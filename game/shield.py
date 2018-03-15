@@ -11,6 +11,12 @@ SHIP_SCALE = Vector2(109, 156)
 
 INERTIA = True
 
+
+# copied from game.py
+GAME_FPS = 50
+GAME_FRAME_MS = 1000 / GAME_FPS
+
+
 class Shield(Entity):
     def __init__(self, ship):
         super().__init__(ship._world, 0, 0)
@@ -63,6 +69,11 @@ class Shield(Entity):
             self.update_angle_position(x, y)
             self.update_charge(trigger)
 
+        self.shield_state.advance_time(
+            time_passed_ms=(game_speed * GAME_FRAME_MS),
+        )
+
+
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
 
@@ -109,4 +120,4 @@ class Shield(Entity):
             self._quad.draw(screen)
 
     def collide(self, other, began):
-        self.shield_state.damage(energy=0.5)
+        self.shield_state.damage(energy=10.0)
