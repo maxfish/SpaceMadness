@@ -4,16 +4,23 @@ from mgl2d.graphics.quad_drawable import QuadDrawable
 
 from game.entity import Entity
 from game.stage import Stage
+from physics.physics_bullet import PhysicsBullet
 
 
 class Bullet(Entity):
-    def __init__(self, world):
-        super().__init__(world, 0, 0, 0)
+    def __init__(self, graphics_world, physics_world=None):
+        super().__init__(graphics_world, 0, 0, 0)
         # TODO: we should get the dimensions of the texture
-        self._quad = QuadDrawable(self.position.x, self.position.y, 8, 13)
+        self.width = 8
+        self.length = 13
+        # The visual representation of the bullet.
+        self._quad = QuadDrawable(self.position.x, self.position.y, self.width, self.length)
         self._quad.texture = Texture.load_from_file('resources/images/bullet.png')
         # By default, bullet is not visible after it has been created for the first time
         self._active = False
+        self._physics_world = physics_world
+        # Attach physics only in the initialize method
+        self._physics = None
 
     @property
     def active(self):
@@ -22,6 +29,9 @@ class Bullet(Entity):
     def initialize(self, x, y, angle, speed):
         # x, y - starting coordinates of the bullet (point at which the bullet was fired)
         self._position = Vector2(x, y)
+        # Physics object corresponding to the bullet
+        if self._physics_world:
+            self._physics = PhysicsBullet(self._position.x, self.position.y, self.width, self.length)
         self._active = True
 
     def draw(self, screen):
