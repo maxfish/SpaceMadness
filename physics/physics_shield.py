@@ -1,8 +1,6 @@
 from Box2D import b2CircleShape
 from Box2D import b2FixtureDef
 
-from game.ship import Ship
-
 
 class PhysicsShield:
     def __init__(self, shield, physicsWorld, center, radius):

@@ -1,7 +1,10 @@
 import math
+import numpy as np
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
+from mgl2d.math.matrix4 import Matrix4
+
 
 from game.stage import Stage
 from game.entity import Entity
@@ -41,9 +44,18 @@ class Turret(Entity):
         bullet = self._bullet_mgr.gen_bullet()
         x = self.turret_quad.pos.x
         y = self.turret_quad.pos.y
-        angle = self.get_angle(x, y)
+        angle = math.radians(self.turret_quad.angle)
+        z_sin = math.sin(angle)
+        z_cos = math.cos(angle)
+        rot_mat = np.array(((z_cos, -z_sin), (z_sin, z_cos))).reshape(2, 2)
+        v = np.array([0, -1]).reshape(2, 1)
+        dir_vec = rot_mat.dot(v)
+        direction = Vector2(dir_vec[0], dir_vec[1])
+        # direction = Vector2(0, -1)
+        # direction = Vector2(math.cos(math.radians(angle)), - math.sin(math.radians(angle)))
         # TODO: tune the velocity
-        bullet.initialize(x, y, angle, BULLET_VELOCITY)
+        bullet.initialize(x, y, direction, BULLET_VELOCITY)
+        print("Angle={0}".format(angle))
 
     def hold_fire(self):
         self.turret_state.hold_fire()
@@ -65,6 +77,9 @@ class Turret(Entity):
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
         angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
+
+    def collide(self, other, began):
+        pass
 
 
 class TurretStage(Stage):

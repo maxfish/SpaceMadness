@@ -24,6 +24,16 @@ GAME_FRAME_MS = 1000 / GAME_FPS
 app = App()
 
 
+class MockCollidable:
+
+    def __init__(self, name):
+        self.name = name
+
+    def collide(self, other, began):
+        state = 'began' if began else 'ended'
+        print(f'collosion between {self.name} and {other.name} {state}')
+
+
 def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
     sdl2.ext.line(surface, color, (x1, y1, x2, y2))
@@ -31,7 +41,7 @@ def draw_line(surface, x1, y1, x2, y2):
 
 def draw_rect(surface, x, y, width, height):
     color = sdl2.ext.Color(255, 0, 0)
-    sdl2.ext.fill(surface, color, ((x-width/2)*10, (y-height/2)*10, width*10, height*10))
+    sdl2.ext.fill(surface, color, ((x - width / 2) * 10, (y - height / 2) * 10, width * 10, height * 10))
 
 
 contact_listener = ContactListener()
@@ -42,7 +52,6 @@ pShip2 = PhysicsShip(object(), physicsWorld, 80, 80)
 pShield = PhysicsShield(object() ,physicsWorld, Vector2(60, 60), 20)
 # pBullet = PhysicsBullet(object(), physicsWorld, 10, 20, 8, 13)
 pAsteroid = PhysicsAsteroid(object(), physicsWorld, 100, 100)
-
 
 
 sdl2.ext.init()
@@ -79,18 +88,21 @@ def run():
         sdl2.ext.fill(windowsurface, 0)
         pAsteroid.update_forces()
         draw_polygon(windowsurface, pAsteroid.body, fixture.shape)
-        """
+
         physicsWorld.ClearForces()
         pShip.update_forces(controller)
+
         for fixture in pShip.body.fixtures:
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
+        # draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
+        for fixture in pShip._gun_left.body.fixtures:
+            draw_polygon(windowsurface, pShip._gun_left.body, fixture.shape)
 
         draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
         # for fixture in pBullet.body.fixtures:
         #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
-        """
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()

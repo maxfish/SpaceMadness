@@ -2,6 +2,7 @@ from Box2D import b2ContactListener
 
 
 class ContactListener(b2ContactListener):
+
     def handle_contact(self, contact, began):
         fixture_a = contact.fixtureA
         fixture_b = contact.fixtureB
@@ -19,6 +20,9 @@ class ContactListener(b2ContactListener):
                 print('Collision with bullet %r' % ud['obj'])
             if ud['type'] == 'shield':
                 print('Collision with shield %r' % ud['obj'])
+
+        ud_a['obj'].collide(ud_b['obj'], began)
+        ud_b['obj'].collide(ud_a['obj'], began)
 
     def BeginContact(self, contact):
         self.handle_contact(contact, True)
