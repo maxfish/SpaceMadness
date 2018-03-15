@@ -64,11 +64,10 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
-    # world.update(delta_ms / GAME_FRAME_MS)
+    world.update(delta_ms / GAME_FRAME_MS)
 
     physicsWorld.Step(timeStep, vel_iters, pos_iters)
     physicsWorld.ClearForces()
-    print(body.position, body.angle)
 
     for p in world.players:
         p.handle_input()
