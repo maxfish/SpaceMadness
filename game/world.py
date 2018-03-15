@@ -22,7 +22,23 @@ class World:
 
         self.stage = None
 
-        ship = Ship(self, None, None, controllers[0], 200, 300)
+        # Grabs controllers if they're present
+        pilotController = shieldController = turretController = None
+        if len(controllers) > 0:
+            turretController = controllers[0]
+        if len(controllers) > 1:
+            shieldController = controllers[1]
+        if len(controllers) > 2:
+            pilotController = controllers[2]
+
+        ship = Ship(
+            self,
+            pilotController=pilotController,
+            shieldController=shieldController,
+            turretController=turretController,
+            x=200,
+            y=300,
+        )
 
         self.players = [
             ship,

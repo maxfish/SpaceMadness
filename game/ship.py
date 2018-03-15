@@ -9,6 +9,8 @@ from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
 
+SCALE=0.67
+
 
 class Ship(Entity):
     def __init__(
@@ -23,8 +25,11 @@ class Ship(Entity):
     ):
         super().__init__(world, x, y, z)
 
-        self._dim = Vector2(130, 344)
+        self._dim = Vector2(130*SCALE, 344*SCALE)
         self._angle = 0
+
+        # Used by ship components to scale themselves
+        self.scale = SCALE
 
         self._quad = QuadDrawable(0, 0, self._dim.x, self._dim.y)
         self._quad.pos = self._position
@@ -39,7 +44,10 @@ class Ship(Entity):
             Shield(self),
             Shield(self),
         ]
-        self.turret = Turret(None, 100, 100)
+        self.turrets = [
+            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
+            Turret(self, offset_x=-59*SCALE, offset_y=2*SCALE),
+        ]
 
     def update(self, game_speed):
         if self.pilotController:
@@ -65,7 +73,8 @@ class Ship(Entity):
                 self.turretController.get_axis(0) or 0.0,
                 self.turretController.get_axis(1) or 0.0,
             )
-            self.turret.update(game_speed, turret_x, turret_y)
+            self.turrets[0].update(game_speed, turret_x, turret_y)
+            self.turrets[1].update(game_speed, turret_x, turret_y)
 
         self._quad.pos = self._position
         self._quad.angle = self._angle
@@ -74,4 +83,5 @@ class Ship(Entity):
         for shield in self.shields:
             shield.draw(screen)
         self._quad.draw(screen)
-        self.turret.draw(screen)
+        for turret in self.turrets:
+            turret.draw(screen)
