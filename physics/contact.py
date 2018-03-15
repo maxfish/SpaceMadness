@@ -20,9 +20,9 @@ class ContactListener(b2ContactListener):
             if ud['type'] == 'shield':
                 print('Collision with shield %r' % ud['obj'])
 
-        if hasattr(ud_a['obj']):
+        if hasattr(ud_a, 'obj'):
             ud_a['obj'].collide(ud_b['obj'], began)
-        if hasattr(ud_a['obj']):
+        if hasattr(ud_b, 'obj'):
             ud_b['obj'].collide(ud_a['obj'], began)
 
     def BeginContact(self, contact):
