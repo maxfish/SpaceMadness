@@ -1,4 +1,3 @@
-from game.shield import Shield
 from game.ship import Ship
 
 INTRO_DEBUG = 0
@@ -12,7 +11,7 @@ class World:
     SCENE_GAME = 2
     SCENE_GAME_OVER = 4
 
-    def __init__(self, bounds, debug=0):
+    def __init__(self, bounds, controllers, debug=0):
         self.scene = self.SCENE_TITLE
 
         self.bounds = bounds
@@ -23,14 +22,13 @@ class World:
 
         self.stage = None
 
-        ship = Ship(self, 1000, 500)
-        shield = Shield(ship)
+        ship = Ship(self, None, controllers[0], 1000, 500)
 
         self.players = [
-            ship
+            ship,
         ]
         self.entities = [
-            ship, shield
+            ship,
         ]
 
         # self.item_frames = FramesStore()

@@ -1,11 +1,23 @@
 import math
-from game.entity import Entity
+
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
 
+from game.entity import Entity
+from game.shield import Shield
+
+
 class Ship(Entity):
-    def __init__(self, world, x, y, z=0):
+    def __init__(
+        self,
+        world,
+        pilotController,
+        shieldController,
+        x,
+        y,
+        z=0,
+    ):
         super().__init__(world, x, y, z)
 
         self._dim = Vector2(130, 344)
@@ -14,8 +26,12 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
 
+        self.shield = Shield(self, shieldController)
+        self.controller = pilotController
+
     def update(self, game_speed):
-        pass
+        self.shield.update(game_speed)
 
     def draw(self, screen):
+        self.shield.draw(screen)
         self._quad.draw(screen)
