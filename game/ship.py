@@ -26,12 +26,32 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
 
-        self.shield = Shield(self, shieldController)
-        self.controller = pilotController
+        self.shieldController = shieldController
+        self.pilotController = pilotController
+
+        self.shields = [
+            Shield(self),
+            Shield(self),
+        ]
 
     def update(self, game_speed):
-        self.shield.update(game_speed)
+        if self.pilotController:
+            self.pilotController.update()
+        self.shieldController.update()
+
+        shield0_input_values = (
+            self.shieldController.get_axis(0) or 0.0,
+            self.shieldController.get_axis(1) or 0.0,
+        )
+        shield1_input_values = (
+            self.shieldController.get_axis(2) or 0.0,
+            self.shieldController.get_axis(3) or 0.0,
+        )
+
+        self.shields[0].update(game_speed, shield0_input_values)
+        self.shields[1].update(game_speed, shield1_input_values)
 
     def draw(self, screen):
-        self.shield.draw(screen)
+        for shield in self.shields:
+            shield.draw(screen)
         self._quad.draw(screen)
