@@ -12,13 +12,18 @@ class Shield(Entity):
         self._ship = ship
         self._position = self._ship.position
         self._angle = 0
-        self._rad1 = ship._dim.x / 1.8
+
+        # self._rad1 = ship._dim.x / 1.8
+        self._rad1 = ship._dim.y / 2.9
         self._rad2 = ship._dim.y / 2.9
+        self._angle = 45
 
         self._quad = QuadDrawable(0, 0, 127, 127)
-        self._quad.pos = self._position
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
         self._quad.anchor = Vector2(65, 65)
+
+        self.update(0, (0,0))
+
 
     def calc_angle(self, input_values):
         x, y = input_values
@@ -26,16 +31,24 @@ class Shield(Entity):
 
     def update(self, game_speed, input_values):
         self._angle = self.calc_angle(input_values)
+
+        pos = Vector2(
+            math.cos(math.radians(self._angle-45)),
+            math.sin(math.radians(self._angle-45)),
+        )
+        pos = Vector2(
+            pos.x * math.cos(math.radians(self._ship._angle)) - \
+            pos.y * math.sin(math.radians(self._ship._angle)),
+            pos.x * math.sin(math.radians(self._ship._angle)) + \
+            pos.y * math.cos(math.radians(self._ship._angle)),
+        )
+
         self._position = \
             self._ship._position + \
-            self._ship._dim.__div__(2.0) + \
-            Vector2(
-                self._rad1 * math.cos(math.radians(self._angle-45)),
-                self._rad2 * math.sin(math.radians(self._angle-45)),
-            )
+            Vector2(pos.x * self._rad1, pos.y * self._rad2)
 
-        self._quad.angle = self._angle
-        self._quad.pos = self.position
+        self._quad.pos = self._position
+        self._quad.angle = self._angle + self._ship._angle
 
     def draw(self, screen):
         self._quad.draw(screen)
