@@ -1,5 +1,6 @@
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
+from mgl2d.math.vector2 import Vector2
 
 from game.stage import Stage
 from game.planet import Planet
@@ -23,6 +24,9 @@ class StageBackground(Stage):
             p = Planet(width, height, planet_picture_list)
             self.planets.append(p)
 
+        self.hint = QuadDrawable(100, 800, 1000, 200)
+        self.hint.texture = Texture.load_from_file('resources/images/hint.png')
+
     def get_width(self):
         return self.width
 
@@ -34,6 +38,7 @@ class StageBackground(Stage):
         self.quad.draw(surface)
         for planet in self.planets:
             planet.draw(surface)
+        self.hint.draw(surface)
 
     def draw_foreground(self, surface, window_x, window_y):
         pass
