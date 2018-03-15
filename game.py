@@ -14,6 +14,7 @@ from game.stage_1 import Stage1
 from game.stage_background import StageBackground
 from game.turret import TurretStage
 from game.world import World
+from game.bullet_mgr import BulletManager
 
 from Box2D import (b2PolygonShape, b2World)
 
@@ -21,6 +22,7 @@ logging.basicConfig(level=logging.INFO)
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
+PHYSICS_SCALE = 10
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
@@ -43,12 +45,15 @@ controllers = [
     for n in range(num_joysticks)
 ]
 
+
 world = World(bounds=screen.viewport, controllers=controllers)
+# TODO: pass physics world to the bullet manager
+bullet_mgr = BulletManager(world, None)
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
 elif args.stage == "bullet":
-    world.set_stage(BulletStage(screen.width, screen.height))
+    world.set_stage(BulletStage(screen.width, screen.height, bullet_mgr))
 else:
     world.set_stage(StageBackground(screen.width, screen.height))
 
@@ -74,15 +79,13 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
-    world.update(delta_ms / GAME_FRAME_MS)
-
     physicsWorld.Step(timeStep, vel_iters, pos_iters)
     physicsWorld.ClearForces()
-
+    world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:
         p.handle_input()
 
-    world.update(0)
+    # world.update(0)
 
 
 app.run(screen, draw_frame, update_frame, fps=GAME_FPS)
