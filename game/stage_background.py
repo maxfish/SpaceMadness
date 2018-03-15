@@ -16,7 +16,7 @@ class StageBackground(Stage):
         self.quad.texture = Texture.load_from_file('resources/images/bg.png')
         number_of_planets = 15
         self.planets = []
-        number_of_clouds = 10
+        number_of_clouds = 20
         self.clouds = []
 
         # Generate the list of planets
@@ -33,12 +33,14 @@ class StageBackground(Stage):
     def update(self, game_speed):
         for planet in self.planets:
             planet.update(game_speed)
+        for cloud in self.clouds:
+            cloud.update(game_speed)
 
     def draw_background(self, surface, window_x, window_y):
         self.quad.draw(surface)
         for planet in self.planets:
             planet.draw(surface)
-            
+
         for cloud in self.clouds:
             cloud.draw(surface)
 

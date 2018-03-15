@@ -1,6 +1,8 @@
 from Box2D import b2World
 
 from game.ship import Ship
+from game.asteroid import Asteroid
+
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -49,6 +51,12 @@ class World:
             y=300,
         )
 
+        asteroid = Asteroid(
+            self,
+            x=500,
+            y=500,
+        )
+
         self.players = [
             ship,
             ship2,
@@ -56,6 +64,7 @@ class World:
         self.entities = [
             ship,
             ship2,
+            asteroid,
         ]
 
         # self.item_frames = FramesStore()
