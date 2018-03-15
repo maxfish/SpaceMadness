@@ -86,9 +86,12 @@ class Ship(Entity):
                 self.shieldController.get_axis(2) or 0.0,
                 self.shieldController.get_axis(3) or 0.0,
             )
+        else:
+            shield0_input_values = (0,0)
+            shield1_input_values = (0,0)
 
-            self.shields[0].update(game_speed, shield0_input_values)
-            self.shields[1].update(game_speed, shield1_input_values)
+        self.shields[0].update(game_speed, shield0_input_values)
+        self.shields[1].update(game_speed, shield1_input_values)
 
         if self.turretController:
             turret_left_x, turret_left_y = (
@@ -99,11 +102,18 @@ class Ship(Entity):
                 self.turretController.get_axis(2) or 0.0,
                 self.turretController.get_axis(3) or 0.0,
             )
-            self.turrets[0].update(game_speed, turret_left_x, turret_left_y)
-            self.turrets[1].update(game_speed, turret_right_x, turret_right_y)
+        else:
+            turret_left_x, turret_left_y = (0,0)
+            turret_right_x, turret_right_y = (0,0)
 
-        self._quad.pos = self._physicsShip.body.position * PHYSICS_SCALE
-        self._quad.angle = math.degrees(self._physicsShip.body.angle) + 180
+        self.turrets[0].update(game_speed, turret_left_x, turret_left_y)
+        self.turrets[1].update(game_speed, turret_right_x, turret_right_y)
+
+        self._angle = math.degrees(self._physicsShip.body.angle) + 180
+        pos = self._physicsShip.body.position * PHYSICS_SCALE
+        self._position = Vector2(pos[0], pos[1])
+        self._quad.pos = self._position
+        self._quad.angle = self._angle
 
     def draw(self, screen):
         for shield in self.shields:
