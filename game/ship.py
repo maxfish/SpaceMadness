@@ -16,6 +16,7 @@ class Ship(Entity):
     def __init__(
         self,
         world,
+        bullet_mgr,
         pilotController,
         shieldController,
         turretController,
@@ -45,8 +46,8 @@ class Ship(Entity):
             Shield(self),
         ]
         self.turrets = [
-            Turret(self, offset_x=-59*SCALE, offset_y=2*SCALE),
-            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
+            Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
+            Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
 
     def update(self, game_speed):

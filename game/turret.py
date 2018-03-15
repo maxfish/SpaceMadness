@@ -6,10 +6,13 @@ from mgl2d.math.vector2 import Vector2
 from game.stage import Stage
 from game.entity import Entity
 
+BULLET_VELOCITY = 1
+
 class Turret(Entity):
 
-    def __init__(self, ship, offset_x, offset_y):
+    def __init__(self, ship, bullet_mgr, offset_x, offset_y):
         self._ship = ship
+        self._bullet_mgr = bullet_mgr
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.turret_quad = QuadDrawable(0, 0, 13*self._ship.scale, 46*self._ship.scale)
@@ -18,8 +21,15 @@ class Turret(Entity):
 
         self.update(0, 0, 0)
 
+    def get_angle(self, x, y):
+        return angle = math.degrees(math.atan2(y, x))
+
     def fire(self):
-        print("FIRE!")
+        bullet = self._bullet_mgr.gen_bullet()
+        x, y = self._ship._quad.pos
+        angle = self.get_angle(x, y)
+        # TODO: tune the velocity
+        bullet.initialize(x, y, angle, BULLET_VELOCITY)
 
     def draw(self, screen):
         self.turret_quad.draw(screen)
@@ -27,7 +37,7 @@ class Turret(Entity):
     def update(self, game_speed, x, y):
         """x and y are the x and y from the controller joystick"""
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
-        angle = math.degrees(math.atan2(y, x))
+        angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
 
 
