@@ -7,19 +7,19 @@ class PhysicShip:
         w = 5
         h = 10
         self.shape = b2PolygonShape(vertices=[
-            (0, -h * 0.5),
-            (-w * 0.5, -h * 0.5 - w * 0.5),
-            (-w * 0.5, +h * 0.5 + w * 0.3),
-            (-w * 0.25, +h * 0.5),
-            (w * 0.25, +h * 0.5),
-            (w * 0.5, +h * 0.5 + w * 0.3),
-            (w * 0.5, -h * 0.5 - w * 0.5),
+            (0, -(h * 0.5)),
+            (-w * 0.5, -(h * 0.5 - w * 0.5)),
+            (-w * 0.5, -(-h * 0.5 + w * 0.3)),
+            (-w * 0.25, -(-h * 0.5)),
+            (w * 0.25, -(-h * 0.5)),
+            (w * 0.5, -(-h * 0.5 + w * 0.3)),
+            (w * 0.5, -(h * 0.5 - w * 0.5)),
         ])
 
         self.body = physicsWorld.CreateDynamicBody(
             position=(x, y),
             shapes=self.shape,
-            angularDamping=5,
+            angularDamping=4,
             linearDamping=0.1,
             shapeFixture=b2FixtureDef(density=2.0),
         )
@@ -37,7 +37,7 @@ class PhysicShip:
         self.body.ApplyTorque(intensity, True)
 
         if controller.is_button_down(GameController.BUTTON_A):
-            intensity = 300
+            intensity = 50
             self.body.ApplyLinearImpulse(dir * intensity, pos, True)
 
         # current_normal = self.body.GetWorldVector((1, 0))
