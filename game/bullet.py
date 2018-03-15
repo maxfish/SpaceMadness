@@ -55,7 +55,6 @@ class Bullet(Entity):
     def collide(self, other, began):
         pass
 
-
 class BulletStage(Stage):
     def __init__(self, width, height, bullet_mgr):
         super().__init__(width, height)
