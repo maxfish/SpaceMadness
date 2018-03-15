@@ -16,7 +16,8 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 
-BULLET_VELOCITY = 1
+BULLET_VELOCITY = 80
+
 
 class Turret(Entity):
 
@@ -46,16 +47,12 @@ class Turret(Entity):
         bullet = self._bullet_mgr.gen_bullet(id(self._ship))
         x = self.turret_quad.pos.x
         y = self.turret_quad.pos.y
+
         angle = math.radians(self.turret_quad.angle)
         z_sin = math.sin(angle)
         z_cos = math.cos(angle)
-        rot_mat = np.array(((z_cos, -z_sin), (z_sin, z_cos))).reshape(2, 2)
-        v = np.array([0, -1]).reshape(2, 1)
-        dir_vec = rot_mat.dot(v)
-        direction = Vector2(dir_vec[0], dir_vec[1])
-        # direction = Vector2(0, -1)
-        # direction = Vector2(math.cos(math.radians(angle)), - math.sin(math.radians(angle)))
-        # TODO: tune the velocity
+        direction = Vector2(-z_cos, z_sin)
+
         bullet.initialize(x, y, direction, BULLET_VELOCITY, id(self._ship))
         print("Angle={0}".format(angle))
 

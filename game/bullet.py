@@ -40,16 +40,14 @@ class Bullet(Entity):
         # x, y - starting coordinates of the bullet (point at which the bullet was fired)
         self._direction = direction
         self._quad.pos = Vector2(x, y)
-        self._quad.angle = math.degrees(math.atan2(self._direction.y, self._direction.x)) + 90
-        print("BULLET ANGLE: {0}".format(self._quad.angle))
+        self._quad.angle = math.degrees(math.atan2(-self._direction.y, self._direction.x))
         # Physics object corresponding to the bullet
-        # TODO remove + 100
-        self._physics.body.position = ((x + 100) / PHYSICS_SCALE, (y + 100) / PHYSICS_SCALE)
-        self._physics.body.angle = math.radians(self._quad.angle)
+        self._physics.body.position = (x / PHYSICS_SCALE, y / PHYSICS_SCALE)
+        #self._physics.body.angle = math.radians(self._quad.angle)
 
         dir = b2Vec2(float(self._direction.y), float(self._direction.x))
         pos = self._physics.body.GetWorldPoint(localPoint=(0.0, 0.0))
-        self._physics.body.ApplyForce(dir * speed * 40, pos, True)
+        self._physics.body.ApplyForce(dir * speed, pos, True)
         self._active = True
 
     def draw(self, screen):
