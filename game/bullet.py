@@ -10,7 +10,7 @@ from physics.physics_bullet import PhysicsBullet
 
 
 class Bullet(Entity):
-    def __init__(self, graphics_world, physics_world=None):
+    def __init__(self, bullet_mgr, graphics_world, physics_world=None):
         super().__init__(graphics_world, 0, 0, 0)
         # TODO: we should get the dimensions of the texture
         self.width = 8
@@ -26,6 +26,7 @@ class Bullet(Entity):
         # Set the angle in the initialize method
         self._direction = None
         self._angle = None
+        self.bullet_mgr = bullet_mgr
 
     @property
     def active(self):
@@ -59,6 +60,8 @@ class Bullet(Entity):
         self._position += self._direction
         self._quad.pos = self._position
 
+    def collide(self, other, began):
+        pass
 
 class BulletStage(Stage):
     def __init__(self, width, height, bullet_mgr):

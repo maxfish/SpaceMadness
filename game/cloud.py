@@ -13,11 +13,15 @@ class Cloud:
 
         size = calculate_size(width, height)
         self.pos = Vector2(start_x, start_y)
+        self.speed_x = random.randint(-100, 100)
+        self.speed_y = random.randint(-100, 100)
 
         create_cloud_quad(self, size, cloud_list, cloud_number)
 
     def update(self, screen):
-        pass
+        self.pos.x += 0.002*self.speed_x
+        self.pos.y += 0.002*self.speed_y
+        self.quad.pos = self.pos
 
     def draw(self, screen):
         self.quad.draw(screen)
@@ -36,6 +40,5 @@ def calculate_size(width, height):
 
 
 def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
-    cloud.quad = QuadDrawable(cloud.pos.x - size/2, cloud.pos.y - size/2, size, size)
+    cloud.quad = QuadDrawable(cloud.pos.x - size/2, cloud.pos.y - size/2, size, size, random.randint(0, 360))
     cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
-    print("cloud : ", cloud.pos.x - size/2, cloud.pos.y - size/2)

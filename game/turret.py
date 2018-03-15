@@ -78,6 +78,9 @@ class Turret(Entity):
         angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
 
+    def collide(self, other, began):
+        pass
+
 
 class TurretStage(Stage):
     def __init__(self, width, height):
