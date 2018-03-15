@@ -9,7 +9,8 @@ from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
-from physics.physic_ship import PhysicShip
+from physics.physics_ship import PhysicsShip
+
 
 SCALE = 0.67
 
@@ -28,7 +29,12 @@ class Ship(Entity):
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
         self._angle = 0
-        self._physicsShip = PhysicShip(self, world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE)
+        self._physicsShip = PhysicsShip(
+            self,
+            world.physicsWorld,
+            x / PHYSICS_SCALE,
+            y / PHYSICS_SCALE,
+        )
 
         # Used by ship components to scale themselves
         self.scale = SCALE

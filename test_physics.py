@@ -8,11 +8,14 @@ from mgl2d.math.vector2 import Vector2
 from random import randint
 import sdl2
 import sdl2.ext
-from Box2D import (b2PolygonShape, b2CircleShape)
+from Box2D import b2PolygonShape
+from Box2D import b2CircleShape
 
+from physics.contact import ContactListener
 from physics.physics_bullet import PhysicsBullet
-from physics.physic_ship import PhysicShip
-from physics.physics_shield import PhysicShield
+from physics.physics_shield import PhysicsShield
+from physics.physics_ship import PhysicsShip
+
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
@@ -30,11 +33,15 @@ def draw_rect(surface, x, y, width, height):
     sdl2.ext.fill(surface, color, ((x-width/2)*10, (y-height/2)*10, width*10, height*10))
 
 
-physicsWorld = b2World(gravity=(0, 0))
-pShip = PhysicShip(object(), physicsWorld, 50, 50)
-pShip2 = PhysicShip(object(), physicsWorld, 80, 80)
-pShield = PhysicShield(physicsWorld, Vector2(60, 60), 20)
-# pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
+contact_listener = ContactListener()
+physicsWorld = b2World(gravity=(0, 0), contactListener=contact_listener)
+
+pShip = PhysicsShip(object(), physicsWorld, 50, 50)
+pShip2 = PhysicsShip(object(), physicsWorld, 80, 80)
+pShield = PhysicsShield(object() ,physicsWorld, Vector2(60, 60), 20)
+# pBullet = PhysicsBullet(object(), physicsWorld, 10, 20, 8, 13)
+
+
 
 sdl2.ext.init()
 window = sdl2.ext.Window("2D drawing primitives", size=(1920, 1080))
