@@ -5,6 +5,13 @@ from mgl2d.math.vector2 import Vector2
 
 from game.stage import Stage
 from game.entity import Entity
+from game.turret_state import TurretState
+
+
+# copied from game.py
+GAME_FPS = 50
+GAME_FRAME_MS = 1000 / GAME_FPS
+
 
 BULLET_VELOCITY = 1
 
@@ -19,23 +26,40 @@ class Turret(Entity):
         self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
         self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
 
+        self.turret_state = TurretState(self)
+
         self.update(0, 0, 0)
+        #if offset_x < 0:
+        self.fire_bullet()
 
     def get_angle(self, x, y):
-        return angle = math.degrees(math.atan2(y, x))
+        return math.degrees(math.atan2(y, x))
 
     def fire(self):
+        self.turret_state.fire()
+
+    def fire_bullet(self):
+        # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
+        print("Bullet fired from: {0} {1}".format(self.turret_quad.pos.x, self.turret_quad.pos.y))
         bullet = self._bullet_mgr.gen_bullet()
-        x, y = self._ship._quad.pos
+        x = self.turret_quad.pos.x
+        y = self.turret_quad.pos.y
         angle = self.get_angle(x, y)
         # TODO: tune the velocity
         bullet.initialize(x, y, angle, BULLET_VELOCITY)
+
+    def hold_fire(self):
+        self.turret_state.hold_fire()
 
     def draw(self, screen):
         self.turret_quad.draw(screen)
 
     def update(self, game_speed, x, y):
         """x and y are the x and y from the controller joystick"""
+        self.turret_state.advance_time(
+            time_passed_ms=(game_speed * GAME_FRAME_MS),
+        )
+
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
         angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
