@@ -1,6 +1,7 @@
 import math
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
+from mgl2d.math.vector2 import Vector2
 
 from game.stage import Stage
 from game.entity import Entity
@@ -12,6 +13,7 @@ class Turret(Entity):
         self.y = y
         self.turret_quad = QuadDrawable(self.x, self.y, 13, 46)
         self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
+        self.turret_quad.anchor = Vector2(7, 46)
 
     def fire(self):
         print("FIRE!")
