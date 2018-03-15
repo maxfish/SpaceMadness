@@ -35,7 +35,7 @@ def calculate_size(width, height):
     percentage = random.randint(0, 100)
     scale = (width+height) / 2
     if percentage < 40:
-        size = random.randint(scale * 0.075, scale * 0.15)
+        size = random.randint(scale * 0.1, scale * 0.15)
     elif percentage < 90:
         size = random.randint(scale * 0.15, scale * 0.25)
     else:
@@ -46,4 +46,4 @@ def calculate_size(width, height):
 def create_planet_quad(planet, size, planet_list, planet_picked):
     planet.quad = QuadDrawable(planet.pos.x, planet.pos.y, size, size)
     planet.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_picked - 1])
-    planet.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/base.frag')
+    planet.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/planet.frag')
