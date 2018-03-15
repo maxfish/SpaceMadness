@@ -1,5 +1,6 @@
 import math
 from game.entity import Entity
+from game.laser import Laser
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
@@ -30,10 +31,8 @@ class Shield(Entity):
         self._quad.anchor = Vector2(109/2, 156/2)
 
         self._charge = 0
-
         self.shield_state = ShieldState(self)
-
-        self.update(0, (0,0,0))
+        self.update(0, (0.0, 0.0, 0.0))
 
 
     def calc_angle(self, x, y):
@@ -55,15 +54,14 @@ class Shield(Entity):
             return math.degrees(math.atan2(y, x))
 
     def update(self, game_speed, input_values):
-        x, y, trigger = input_values
+        self.update_charge(input_values[2])
 
-        if (x, y) == (0.0, 0.0):
+        if input_values == (0.0, 0.0, 0.0):
             # If the shields aren't being used, don't display them
             self._quad.scale = Vector2(0, 0)
         else:
             self._quad.scale = SHIP_SCALE
             self.update_angle_position(x, y)
-            self.update_charge(trigger)
 
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
@@ -94,8 +92,13 @@ class Shield(Entity):
             self._charge -= 0.4
             if self._charge < 0:
                 self._charge = 0
+
         if self._charge >= 50:
             self._charge = 0
+            self._world.entities.append(
+                Laser(self.position.x, self.position.y, 1000, self._angle),
+            )
+
         self._quad.scale = Vector2(
             SHIP_SCALE.x * (1.0 + 2*self._charge/55.0),
             SHIP_SCALE.y * (1.0 - self._charge/55.0),
