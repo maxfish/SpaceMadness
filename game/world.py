@@ -1,3 +1,6 @@
+from game.shield import Shield
+from game.entity import Entity
+
 INTRO_DEBUG = 0
 DEBUG = 0
 
@@ -19,7 +22,9 @@ class World:
         self.window_y = 0
 
         self.stage = None
-        self.players = set()
+        self.players = [
+            Shield(Entity(self, 1000, 500)),
+        ]
 
         # self.item_frames = FramesStore()
         # self.item_frames.load('resources/sprites/items', 'sprites.json')
@@ -41,11 +46,15 @@ class World:
 
         # for i in self.items:
         #     i.update(game_speed)
+        for player in self.players:
+            player.update(game_speed)
 
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
 
         # TODO: Draw objects
+        for player in self.players:
+            player.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
 

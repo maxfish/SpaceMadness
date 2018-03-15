@@ -73,5 +73,7 @@ def update_frame(delta_ms):
     for p in world.players:
         p.handle_input()
 
+    world.update(0)
+
 
 app.run(screen, draw_frame, update_frame, fps=GAME_FPS)
