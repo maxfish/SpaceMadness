@@ -1,8 +1,10 @@
 from Box2D import b2PolygonShape, b2FixtureDef
 from mgl2d.input.game_controller import GameController
 
+from physics.physics_gun import PhysicsGun
 
-class PhysicShip:
+
+class PhysicsShip:
     def __init__(self, ship, physicsWorld, x, y):
         w = 5
         h = 10
@@ -22,8 +24,25 @@ class PhysicShip:
             angularDamping=4,
             linearDamping=0.1,
             shapeFixture=b2FixtureDef(density=2.0),
-            userData=ship,
+            userData={'type': 'ship', 'obj': ship},
         )
+        #
+        # anchor = (w / 2, h / 2)
+        # pos = anchor
+        # self._gun_left = PhysicsGun(physicsWorld, pos[0], pos[1], 1.5, 0.5)
+        # j = physicsWorld.CreateRevoluteJoint(bodyA=self.body,
+        #                                      bodyB=self._gun_left.body,
+        #                                      localAnchorA=anchor,
+        #                                      localAnchorB=(0, 0),
+        #                                      enableMotor=False,
+        #                                      maxMotorTorque=1000,
+        #                                      enableLimit=True,
+        #                                      collideConnected=False,
+        #                                      lowerAngle=0,
+        #                                      upperAngle=60,
+        #                                      )
+        #
+        # self._gun_left.body.position = self.body.worldCenter + anchor
 
     def update_forces(self, controller):
         if controller is None:

@@ -9,7 +9,9 @@ from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
-from physics.physic_ship import PhysicShip
+from game.trail import Trail
+from physics.physics_ship import PhysicsShip
+
 
 SCALE = 0.67
 
@@ -28,7 +30,12 @@ class Ship(Entity):
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
         self._angle = 0
-        self._physicsShip = PhysicShip(self, world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE)
+        self._physicsShip = PhysicsShip(
+            self,
+            world.physicsWorld,
+            x / PHYSICS_SCALE,
+            y / PHYSICS_SCALE,
+        )
 
         # Used by ship components to scale themselves
         self.scale = SCALE
@@ -44,13 +51,14 @@ class Ship(Entity):
         self.turretController = None
 
         self.shields = [
-            Shield(self),
-            Shield(self),
+            Shield(self, world),
+            Shield(self, world),
         ]
         self.turrets = [
             Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
             Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
+        self.trail = Trail(self, offset_x=0, offset_y=0)
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -76,20 +84,23 @@ class Ship(Entity):
                 self.shieldController = c
 
         if self.pilotController:
-            pass
+            trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
+            self.trail.update(game_speed, trigger_intensity)
 
         if self.shieldController:
             shield0_input_values = (
-                self.shieldController.get_axis(0) or 0.0,
-                self.shieldController.get_axis(1) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_TRIGGER_LEFT) or 0.0,
             )
             shield1_input_values = (
-                self.shieldController.get_axis(2) or 0.0,
-                self.shieldController.get_axis(3) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_RIGHT_X) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0,
             )
         else:
-            shield0_input_values = (0,0)
-            shield1_input_values = (0,0)
+            shield0_input_values = (0.0,0.0,0.0)
+            shield1_input_values = (0.0,0.0,0.0)
 
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
@@ -127,6 +138,10 @@ class Ship(Entity):
     def draw(self, screen):
         for shield in self.shields:
             shield.draw(screen)
+        self.trail.draw(screen)
         self._quad.draw(screen)
         for turret in self.turrets:
             turret.draw(screen)
+
+    def collide(self, other, began):
+        pass

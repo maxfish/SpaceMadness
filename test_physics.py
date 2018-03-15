@@ -8,16 +8,29 @@ from mgl2d.math.vector2 import Vector2
 from random import randint
 import sdl2
 import sdl2.ext
-from Box2D import (b2PolygonShape, b2CircleShape)
+from Box2D import b2PolygonShape
+from Box2D import b2CircleShape
 
+from physics.contact import ContactListener
 from physics.physics_bullet import PhysicsBullet
-from physics.physic_ship import PhysicShip
-from physics.physics_shield import PhysicShield
+from physics.physics_shield import PhysicsShield
+from physics.physics_ship import PhysicsShip
+
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 app = App()
+
+
+class MockCollidable:
+
+    def __init__(self, name):
+        self.name = name
+
+    def collide(self, other, began):
+        state = 'began' if began else 'ended'
+        print(f'collosion between {self.name} and {other.name} {state}')
 
 
 def draw_line(surface, x1, y1, x2, y2):
@@ -27,14 +40,17 @@ def draw_line(surface, x1, y1, x2, y2):
 
 def draw_rect(surface, x, y, width, height):
     color = sdl2.ext.Color(255, 0, 0)
-    sdl2.ext.fill(surface, color, ((x-width/2)*10, (y-height/2)*10, width*10, height*10))
+    sdl2.ext.fill(surface, color, ((x - width / 2) * 10, (y - height / 2) * 10, width * 10, height * 10))
 
 
-physicsWorld = b2World(gravity=(0, 0))
-pShip = PhysicShip(object(), physicsWorld, 50, 50)
-pShip2 = PhysicShip(object(), physicsWorld, 80, 80)
-pShield = PhysicShield(physicsWorld, Vector2(60, 60), 20)
-# pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
+contact_listener = ContactListener()
+physicsWorld = b2World(gravity=(0, 0), contactListener=contact_listener)
+
+pShip = PhysicsShip(MockCollidable('ship'), physicsWorld, 50, 50)
+pShip2 = PhysicsShip(MockCollidable('ship2'), physicsWorld, 80, 80)
+pShield = PhysicsShield(MockCollidable('shield') ,physicsWorld, Vector2(60, 60), 20)
+# pBullet = PhysicsBullet(MockCollidable('bullet'), physicsWorld, 10, 20, 8, 13)
+
 
 sdl2.ext.init()
 window = sdl2.ext.Window("2D drawing primitives", size=(1920, 1080))
@@ -70,14 +86,15 @@ def run():
         sdl2.ext.fill(windowsurface, 0)
         physicsWorld.ClearForces()
         pShip.update_forces(controller)
+
         for fixture in pShip.body.fixtures:
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
+        # draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
+        for fixture in pShip._gun_left.body.fixtures:
+            draw_polygon(windowsurface, pShip._gun_left.body, fixture.shape)
 
-        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
-        # for fixture in pBullet.body.fixtures:
-        #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()
