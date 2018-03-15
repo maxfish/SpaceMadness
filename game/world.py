@@ -94,8 +94,7 @@ class World:
             e.update(game_speed)
 
         self.val += 1
-        if(self.val%150 == 0):
-            print('generate')
+        if(self.val%100 == 0):
             self.generate_asteroid()
 
     def draw(self, screen):
@@ -114,7 +113,6 @@ class World:
 
     def generate_asteroid(self):
         side = random.randint(1, 4)
-        print(side)
         speed_x = random.randint(-100, 100) / 100
         speed_y = random.randint(-100, 100) / 100
         if side == 1:
