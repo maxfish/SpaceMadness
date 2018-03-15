@@ -22,7 +22,7 @@ class Shield(Entity):
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
         self._quad.anchor = Vector2(65, 65)
 
-        self.update(0)
+        self.update(0, (0,0))
 
 
     def calc_angle(self, input_values):
