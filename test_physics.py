@@ -15,6 +15,7 @@ from physics.contact import ContactListener
 from physics.physics_bullet import PhysicsBullet
 from physics.physics_shield import PhysicsShield
 from physics.physics_ship import PhysicsShip
+from physics.physics_asteroid import PhysicsAsteroid
 
 
 GAME_FPS = 50
@@ -46,10 +47,11 @@ def draw_rect(surface, x, y, width, height):
 contact_listener = ContactListener()
 physicsWorld = b2World(gravity=(0, 0), contactListener=contact_listener)
 
-pShip = PhysicsShip(MockCollidable('ship'), physicsWorld, 50, 50)
-pShip2 = PhysicsShip(MockCollidable('ship2'), physicsWorld, 80, 80)
-pShield = PhysicsShield(MockCollidable('shield') ,physicsWorld, Vector2(60, 60), 20)
-# pBullet = PhysicsBullet(MockCollidable('bullet'), physicsWorld, 10, 20, 8, 13)
+pShip = PhysicsShip(object(), physicsWorld, 50, 50)
+pShip2 = PhysicsShip(object(), physicsWorld, 80, 80)
+pShield = PhysicsShield(object() ,physicsWorld, Vector2(60, 60), 20)
+# pBullet = PhysicsBullet(object(), physicsWorld, 10, 20, 8, 13)
+pAsteroid = PhysicsAsteroid(object(), physicsWorld, 100, 100)
 
 
 sdl2.ext.init()
@@ -84,6 +86,9 @@ def run():
                 running = False
                 break
         sdl2.ext.fill(windowsurface, 0)
+        pAsteroid.update_forces()
+        draw_polygon(windowsurface, pAsteroid.body, fixture.shape)
+
         physicsWorld.ClearForces()
         pShip.update_forces(controller)
 
@@ -95,6 +100,9 @@ def run():
         for fixture in pShip._gun_left.body.fixtures:
             draw_polygon(windowsurface, pShip._gun_left.body, fixture.shape)
 
+        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
+        # for fixture in pBullet.body.fixtures:
+        #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()

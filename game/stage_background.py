@@ -16,13 +16,19 @@ class StageBackground(Stage):
         self.quad.texture = Texture.load_from_file('resources/images/bg.png')
         number_of_planets = 15
         self.planets = []
-        number_of_clouds = 20
-        self.clouds = []
+        number_of_clouds_background = 10
+        number_of_clouds_foreground = 10
+
+        self.clouds_background = []
+        self.clouds_foreground = []
+
 
         # Generate the list of planets
         self.generate_planets(number_of_planets, width, height)
         # Generate the list of clouds
-        self.generate_clouds(number_of_clouds, width, height)
+        self.generate_clouds_background(number_of_clouds_background, width, height)
+        self.generate_clouds_foreground(number_of_clouds_foreground, width, height)
+
 
         self.hint = QuadDrawable(100, 800, 1000, 200)
         self.hint.texture = Texture.load_from_file('resources/images/hint.png')
@@ -33,21 +39,23 @@ class StageBackground(Stage):
     def update(self, game_speed):
         for planet in self.planets:
             planet.update(game_speed)
-        for cloud in self.clouds:
+        for cloud in self.clouds_foreground:
+            cloud.update(game_speed)
+        for cloud in self.clouds_background:
             cloud.update(game_speed)
 
     def draw_background(self, surface, window_x, window_y):
         self.quad.draw(surface)
         for planet in self.planets:
             planet.draw(surface)
-
-        for cloud in self.clouds:
+        for cloud in self.clouds_background:
             cloud.draw(surface)
 
         self.hint.draw(surface)
 
     def draw_foreground(self, surface, window_x, window_y):
-        pass
+        for cloud in self.clouds_foreground:
+            cloud.draw(surface)
 
     def generate_planets(self, number_of_planets, width, height):
         planet_picture_list = [f for f in listdir('resources/images/planets') if
@@ -66,9 +74,16 @@ class StageBackground(Stage):
             p = Planet(0, 0, width, height, planet_picture_list)
             self.planets.append(p)
 
-    def generate_clouds(self, number_of_planets, width, height):
+    def generate_clouds_background(self, number_of_clouds, width, height):
         planet_picture_list = [f for f in listdir('resources/images/clouds') if
                                isfile(join('resources/images/clouds', f))]
-        for x in range(0, number_of_planets):
+        for x in range(0, number_of_clouds):
             cloud = Cloud(width, height, planet_picture_list)
-            self.clouds.append(cloud)
+            self.clouds_background.append(cloud)
+
+    def generate_clouds_foreground(self, number_of_clouds, width, height):
+        planet_picture_list = [f for f in listdir('resources/images/clouds') if
+                               isfile(join('resources/images/clouds', f))]
+        for x in range(0, number_of_clouds):
+            cloud = Cloud(width, height, planet_picture_list)
+            self.clouds_foreground.append(cloud)

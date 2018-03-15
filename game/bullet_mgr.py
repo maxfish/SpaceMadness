@@ -10,7 +10,7 @@ class BulletManager(Entity):
         self.active_bullets = []
 
     def _create_bullet(self):
-        bullet = Bullet(self.gWorld, self.pWorld)
+        bullet = Bullet(self, self.gWorld, self.pWorld)
         return bullet
 
     def gen_bullet(self):
