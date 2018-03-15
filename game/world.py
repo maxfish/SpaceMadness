@@ -2,6 +2,7 @@ from Box2D import b2World
 
 from game.ship import Ship
 from game.bullet_mgr import BulletManager
+from physics.contact import ContactListener
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -25,7 +26,7 @@ class World:
 
         self.stage = None
 
-        self.physicsWorld = b2World(gravity=(0, 0))
+        self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
 
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
