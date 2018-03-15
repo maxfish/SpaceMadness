@@ -1,5 +1,6 @@
 import math
 
+from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
@@ -44,6 +45,7 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.anchor = self._dim.__div__(2.0)
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
+        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
         self.controllers = controllers
         self.shieldController = None
