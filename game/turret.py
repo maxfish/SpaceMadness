@@ -12,9 +12,9 @@ class Turret(Entity):
         self._ship = ship
         self.offset_x = offset_x
         self.offset_y = offset_y
-        self.turret_quad = QuadDrawable(0, 0, 13, 46)
+        self.turret_quad = QuadDrawable(0, 0, 13*self._ship.scale, 46*self._ship.scale)
         self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
-        self.turret_quad.anchor = Vector2(7, 35)
+        self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
 
         self.update(0, 0, 0)
 
@@ -26,7 +26,7 @@ class Turret(Entity):
 
     def update(self, game_speed, x, y):
         """x and y are the x and y from the controller joystick"""
-        self.turret_quad.pos = self._ship._position + Vector2(self.offset_x, self.offset_y)
+        self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
         angle = math.degrees(math.atan2(y, x))
         self.turret_quad.angle = angle
 
