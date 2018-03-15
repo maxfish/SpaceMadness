@@ -112,7 +112,7 @@ class Ship(Entity):
         else:
             turret_left_x, turret_left_y = (0,0)
             turret_right_x, turret_right_y = (0,0)
-            turret_left_fire = turret_right_fire = True
+            turret_left_fire = turret_right_fire = False
 
         self.turrets[0].update(game_speed, turret_left_x, turret_left_y, turret_left_fire)
         self.turrets[1].update(game_speed, turret_right_x, turret_right_y, turret_right_fire)
