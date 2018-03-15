@@ -1,3 +1,5 @@
+import math
+
 from mgl2d.math.vector2 import Vector2
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
@@ -22,20 +24,25 @@ class Bullet(Entity):
         # Attach physics only in the initialize method
         self._physics = None
         # Set the angle in the initialize method
+        self._direction = None
         self._angle = None
 
     @property
     def active(self):
         return self._active
 
-    def initialize(self, x, y, angle, speed):
+    def initialize(self, x, y, direction, speed):
         # x, y - starting coordinates of the bullet (point at which the bullet was fired)
         self._position = Vector2(x, y)
+        self._direction = direction
         self._quad.pos = self._position
+        self._quad.angle = math.degrees(math.atan2(self._direction.y, self._direction.x)) + 90
+        print("BULLET ANGLE: {0}".format(self._quad.angle))
         # Physics object corresponding to the bullet
         if self._physics_world:
             self._physics = PhysicsBullet(
                 self,
+                self._physics_world,
                 self._position.x,
                 self.position.y,
                 self.width,
@@ -49,7 +56,7 @@ class Bullet(Entity):
 
     def update(self, screen):
         # TODO: this should call the physics object to update the position
-        self._position += Vector2(0, -1)
+        self._position += self._direction
         self._quad.pos = self._position
 
 
