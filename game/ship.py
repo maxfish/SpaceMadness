@@ -6,6 +6,7 @@ from mgl2d.math.vector2 import Vector2
 
 from game.entity import Entity
 from game.shield import Shield
+from game.turret import Turret
 
 
 class Ship(Entity):
@@ -33,6 +34,7 @@ class Ship(Entity):
             Shield(self),
             Shield(self),
         ]
+        self.turret = Turret(None, 100, 100)
 
     def update(self, game_speed):
         if self.pilotController:
@@ -50,8 +52,10 @@ class Ship(Entity):
 
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
+        self.turret.update(game_speed)
 
     def draw(self, screen):
         for shield in self.shields:
             shield.draw(screen)
         self._quad.draw(screen)
+        self.turret.draw(screen)

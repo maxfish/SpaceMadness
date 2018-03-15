@@ -11,11 +11,9 @@ class Turret(Entity):
         self.y = y
         self.turret_quad = QuadDrawable(self.x, self.y, 13, 46)
         self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
-        print("Turret initialized")
-
 
     def fire(self):
-        print("FIRE")
+        print("FIRE!")
 
     def draw(self, screen):
         self.turret_quad.draw(screen)
