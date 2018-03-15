@@ -86,16 +86,18 @@ class Ship(Entity):
 
         if self.shieldController:
             shield0_input_values = (
-                self.shieldController.get_axis(0) or 0.0,
-                self.shieldController.get_axis(1) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_TRIGGER_LEFT) or 0.0,
             )
             shield1_input_values = (
-                self.shieldController.get_axis(2) or 0.0,
-                self.shieldController.get_axis(3) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_RIGHT_X) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
+                self.shieldController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0,
             )
         else:
-            shield0_input_values = (0,0)
-            shield1_input_values = (0,0)
+            shield0_input_values = (0.0,0.0,0.0)
+            shield1_input_values = (0.0,0.0,0.0)
 
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
