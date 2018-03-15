@@ -20,6 +20,7 @@ from Box2D import (b2PolygonShape, b2World)
 
 logging.basicConfig(level=logging.INFO)
 
+# FIXME: these constants are copied in other modules, grep it.
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 PHYSICS_SCALE = 10
