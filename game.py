@@ -10,6 +10,7 @@ from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
 from game.stage_1 import Stage1
+from game.stage_background import StageBackground
 from game.turret import TurretStage
 from game.world import World
 
@@ -21,7 +22,8 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 app = App()
-screen = Screen(1920, 1080, '!!!')
+# screen = Screen(1920, 1080, '!!!')
+screen = Screen(960, 540, '!!!')
 screen.print_info()
 
 world = World(bounds=screen.viewport)
@@ -33,7 +35,7 @@ args = parser.parse_args()
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
 else:
-    world.set_stage(Stage1(screen.width, screen.height))
+    world.set_stage(StageBackground(screen.width, screen.height))
 
 controllerManager = GameControllerManager()
 controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
@@ -61,7 +63,7 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
-    # world.update(delta_ms / GAME_FRAME_MS)
+    world.update(delta_ms / GAME_FRAME_MS)
 
     physicsWorld.Step(timeStep, vel_iters, pos_iters)
     physicsWorld.ClearForces()
