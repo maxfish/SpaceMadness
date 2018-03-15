@@ -9,6 +9,7 @@ from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
+from game.trail import Trail
 from physics.physics_ship import PhysicsShip
 
 
@@ -57,6 +58,7 @@ class Ship(Entity):
             Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
             Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
+        self.trail = Trail(self, offset_x=0, offset_y=0)
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -82,7 +84,8 @@ class Ship(Entity):
                 self.shieldController = c
 
         if self.pilotController:
-            pass
+            trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
+            self.trail.update(game_speed, trigger_intensity)
 
         if self.shieldController:
             shield0_input_values = (
@@ -135,6 +138,7 @@ class Ship(Entity):
     def draw(self, screen):
         for shield in self.shields:
             shield.draw(screen)
+        self.trail.draw(screen)
         self._quad.draw(screen)
         for turret in self.turrets:
             turret.draw(screen)
