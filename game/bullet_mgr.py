@@ -24,6 +24,7 @@ class BulletManager(Entity):
 
     def deactivate(self, bullet):
         if bullet in self.active_bullets:
+            bullet._active = False
             self.active_bullets.remove(bullet)
             self.bullets_pool.append(bullet)
 

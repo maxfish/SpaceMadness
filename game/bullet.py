@@ -55,9 +55,7 @@ class Bullet(Entity):
         self._quad.pos = self._position
 
     def collide(self, other, began):
-        pass
-        # if other object was enemy, implode
-        # self.bullet_mgr.deactivate()
+        self.bullet_mgr.deactivate()
 
 class BulletStage(Stage):
     def __init__(self, width, height, bullet_mgr):
