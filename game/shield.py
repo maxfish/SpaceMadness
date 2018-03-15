@@ -11,8 +11,8 @@ class Shield(Entity):
         self._ship = ship
         self._position = self._ship.position
         self._angle = 0
-        self._rad1 = ship._dim.x
-        self._rad2 = ship._dim.y / 2
+        self._rad1 = ship._dim.x / 1.8
+        self._rad2 = ship._dim.y / 2.9
 
         self._quad = QuadDrawable(0, 0, 127, 127)
         self._quad.pos = self._position
