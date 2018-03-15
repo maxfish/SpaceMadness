@@ -27,7 +27,7 @@ class Ship(Entity):
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
         self._angle = 0
-        self._physicsShip = PhysicShip(world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE)
+        self._physicsShip = PhysicShip(self, world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE)
 
         # Used by ship components to scale themselves
         self.scale = SCALE
