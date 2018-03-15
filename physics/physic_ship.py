@@ -36,6 +36,10 @@ class PhysicShip:
         intensity = controller.get_axis(GameController.AXIS_LEFT_X) * 3850
         self.body.ApplyTorque(intensity, True)
 
+        if controller.is_button_down(GameController.BUTTON_A):
+            intensity = 300
+            self.body.ApplyLinearImpulse(dir * intensity, pos, True)
+
         # current_normal = self.body.GetWorldVector((1, 0))
         # forward_velocity = current_normal.dot(self.body.linearVelocity) * current_normal
         # pos = self.body.GetWorldPoint(localPoint=(0.0, 0.0))
