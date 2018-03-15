@@ -1,3 +1,6 @@
+from game.shield import Shield
+from game.ship import Ship
+
 INTRO_DEBUG = 0
 DEBUG = 0
 
@@ -19,7 +22,16 @@ class World:
         self.window_y = 0
 
         self.stage = None
-        self.players = set()
+
+        ship = Ship(self, 1000, 500)
+        shield = Shield(ship)
+
+        self.players = [
+            ship
+        ]
+        self.entities = [
+            ship, shield
+        ]
 
         # self.item_frames = FramesStore()
         # self.item_frames.load('resources/sprites/items', 'sprites.json')
@@ -41,11 +53,15 @@ class World:
 
         # for i in self.items:
         #     i.update(game_speed)
+        for e in self.entities:
+            e.update(game_speed)
 
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
 
         # TODO: Draw objects
+        for e in self.entities:
+            e.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
 
