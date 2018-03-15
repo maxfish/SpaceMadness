@@ -25,7 +25,7 @@ class Turret(Entity):
 
         self.turret_state = TurretState()
 
-        self.update(0, 0, 0)
+        self.update(0, 0, 0, False)
 
     def fire(self):
         self.turret_state.fire()
@@ -36,8 +36,13 @@ class Turret(Entity):
     def draw(self, screen):
         self.turret_quad.draw(screen)
 
-    def update(self, game_speed, x, y):
+    def update(self, game_speed, x, y, fire):
         """x and y are the x and y from the controller joystick"""
+        if fire:
+            self.fire()
+        else:
+            self.hold_fire()
+
         self.turret_state.advance_time(
             time_passed_ms=(game_speed * GAME_FRAME_MS),
         )
