@@ -10,18 +10,16 @@ class BulletManager:
         self.bullet_list = []
         self.recycled_bullet_list = []
 
-    def gen_bullet(self, x, y):
+    def gen_bullet(self):
         bullet = None
         if len(self.recycled_bullet_list) == 0:
             bullet = QuadDrawable(0, 0, 255, 255)
-            bullet.pos = Vector2(x, y)
             bullet.texture = Texture.load_from_file(
                 'resources/images/bullet.png')
             self.bullet_list.append(bullet)
             return bullet
         else:
             tmp_bullet = self.recycled_bullet_list.pop()
-            tmp_bullet.pos = Vector2(x, y)
             self.bullet_list.append(tmp_bullet)
             return tmp_bullet
 
