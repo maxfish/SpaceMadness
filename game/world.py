@@ -33,7 +33,7 @@ class World:
         if len(controllers) > 1:
             turretController = controllers[1]
         if len(controllers) > 2:
-            pilotController   = controllers[2]
+            pilotController = controllers[2]
 
         ship = Ship(
             self,
@@ -44,9 +44,7 @@ class World:
 
         ship2 = Ship(
             self,
-            pilotController=None,
-            shieldController=None,
-            turretController=None,
+            controllers=[],
             x=500,
             y=300,
         )

@@ -11,24 +11,23 @@ from game.shield import Shield
 from game.turret import Turret
 from physics.physic_ship import PhysicShip
 
-SCALE=0.67
-
+SCALE = 0.67
 
 
 class Ship(Entity):
     def __init__(
-        self,
-        world,
-        controllers,
-        x,
-        y,
-        z=0,
+            self,
+            world,
+            controllers,
+            x,
+            y,
+            z=0,
     ):
         super().__init__(world, x, y, z)
 
-        self._dim = Vector2(130*SCALE, 344*SCALE)
+        self._dim = Vector2(130 * SCALE, 344 * SCALE)
         self._angle = 0
-        self._physicsShip = PhysicShip(world.physicsWorld, x/PHYSICS_SCALE, y/PHYSICS_SCALE)
+        self._physicsShip = PhysicShip(world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE)
 
         # Used by ship components to scale themselves
         self.scale = SCALE
@@ -48,8 +47,8 @@ class Ship(Entity):
             Shield(self),
         ]
         self.turrets = [
-            Turret(self, offset_x=-59*SCALE, offset_y=2*SCALE),
-            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
+            Turret(self, offset_x=-59 * SCALE, offset_y=2 * SCALE),
+            Turret(self, offset_x=59 * SCALE, offset_y=2 * SCALE),
         ]
 
     def update(self, game_speed):
@@ -92,11 +91,11 @@ class Ship(Entity):
             self.shields[1].update(game_speed, shield1_input_values)
 
         if self.turretController:
-            turret_left_x, turret_left_y =  (
+            turret_left_x, turret_left_y = (
                 self.turretController.get_axis(0) or 0.0,
                 self.turretController.get_axis(1) or 0.0,
             )
-            turret_right_x, turret_right_y =  (
+            turret_right_x, turret_right_y = (
                 self.turretController.get_axis(2) or 0.0,
                 self.turretController.get_axis(3) or 0.0,
             )
