@@ -31,7 +31,7 @@ args = parser.parse_args()
 app = App()
 
 #screen = Screen(args.width, args.height, 'Space Madness')
-screen = Screen(600, 600, 'Space Madness')
+screen = Screen(1500, 900, 'Space Madness')
 screen.print_info()
 
 controllerManager = GameControllerManager()

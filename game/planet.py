@@ -2,11 +2,7 @@ from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.shader import Shader
 
-from game.entity import Entity
 from mgl2d.math.vector2 import Vector2
-from os import listdir
-from os.path import isfile, join
-
 
 import random
 
@@ -17,14 +13,12 @@ class Planet:
         start_x = width/2 + random.randint(-width/2, width/2)
         start_y = height/2 + random.randint(-height/2, height/2)
         planet_number = random.randint(0, len(planet_list))
-
         size = calculate_size(width, height)
-
         self.pos = Vector2(start_x, start_y)
         self.speed_x = random.randint(-100, 100)
         self.speed_y = random.randint(-100, 100)
-        self.quad = QuadDrawable(self.pos.x, self.pos.y, size, size)
-        self.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_number - 1])
+
+        create_planet_quad(self, size, planet_list, planet_number)
 
     def update(self, screen):
         self.pos.x += 0.00005*self.speed_x
@@ -47,3 +41,9 @@ def calculate_size(width, height):
     else:
         size = random.randint(scale * 0.25, scale * 0.35)
     return size
+
+
+def create_planet_quad(planet, size, planet_list, planet_picked):
+    planet.quad = QuadDrawable(planet.pos.x, planet.pos.y, size, size)
+    planet.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_picked - 1])
+    planet.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/base.frag')
