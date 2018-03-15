@@ -33,18 +33,14 @@ class Shield(Entity):
 
         if mag > 0.001:
             theta = math.degrees(math.atan2(y, x))
-            self._angle_speed = min(self._angle_speed * 1.05, 4)
+            self._angle_speed = min(self._angle_speed * 1.01, 6)
         else:
             return self._angle
 
-        angle = self._angle
-
-        delta = theta - angle
+        delta = theta - self._angle
         delta = (delta + 180) % 360 - 180
-
-        step = delta * self._angle_speed / 15.0
-
-        return angle + step
+        step = delta * self._angle_speed / 50.0
+        return self._angle + step
 
     def update(self, game_speed, input_values):
         self._angle = self.calc_angle(input_values)
