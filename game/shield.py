@@ -1,13 +1,21 @@
 import math
 from game.entity import Entity
+from game.laser import Laser
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
+from game.shield_state import ShieldState
 
 
 SHIP_SCALE = Vector2(109, 156)
 
 INERTIA = True
+
+
+# copied from game.py
+GAME_FPS = 50
+GAME_FRAME_MS = 1000 / GAME_FPS
+
 
 class Shield(Entity):
     def __init__(self, ship):
@@ -29,8 +37,8 @@ class Shield(Entity):
         self._quad.anchor = Vector2(109/2, 156/2)
 
         self._charge = 0
-
-        self.update(0, (0,0,0))
+        self.shield_state = ShieldState(self)
+        self.update(0, (0.0, 0.0, 0.0))
 
 
     def calc_angle(self, x, y):
@@ -53,14 +61,18 @@ class Shield(Entity):
 
     def update(self, game_speed, input_values):
         x, y, trigger = input_values
-
-        if (x, y) == (0.0, 0.0):
+        if input_values == (0.0, 0.0, 0.0):
             # If the shields aren't being used, don't display them
             self._quad.scale = Vector2(0, 0)
         else:
             self._quad.scale = SHIP_SCALE
             self.update_angle_position(x, y)
             self.update_charge(trigger)
+
+        self.shield_state.advance_time(
+            time_passed_ms=(game_speed * GAME_FRAME_MS),
+        )
+
 
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
@@ -91,15 +103,21 @@ class Shield(Entity):
             self._charge -= 0.4
             if self._charge < 0:
                 self._charge = 0
+
         if self._charge >= 50:
             self._charge = 0
+            self._world.entities.append(
+                Laser(self.position.x, self.position.y, 1000, self._angle),
+            )
+
         self._quad.scale = Vector2(
             SHIP_SCALE.x * (1.0 + 2*self._charge/55.0),
             SHIP_SCALE.y * (1.0 - self._charge/55.0),
         )
 
     def draw(self, screen):
-        self._quad.draw(screen)
+        if self.shield_state.is_healthy:
+            self._quad.draw(screen)
 
     def collide(self, other, began):
-        pass
+        self.shield_state.damage(energy=10.0)
