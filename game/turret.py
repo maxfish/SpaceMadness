@@ -51,7 +51,11 @@ class Turret(Entity):
         angle = math.radians(self.turret_quad.angle)
         z_sin = math.sin(angle)
         z_cos = math.cos(angle)
-        direction = Vector2(-z_cos, z_sin)
+        direction = Vector2(z_sin, -z_cos)
+
+        muzzle_pos = Vector2(x, y) + (direction * 25)
+        x = muzzle_pos.x
+        y = muzzle_pos.y
 
         bullet.initialize(x, y, direction, BULLET_VELOCITY, id(self._ship))
         print("Angle={0}".format(angle))
