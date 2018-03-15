@@ -136,3 +136,6 @@ class Ship(Entity):
         self._quad.draw(screen)
         for turret in self.turrets:
             turret.draw(screen)
+
+    def collide(self, other, began):
+        pass

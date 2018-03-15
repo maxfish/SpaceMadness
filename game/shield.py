@@ -28,7 +28,6 @@ class Shield(Entity):
 
         self.update(0, (0,0))
 
-
     def calc_angle(self, input_values):
         return math.degrees(math.atan2(input_values[1], input_values[0]))
 
@@ -38,7 +37,7 @@ class Shield(Entity):
             self._quad.scale = Vector2(0, 0)
         else:
             self._quad.scale = SHIP_SCALE
-        
+
         self._angle = self.calc_angle(input_values)
 
         pos = Vector2(
@@ -61,3 +60,6 @@ class Shield(Entity):
 
     def draw(self, screen):
         self._quad.draw(screen)
+
+    def collide(self, other, began):
+        pass

@@ -52,6 +52,9 @@ class Bullet(Entity):
         self._position += Vector2(0, -1)
         self._quad.pos = self._position
 
+    def collide(self, other, began):
+        pass
+
 
 class BulletStage(Stage):
     def __init__(self, width, height, bullet_mgr):
