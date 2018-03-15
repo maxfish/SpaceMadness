@@ -1,5 +1,5 @@
 from game.shield import Shield
-from game.entity import Entity
+from game.ship import Ship
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -22,8 +22,15 @@ class World:
         self.window_y = 0
 
         self.stage = None
+
+        ship = Ship(self, 1000, 500)
+        shield = Shield(ship)
+
         self.players = [
-            Shield(Entity(self, 1000, 500)),
+            ship
+        ]
+        self.entities = [
+            ship, shield
         ]
 
         # self.item_frames = FramesStore()
@@ -46,15 +53,15 @@ class World:
 
         # for i in self.items:
         #     i.update(game_speed)
-        for player in self.players:
-            player.update(game_speed)
+        for e in self.entities:
+            e.update(game_speed)
 
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
 
         # TODO: Draw objects
-        for player in self.players:
-            player.draw(screen)
+        for e in self.entities:
+            e.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
 
