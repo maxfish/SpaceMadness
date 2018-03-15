@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import logging
 
+import sdl2
 from mgl2d.app import App
 from mgl2d.graphics.post_processing_step import PostProcessingStep
 from mgl2d.graphics.screen import Screen
@@ -22,7 +23,7 @@ screen = Screen(1920, 1080, '!!!')
 screen.print_info()
 
 world = World(bounds=screen.viewport)
-world.set_stage(Stage1())
+world.set_stage(Stage1(screen.width, screen.height))
 
 
 controllerManager = GameControllerManager()
@@ -41,7 +42,7 @@ groundBody = physicsWorld.CreateStaticBody(position=(0, -10),
 
 # Create a dynamic body at (0, 4)
 body = physicsWorld.CreateDynamicBody(position=(0, 4))
-
+# sdl2.ext.fill(screen, 0)
 # And add a box fixture onto it (with a nonzero density, so it will move)
 box = body.CreatePolygonFixture(box=(1, 1), density=1, friction=0.3)
 
