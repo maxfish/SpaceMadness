@@ -20,6 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
+PHYSICS_SCALE = 10
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
@@ -71,15 +72,13 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
-    world.update(delta_ms / GAME_FRAME_MS)
-
     physicsWorld.Step(timeStep, vel_iters, pos_iters)
     physicsWorld.ClearForces()
-
+    world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:
         p.handle_input()
 
-    world.update(0)
+    # world.update(0)
 
 
 app.run(screen, draw_frame, update_frame, fps=GAME_FPS)
