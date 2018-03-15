@@ -8,5 +8,5 @@ class PhysicsGun:
             angularDamping=4,
             linearDamping=0.1,
             shapes=b2PolygonShape(box=(w, l)),
-            userData={'type': 'gun', obj: gun},
+            userData={'type': 'gun', 'obj': gun, 'owner': id(gun._ship)},
         )

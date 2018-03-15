@@ -6,20 +6,21 @@ class BulletManager(Entity):
     def __init__(self, gWorld, pWorld):
         self.gWorld = gWorld
         self.pWorld = pWorld
-        self.bullets_pool = [self._create_bullet()] * 100
+        self.bullets_pool = [self._create_bullet(None)] * 100
         self.active_bullets = []
 
-    def _create_bullet(self):
-        bullet = Bullet(self, self.gWorld, self.pWorld)
+    def _create_bullet(self, owner):
+        bullet = Bullet(self, self.gWorld, self.pWorld, owner)
         return bullet
 
-    def gen_bullet(self):
+    def gen_bullet(self, owner):
         if len(self.bullets_pool) == 0:
-            bullet = self._create_bullet()
+            bullet = self._create_bullet(owner)
             self.active_bullets.append(bullet)
         else:
             bullet = self.bullets_pool.pop()
             self.active_bullets.append(bullet)
+
         return bullet
 
     def deactivate(self, bullet):

@@ -42,7 +42,8 @@ class Turret(Entity):
     def fire_bullet(self):
         # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
         print("Bullet fired from: {0} {1}".format(self.turret_quad.pos.x, self.turret_quad.pos.y))
-        bullet = self._bullet_mgr.gen_bullet()
+        print("Bullet owner: {0}".format(id(self._ship)))
+        bullet = self._bullet_mgr.gen_bullet(id(self._ship))
         x = self.turret_quad.pos.x
         y = self.turret_quad.pos.y
         angle = math.radians(self.turret_quad.angle)
@@ -55,7 +56,7 @@ class Turret(Entity):
         # direction = Vector2(0, -1)
         # direction = Vector2(math.cos(math.radians(angle)), - math.sin(math.radians(angle)))
         # TODO: tune the velocity
-        bullet.initialize(x, y, direction, BULLET_VELOCITY)
+        bullet.initialize(x, y, direction, BULLET_VELOCITY, id(self._ship))
         print("Angle={0}".format(angle))
 
     def hold_fire(self):

@@ -26,7 +26,7 @@ class PhysicsShip:
             angularDamping=4,
             linearDamping=0.1,
             shapeFixture=b2FixtureDef(density=2.0),
-            userData={'type': 'ship', 'obj': ship},
+            userData={'type': 'ship', 'obj': ship, 'owner': id(ship)},
         )
         #
         # anchor = (w / 2, h / 2)
