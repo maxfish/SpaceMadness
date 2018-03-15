@@ -45,8 +45,8 @@ class Ship(Entity):
             Shield(self),
         ]
         self.turrets = [
-            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
             Turret(self, offset_x=-59*SCALE, offset_y=2*SCALE),
+            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
 
     def update(self, game_speed):
@@ -69,12 +69,16 @@ class Ship(Entity):
             self.shields[1].update(game_speed, shield1_input_values)
 
         if self.turretController:
-            turret_x, turret_y =  (
+            turret_left_x, turret_left_y =  (
                 self.turretController.get_axis(0) or 0.0,
                 self.turretController.get_axis(1) or 0.0,
             )
-            self.turrets[0].update(game_speed, turret_x, turret_y)
-            self.turrets[1].update(game_speed, turret_x, turret_y)
+            turret_right_x, turret_right_y =  (
+                self.turretController.get_axis(2) or 0.0,
+                self.turretController.get_axis(3) or 0.0,
+            )
+            self.turrets[0].update(game_speed, turret_left_x, turret_left_y)
+            self.turrets[1].update(game_speed, turret_right_x, turret_right_y)
 
         self._quad.pos = self._position
         self._quad.angle = self._angle

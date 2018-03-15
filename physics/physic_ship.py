@@ -31,5 +31,11 @@ class PhysicShip:
         intensity = controller.get_axis(GameController.AXIS_TRIGGER_RIGHT) * 200
         self.body.ApplyForce(dir * intensity, pos, True)
 
-        intensity = controller.get_axis(GameController.AXIS_LEFT_X) * 300
+        intensity = controller.get_axis(GameController.AXIS_LEFT_X) * 350
         self.body.ApplyTorque(-intensity, True)
+
+        current_normal = self.body.GetWorldVector((1, 0))
+        forward_velocity = current_normal.dot(self.body.linearVelocity) * current_normal
+        pos = self.body.GetWorldPoint(localPoint=(0.0, 0.0))
+        intensity = forward_velocity * 5
+        self.body.ApplyForce(-intensity, pos, True)
