@@ -45,11 +45,12 @@ class Bullet(Entity):
 
 
 class BulletStage(Stage):
-    def __init__(self, width, height):
+    def __init__(self, width, height, bullet_mgr):
         super().__init__(width, height)
         self.quad = QuadDrawable(0, 0, width, height)
         self.quad.texture = Texture.load_from_file('resources/images/bg.png')
-        self.bullet = Bullet(None)
+        self.bullet_mgr = bullet_mgr
+        self.bullet = self.bullet_mgr.gen_bullet()
         self.bullet.initialize(0, 0, 0, 0)
 
     def get_width(self):
