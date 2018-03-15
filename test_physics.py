@@ -7,6 +7,8 @@ import sdl2
 import sdl2.ext
 from Box2D import (b2PolygonShape, b2CircleShape)
 
+from physics.physic_ship import PhysicShip
+
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
@@ -29,46 +31,7 @@ def draw_rects(surface, width, height):
 
 
 physicsWorld = b2World(gravity=(0, 0))
-
-
-# body_def = b2BodyDef()
-# body_def.position = (0, -10)
-w = 20
-h = 50
-shape = b2PolygonShape(vertices=[
-    (0, h * 0.5),
-    (-w * 0.5, h * 0.5 - w * 0.5),
-    (-w * 0.5, -h * 0.5 + w * 0.3),
-    (-w * 0.25, -h * 0.5),
-    (w * 0.25, -h * 0.5),
-    (w * 0.5, -h * 0.5 + w * 0.3),
-    (w * 0.5, h * 0.5 - w * 0.5),
-])
-# body = physicsWorld.CreateBody(body_def, position=(0, 4))
-# shapeFixture = b2FixtureDef(shape=shape)
-# body.CreateFixture(groundBoxFixture)
-
-body = physicsWorld.CreateStaticBody(
-    position=(50,-10),
-    shapes=shape,
-    )
-
-# box = body.CreatePolygonFixture(box=(40, 40), density=1, friction=0.3)
-# box = body.CreatePolygonFixture(box=(40, 40), density=1, friction=0.3)
-# body = physicsWorld.CreateDynamicBody(position=(0, 4))
-
-
-#     b2PolygonShape *polygonShape = new b2PolygonShape();
-#     b2Vec2 points[7];
-#     points[0] = b2Vec2(0, h * 0.5f);
-#     points[1] = b2Vec2(-w * 0.5f, h * 0.5f - w * 0.5f);
-#     points[2] = b2Vec2(-w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[3] = b2Vec2(-w * 0.25f, -h * 0.5f);
-#     points[4] = b2Vec2(w * 0.25f, -h * 0.5f);
-#     points[5] = b2Vec2(w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[6] = b2Vec2(w * 0.5f, h * 0.5f - w * 0.5f);
-#     polygonShape->Set(points, 7);
-
+pShip = PhysicShip(physicsWorld, 10, 10)
 
 timeStep = 1.0 / GAME_FPS
 vel_iters, pos_iters = 6, 2
@@ -80,24 +43,16 @@ window.show()
 windowsurface = window.get_surface()
 
 def draw_polygon(screen, body, polygon):
-    vertices = [(body.transform * v) * 10 for v in polygon.vertices]
+    vertices = [(body.transform * v) * 5 for v in polygon.vertices]
     vertices = [(v[0], 500 - v[1]) for v in vertices]
     for i in range(0, len(vertices)):
         draw_line(screen, int(vertices[i][0]), int(vertices[i][1]), int(vertices[(i+1)%len(vertices)][0]), int(vertices[(i+1)%len(vertices)][1]))
-    # .draw.polygon(screen, colors[body.type], vertices)
 
 
 # b2PolygonShape.draw = my_draw_polygon
 
 
 def run():
-
-
-    # draw_lines(windowsurface, 1920, 1080)
-    # physicsWorld.DrawDebugData()
-    # shape = box.GetShape()
-    # v = shape.m_vertices
-
     running = True
     while running:
         events = sdl2.ext.get_events()
@@ -106,8 +61,8 @@ def run():
                 running = False
                 break
 
-        for fixture in body.fixtures:
-            draw_polygon(windowsurface, body, fixture.shape)
+        for fixture in pShip.body.fixtures:
+            draw_polygon(windowsurface, pShip.body, fixture.shape)
         window.refresh()
     sdl2.ext.quit()
     return 0

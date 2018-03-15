@@ -1,13 +1,21 @@
+from Box2D import b2PolygonShape
+
 
 class PhysicShip:
-    def __init__(self):
-#     b2PolygonShape *polygonShape = new b2PolygonShape();
-#     b2Vec2 points[7];
-#     points[0] = b2Vec2(0, h * 0.5f);
-#     points[1] = b2Vec2(-w * 0.5f, h * 0.5f - w * 0.5f);
-#     points[2] = b2Vec2(-w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[3] = b2Vec2(-w * 0.25f, -h * 0.5f);
-#     points[4] = b2Vec2(w * 0.25f, -h * 0.5f);
-#     points[5] = b2Vec2(w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[6] = b2Vec2(w * 0.5f, h * 0.5f - w * 0.5f);
-#     polygonShape->Set(points, 7);
+    def __init__(self, physicsWorld, x, y):
+        w = 20
+        h = 50
+        self.shape = b2PolygonShape(vertices=[
+            (0, h * 0.5),
+            (-w * 0.5, h * 0.5 - w * 0.5),
+            (-w * 0.5, -h * 0.5 + w * 0.3),
+            (-w * 0.25, -h * 0.5),
+            (w * 0.25, -h * 0.5),
+            (w * 0.5, -h * 0.5 + w * 0.3),
+            (w * 0.5, h * 0.5 - w * 0.5),
+        ])
+
+        self.body = physicsWorld.CreateDynamicBody(
+            position=(x, y),
+            shapes=self.shape,
+        )
