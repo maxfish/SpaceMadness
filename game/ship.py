@@ -71,6 +71,10 @@ class Ship(Entity):
         self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
         self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
 
+        self._healthbar = QuadDrawable(0, 0, self._dim.x, 5)
+        self._healthbar.pos = self._position
+        self._healthbar.texture = Texture.load_from_file('resources/images/health.png')
+
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
         for c in self.controllers:
@@ -154,6 +158,12 @@ class Ship(Entity):
             time_passed_ms=(game_speed * GAME_FRAME_MS),
         )
 
+        self._healthbar.scale = Vector2(
+            self._dim.x * self.ship_state.cur_energy / 100.0,
+            self._healthbar.scale.y,
+        )
+        self._healthbar.pos = self._position + Vector2(-self._dim.x/2, -self._dim.y/3)
+
     def draw(self, screen):
         if self.ship_state.is_healthy:
             for shield in self.shields:
@@ -169,6 +179,7 @@ class Ship(Entity):
 
             for turret in self.turrets:
                 turret.draw(screen)
+            self._healthbar.draw(screen)
 
     def collide(self, other, began):
         self.ship_state.damage(energy=10.0)
