@@ -1,5 +1,6 @@
 import math
 
+from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
@@ -10,6 +11,7 @@ from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
 from game.trail import Trail
+from game.side_trail import SideTrail
 from physics.physics_ship import PhysicsShip
 from game.ship_state import ShipState
 
@@ -50,10 +52,11 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.anchor = self._dim.__div__(2.0)
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
+        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
         self.controllers = controllers
         self.shieldController = None
-        self.pilotController = None
+        self.pilotController = controllers[0] if len(controllers) else None
         self.turretController = None
 
         self.shields = [
@@ -64,8 +67,15 @@ class Ship(Entity):
             Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
             Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
-        self.trail = Trail(self, offset_x=0, offset_y=0)
         self.ship_state = ShipState(self)
+
+        self.trail = Trail(self, 0, 0)
+        self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
+        self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
+
+        self._healthbar = QuadDrawable(0, 0, self._dim.x, 5)
+        self._healthbar.pos = self._position
+        self._healthbar.texture = Texture.load_from_file('resources/images/health.png')
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -94,6 +104,10 @@ class Ship(Entity):
             trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
             self.trail.update(game_speed, trigger_intensity)
 
+            axis_intensity = self.pilotController.get_axis(GameController.AXIS_LEFT_X) or 0.0
+            self.side_trail_left.update(game_speed, axis_intensity)
+            self.side_trail_right.update(game_speed, -axis_intensity)
+
         if self.shieldController:
             shield0_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
@@ -114,12 +128,12 @@ class Ship(Entity):
 
         if self.turretController:
             turret_left_x, turret_left_y = (
-                self.turretController.get_axis(0) or 0.0,
-                self.turretController.get_axis(1) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
             )
             turret_right_x, turret_right_y = (
-                self.turretController.get_axis(2) or 0.0,
-                self.turretController.get_axis(3) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_RIGHT_X) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
             )
 
             turret_left_fire = self.turretController.is_button_down(
@@ -142,18 +156,30 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.angle = self._angle
 
-        self.ship_state.advance_time(
-            time_passed_ms=(game_speed * GAME_FRAME_MS),
+        self.ship_state.update(game_speed)
+
+        self._healthbar.scale = Vector2(
+            self._dim.x * self.ship_state.energy / ShipState.MAX_ENERGY,
+            self._healthbar.scale.y,
         )
+        self._healthbar.pos = self._position + Vector2(-self._dim.x/2, -self._dim.y/3)
 
     def draw(self, screen):
-        if self.ship_state.is_healthy:
+        if self.ship_state.state == ShipState.LIVE:
             for shield in self.shields:
                 shield.draw(screen)
+
             self.trail.draw(screen)
+            self.side_trail_left.draw(screen)
+            self.side_trail_right.draw(screen)
+
+            # Important: this has to be drawn AFTER the trails (to be positioned on
+            # top of them)
             self._quad.draw(screen)
+
             for turret in self.turrets:
                 turret.draw(screen)
+            self._healthbar.draw(screen)
 
     def collide(self, other, began):
         self.ship_state.damage(energy=10.0)

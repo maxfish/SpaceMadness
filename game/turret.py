@@ -16,7 +16,8 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 
-BULLET_VELOCITY = 1
+BULLET_VELOCITY = 80
+
 
 class Turret(Entity):
 
@@ -33,7 +34,8 @@ class Turret(Entity):
         self.update(0, 0, 0, False)
 
     def get_angle(self, x, y):
-        return math.degrees(math.atan2(y, x))
+        # Rotate 90 degrees more to compensate the resource being rotated...
+        return math.degrees(math.atan2(y, x)) + 90
 
     def fire(self):
         self.turret_state.fire()
@@ -41,20 +43,17 @@ class Turret(Entity):
     def fire_bullet(self):
         # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
         print("Bullet fired from: {0} {1}".format(self.turret_quad.pos.x, self.turret_quad.pos.y))
-        bullet = self._bullet_mgr.gen_bullet()
+        print("Bullet owner: {0}".format(id(self._ship)))
+        bullet = self._bullet_mgr.gen_bullet(id(self._ship))
         x = self.turret_quad.pos.x
         y = self.turret_quad.pos.y
+
         angle = math.radians(self.turret_quad.angle)
         z_sin = math.sin(angle)
         z_cos = math.cos(angle)
-        rot_mat = np.array(((z_cos, -z_sin), (z_sin, z_cos))).reshape(2, 2)
-        v = np.array([0, -1]).reshape(2, 1)
-        dir_vec = rot_mat.dot(v)
-        direction = Vector2(dir_vec[0], dir_vec[1])
-        # direction = Vector2(0, -1)
-        # direction = Vector2(math.cos(math.radians(angle)), - math.sin(math.radians(angle)))
-        # TODO: tune the velocity
-        bullet.initialize(x, y, direction, BULLET_VELOCITY)
+        direction = Vector2(-z_cos, z_sin)
+
+        bullet.initialize(x, y, direction, BULLET_VELOCITY, id(self._ship))
         print("Angle={0}".format(angle))
 
     def hold_fire(self):
@@ -75,7 +74,11 @@ class Turret(Entity):
         )
 
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
-        angle = self.get_angle(x, y)
+        if (x, y) == (0.0, 0.0):
+            # Align guns with the ship if they're inactive
+            angle = self._ship._quad.angle
+        else:
+            angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
 
     def collide(self, other, began):

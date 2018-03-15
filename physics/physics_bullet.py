@@ -1,10 +1,12 @@
-from Box2D import b2PolygonShape
+from Box2D import b2PolygonShape, b2CircleShape
 
 
 class PhysicsBullet:
-    def __init__(self, bullet, physics_world, x, y, w, l):
+    def __init__(self, bullet, physics_world, x, y, r, owner):
         self.body = physics_world.CreateDynamicBody(
             position=(x, y),
-            shapes=b2PolygonShape(box=(w, l)),
-            userData={'type': 'bullet', 'obj': bullet},
+            shapes=b2CircleShape(radius=r),
+            angularDamping=0,
+            linearDamping=0,
+            userData={'type': 'bullet', 'obj': bullet, 'owner': owner},
         )

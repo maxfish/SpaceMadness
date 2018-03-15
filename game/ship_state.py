@@ -1,77 +1,31 @@
-from abc import ABC
+class ShipState:
+    LIVE = 1
+    DYING = 2
+    DEAD = 3
 
-
-class ShipState():
-
-    max_energy = 100.0
+    MAX_ENERGY = 100.0
 
     def __init__(self, ship):
         self.ship = ship
-        self._current_time_ms = 0
-        self._state = ShipHealthy(self)
+        self.energy = self.MAX_ENERGY
+        self.time = 0
+        self.enter(self.LIVE)
 
-        self.cur_energy = self.max_energy
+    def update(self, game_speed):
+        self.time += game_speed
 
-    def _set_state(self, state=None):
-        if state:
-            self._state = state
-        return self._state
-
-    def damage(self, energy):
-        self._set_state(
-            self._state.damage(energy),
-        )
-
-    def advance_time(self, time_passed_ms):
-        self._current_time_ms += time_passed_ms
-        self._set_state(
-            self._state.advanced_time(time_passed_ms),
-        )
-
-    @property
-    def is_healthy(self):
-        return isinstance(self._state, ShipHealthy)
-
-
-class _ShipState(ABC):
-    """State Machine interface"""
-
-    def __init__(self, sm):
-        self.sm = sm
-        self._state_init_time = self._current_time_ms
-        self._entered()
+        if self.state == self.DYING:
+            if self.state_time + 1 < self.time:
+                self.enter(self.DEAD)
 
     def damage(self, energy):
-        return self
+        self.energy -= energy
+        print(self.energy)
 
-    def advanced_time(self, time_passed_ms):
-        return self
+        if self.energy <= 0:
+            self.energy = 0
+            self.enter(self.DYING)
 
-    def _entered(self):
-        print(self.__class__.__name__)
-
-    @property
-    def _current_time_ms(self):
-        return self.sm._current_time_ms
-
-    @property
-    def _time_in_state(self):
-        return self._time_since(self._state_init_time)
-
-    def _time_since(self, past_time_ms):
-        return self._current_time_ms - past_time_ms
-
-
-class ShipHealthy(_ShipState):
-
-    def damage(self, energy):
-        self.sm.cur_energy = max(
-            0,
-            self.sm.cur_energy - energy
-        )
-        if self.sm.cur_energy == 0:
-            return ShipDestroyed(self.sm)
-
-
-class ShipDestroyed(_ShipState):
-    pass
+    def enter(self, state):
+        self.state = state
+        self.state_time = self.time
