@@ -22,7 +22,7 @@ class World:
 
         self.stage = None
 
-        ship = Ship(self, None, controllers[0], 1000, 500)
+        ship = Ship(self, None, controllers[0], 200, 300)
 
         self.players = [
             ship,
