@@ -36,6 +36,7 @@ def draw_rects(surface, width, height):
 
 physicsWorld = b2World(gravity=(0, 0))
 pShip = PhysicShip(physicsWorld, 10, 30)
+pShip2 = PhysicShip(physicsWorld, 80, 80)
 
 timeStep = 1.0 / GAME_FPS
 vel_iters, pos_iters = 6, 2
@@ -55,7 +56,6 @@ def draw_polygon(screen, body, polygon):
                   int(vertices[(i + 1) % len(vertices)][1]))
 
 
-# b2PolygonShape.draw = my_draw_polygon
 controllerManager = GameControllerManager()
 controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
 controller = controllerManager.grab_controller()
@@ -78,21 +78,12 @@ def run():
         pShip.update_forces(controller)
         for fixture in pShip.body.fixtures:
             draw_polygon(windowsurface, pShip.body, fixture.shape)
+        for fixture in pShip2.body.fixtures:
+            draw_polygon(windowsurface, pShip2.body, fixture.shape)
         window.refresh()
     sdl2.ext.quit()
     return 0
 
-
-#     b2PolygonShape *polygonShape = new b2PolygonShape();
-#     b2Vec2 points[7];
-#     points[0] = b2Vec2(0, h * 0.5f);
-#     points[1] = b2Vec2(-w * 0.5f, h * 0.5f - w * 0.5f);
-#     points[2] = b2Vec2(-w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[3] = b2Vec2(-w * 0.25f, -h * 0.5f);
-#     points[4] = b2Vec2(w * 0.25f, -h * 0.5f);
-#     points[5] = b2Vec2(w * 0.5f, -h * 0.5f + w * 0.3f);
-#     points[6] = b2Vec2(w * 0.5f, h * 0.5f - w * 0.5f);
-#     polygonShape->Set(points, 7);
 
 
 if __name__ == "__main__":
