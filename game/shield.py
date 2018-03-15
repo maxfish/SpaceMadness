@@ -3,6 +3,7 @@ from game.entity import Entity
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
+from game.shield_state import ShieldState
 
 
 SHIP_SCALE = Vector2(109, 156)
@@ -29,6 +30,8 @@ class Shield(Entity):
         self._quad.anchor = Vector2(109/2, 156/2)
 
         self._charge = 0
+
+        self.shield_state = ShieldState(self)
 
         self.update(0, (0,0,0))
 
@@ -99,7 +102,8 @@ class Shield(Entity):
         )
 
     def draw(self, screen):
-        self._quad.draw(screen)
+        if self.shield_state.is_healthy:
+            self._quad.draw(screen)
 
     def collide(self, other, began):
-        pass
+        self.shield_state.damage(energy=0.5)
