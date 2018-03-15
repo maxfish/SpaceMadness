@@ -13,15 +13,16 @@ from mgl2d.input.game_controller_manager import GameControllerManager
 from config import GAME_FPS, GAME_FRAME_MS
 from game.bullet import BulletStage
 from game.stage_1 import Stage1
+from game.stage_background import StageBackground
 from game.turret import TurretStage
 from game.world import World
+from game.bullet_mgr import BulletManager
 
 from Box2D import (b2PolygonShape, b2World)
 
 from physics.physic_ship import PhysicShip
 
 logging.basicConfig(level=logging.INFO)
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
@@ -30,6 +31,7 @@ parser.add_argument("--height", default=1080, type=int, help="screen height. Def
 args = parser.parse_args()
 
 app = App()
+
 screen = Screen(args.width, args.height, 'Space Madness')
 screen.print_info()
 
@@ -42,14 +44,17 @@ controllers = [
     for n in range(num_joysticks)
 ]
 
+
 world = World(bounds=screen.viewport, controllers=controllers)
+# TODO: pass physics world to the bullet manager
+bullet_mgr = BulletManager(world, None)
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
 elif args.stage == "bullet":
-    world.set_stage(BulletStage(screen.width, screen.height))
+    world.set_stage(BulletStage(screen.width, screen.height, bullet_mgr))
 else:
-    world.set_stage(Stage1(screen.width, screen.height))
+    world.set_stage(StageBackground(screen.width, screen.height))
 
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')

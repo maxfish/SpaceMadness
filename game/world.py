@@ -29,17 +29,15 @@ class World:
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
         if len(controllers) > 0:
-            pilotController = controllers[0]
+            shieldController = controllers[0]
         if len(controllers) > 1:
-            shieldController = controllers[1]
+            turretController = controllers[1]
         if len(controllers) > 2:
-            turretController   = controllers[2]
+            pilotController   = controllers[2]
 
         ship = Ship(
             self,
-            pilotController=pilotController,
-            shieldController=shieldController,
-            turretController=turretController,
+            controllers=controllers[:3],
             x=200,
             y=300,
         )

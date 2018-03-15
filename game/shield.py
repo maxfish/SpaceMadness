@@ -17,6 +17,7 @@ class Shield(Entity):
         self._rad1 = ship._dim.y / 2.9
         self._rad2 = ship._dim.y / 2.9
         self._angle = 0
+        self._angle_speed = 1
 
         self._quad = QuadDrawable(0, 0, 109, 156)
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
@@ -26,8 +27,7 @@ class Shield(Entity):
 
 
     def calc_angle(self, input_values):
-        x, y = input_values
-        return self._angle + x * 0.5
+        return math.degrees(math.atan2(input_values[1], input_values[0]))
 
     def update(self, game_speed, input_values):
         self._angle = self.calc_angle(input_values)

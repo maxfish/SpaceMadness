@@ -14,13 +14,12 @@ from physics.physic_ship import PhysicShip
 SCALE=0.67
 
 
+
 class Ship(Entity):
     def __init__(
         self,
         world,
-        pilotController,
-        shieldController,
-        turretController,
+        controllers,
         x,
         y,
         z=0,
@@ -39,28 +38,47 @@ class Ship(Entity):
         self._quad.anchor = self._dim.__div__(2.0)
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
 
-        self.shieldController = shieldController
-        self.pilotController = pilotController
-        self.turretController = turretController
+        self.controllers = controllers
+        self.shieldController = None
+        self.pilotController = None
+        self.turretController = None
 
         self.shields = [
             Shield(self),
             Shield(self),
         ]
         self.turrets = [
-            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
             Turret(self, offset_x=-59*SCALE, offset_y=2*SCALE),
+            Turret(self, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
+        for c in self.controllers:
+            c.update()
+            if c.is_button_pressed(GameController.BUTTON_DPAD_UP):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.pilotController = c
+            elif c.is_button_pressed(GameController.BUTTON_DPAD_DOWN):
+                if self.pilotController == c:
+                    self.pilotController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.turretController = c
+            elif c.is_button_pressed(GameController.BUTTON_DPAD_LEFT):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.pilotController == c:
+                    self.pilotController = None
+                self.shieldController = c
 
         if self.pilotController:
-            self.pilotController.update()
+            pass
 
         if self.shieldController:
-            self.shieldController.update()
-
             shield0_input_values = (
                 self.shieldController.get_axis(0) or 0.0,
                 self.shieldController.get_axis(1) or 0.0,
@@ -74,12 +92,16 @@ class Ship(Entity):
             self.shields[1].update(game_speed, shield1_input_values)
 
         if self.turretController:
-            turret_x, turret_y =  (
+            turret_left_x, turret_left_y =  (
                 self.turretController.get_axis(0) or 0.0,
                 self.turretController.get_axis(1) or 0.0,
             )
-            self.turrets[0].update(game_speed, turret_x, turret_y)
-            self.turrets[1].update(game_speed, turret_x, turret_y)
+            turret_right_x, turret_right_y =  (
+                self.turretController.get_axis(2) or 0.0,
+                self.turretController.get_axis(3) or 0.0,
+            )
+            self.turrets[0].update(game_speed, turret_left_x, turret_left_y)
+            self.turrets[1].update(game_speed, turret_right_x, turret_right_y)
 
         self._quad.pos = self._physicsShip.body.position * PHYSICS_SCALE
         self._quad.angle = math.degrees(self._physicsShip.body.angle) + 180
