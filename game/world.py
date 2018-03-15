@@ -37,7 +37,7 @@ class World:
             pilotController = controllers[2]
 
         # TODO: ships should be initialised in stage
-        bullet_mgr = BulletManager(self, None)
+        bullet_mgr = BulletManager(self, self.physicsWorld)
 
         ship = Ship(
             self,
