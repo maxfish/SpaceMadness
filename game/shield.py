@@ -54,14 +54,14 @@ class Shield(Entity):
             return math.degrees(math.atan2(y, x))
 
     def update(self, game_speed, input_values):
-        self.update_charge(input_values[2])
-
+        x, y, trigger = input_values
         if input_values == (0.0, 0.0, 0.0):
             # If the shields aren't being used, don't display them
             self._quad.scale = Vector2(0, 0)
         else:
             self._quad.scale = SHIP_SCALE
             self.update_angle_position(x, y)
+            self.update_charge(trigger)
 
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
