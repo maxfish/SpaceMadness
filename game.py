@@ -20,15 +20,18 @@ logging.basicConfig(level=logging.INFO)
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
+parser.add_argument("--width", default=1920, type=int, help="screen width. Defaults to 1920")
+parser.add_argument("--height", default=1080, type=int, help="screen height. Defaults to 1080.")
+args = parser.parse_args()
+
 app = App()
-screen = Screen(1920, 1080, '!!!')
+screen = Screen(args.width, args.height, 'Space Madness')
 screen.print_info()
 
 world = World(bounds=screen.viewport)
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
-args = parser.parse_args()
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
