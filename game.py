@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import argparse
 import logging
 
 import sdl2.ext as sdl2ext
@@ -9,6 +10,7 @@ from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
 from game.stage_1 import Stage1
+from game.turret import TurretStage
 from game.world import World
 
 from Box2D import (b2PolygonShape, b2World)
@@ -23,13 +25,20 @@ screen = Screen(1920, 1080, '!!!')
 screen.print_info()
 
 world = World(bounds=screen.viewport)
-world.set_stage(Stage1(screen.width, screen.height))
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
+args = parser.parse_args()
+
+if args.stage == "turret":
+    world.set_stage(TurretStage(screen.width, screen.height))
+else:
+    world.set_stage(Stage1(screen.width, screen.height))
 
 controllerManager = GameControllerManager()
 controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
 
 controller = controllerManager.grab_controller()
-controller.get_axis(GameController.AXIS_LEFT_X)
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')
 # screen.add_postprocessing_step(ppe)
