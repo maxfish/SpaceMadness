@@ -156,18 +156,16 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.angle = self._angle
 
-        self.ship_state.advance_time(
-            time_passed_ms=(game_speed * GAME_FRAME_MS),
-        )
+        self.ship_state.update(game_speed)
 
         self._healthbar.scale = Vector2(
-            self._dim.x * self.ship_state.cur_energy / 100.0,
+            self._dim.x * self.ship_state.energy / ShipState.MAX_ENERGY,
             self._healthbar.scale.y,
         )
         self._healthbar.pos = self._position + Vector2(-self._dim.x/2, -self._dim.y/3)
 
     def draw(self, screen):
-        if self.ship_state.is_healthy:
+        if self.ship_state.state == ShipState.LIVE:
             for shield in self.shields:
                 shield.draw(screen)
 
