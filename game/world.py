@@ -1,6 +1,7 @@
 from Box2D import b2World
 
 from game.ship import Ship
+from game.bullet_mgr import BulletManager
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -35,8 +36,12 @@ class World:
         if len(controllers) > 2:
             pilotController = controllers[2]
 
+        # TODO: ships should be initialised in stage
+        bullet_mgr = BulletManager(self, None)
+
         ship = Ship(
             self,
+            bullet_mgr,
             controllers=controllers[:3],
             x=200,
             y=300,
@@ -44,6 +49,7 @@ class World:
 
         ship2 = Ship(
             self,
+            bullet_mgr,
             controllers=[],
             x=500,
             y=300,
@@ -56,6 +62,7 @@ class World:
         self.entities = [
             ship,
             ship2,
+            bullet_mgr,
         ]
 
         # self.item_frames = FramesStore()

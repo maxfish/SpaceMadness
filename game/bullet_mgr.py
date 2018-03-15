@@ -1,11 +1,8 @@
 from game.entity import Entity
-from mgl2d.graphics.texture import Texture
-from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.math.vector2 import Vector2
 from .bullet import Bullet
 
 
-class BulletManager:
+class BulletManager(Entity):
     def __init__(self, gWorld, pWorld):
         self.gWorld = gWorld
         self.pWorld = pWorld
@@ -29,4 +26,13 @@ class BulletManager:
         if bullet in self.active_bullets:
             self.active_bullets.remove(bullet)
             self.bullets_pool.append(bullet)
+
+    def draw(self, screen):
+        #print("active bullets: {0}".format(len(self.active_bullets)))
+        for bullet in self.active_bullets:
+            bullet.draw(screen)
+
+    def update(self, screen):
+        for bullet in self.active_bullets:
+            bullet.update(screen)
 

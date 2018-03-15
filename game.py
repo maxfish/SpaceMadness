@@ -46,13 +46,9 @@ controllers = [
 
 
 world = World(bounds=screen.viewport, controllers=controllers)
-# TODO: pass physics world to the bullet manager
-bullet_mgr = BulletManager(world, None)
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
-elif args.stage == "bullet":
-    world.set_stage(BulletStage(screen.width, screen.height, bullet_mgr))
 else:
     world.set_stage(StageBackground(screen.width, screen.height))
 
