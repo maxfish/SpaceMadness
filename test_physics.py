@@ -27,7 +27,7 @@ def draw_line(surface, x1, y1, x2, y2):
 
 def draw_rect(surface, x, y, width, height):
     color = sdl2.ext.Color(255, 0, 0)
-    sdl2.ext.fill(surface, color, ((x-width/2)*10, (y-height/2)*10, width*10, height*10))
+    sdl2.ext.fill(surface, color, ((x - width / 2) * 10, (y - height / 2) * 10, width * 10, height * 10))
 
 
 physicsWorld = b2World(gravity=(0, 0))
@@ -70,14 +70,15 @@ def run():
         sdl2.ext.fill(windowsurface, 0)
         physicsWorld.ClearForces()
         pShip.update_forces(controller)
+
         for fixture in pShip.body.fixtures:
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
+        # draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
+        for fixture in pShip._gun_left.body.fixtures:
+            draw_polygon(windowsurface, pShip._gun_left.body, fixture.shape)
 
-        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
-        # for fixture in pBullet.body.fixtures:
-        #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()
