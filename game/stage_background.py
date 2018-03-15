@@ -24,10 +24,10 @@ class StageBackground(Stage):
 
 
         # Generate the list of planets
-        self.generate_planets(number_of_planets, width, height)
+        #self.generate_planets(number_of_planets, width, height)
         # Generate the list of clouds
-        self.generate_clouds_background(number_of_clouds_background, width, height)
-        self.generate_clouds_foreground(number_of_clouds_foreground, width, height)
+        #self.generate_clouds_background(number_of_clouds_background, width, height)
+        #self.generate_clouds_foreground(number_of_clouds_foreground, width, height)
 
 
         self.hint = QuadDrawable(100, 800, 1000, 200)

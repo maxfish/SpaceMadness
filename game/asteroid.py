@@ -21,29 +21,38 @@ class Asteroid(Entity):
             world,
             x,
             y,
+            speed_x,
+            speed_y,
             z=0,
     ):
         super().__init__(world, x, y, z)
 
         size = 100;
-        self._angle = 0
-        self._physicAsteroid = PhysicsShip(self, world.physicsWorld,
-                                           x / PHYSICS_SCALE,
-                                           y / PHYSICS_SCALE)
+        self._physicAsteroid = PhysicsAsteroid(
+            self,
+            world.physicsWorld,
+            center=Vector2(x/PHYSICS_SCALE, y/PHYSICS_SCALE),
+            radius=5.0,
+            speed_x=speed_x,
+            speed_y=speed_y
+        )
 
         pos = self._physicAsteroid.body.position
-        self._position = Vector2(pos[0], pos[1])
+        self._position = Vector2(pos[0] - 50, pos[1] - 50)
 
-        self._quad = QuadDrawable(0, 0, size, size)
+        self._quad = QuadDrawable(self._position.x, self._position.y, size, size)
         self._quad.texture = Texture.load_from_file('resources/images/asteroides/asteroid_01.png')
 
     def update(self, game_speed):
-        self._physicAsteroid.update_forces(None)
+        self._physicAsteroid.update_forces()
         pos = self._physicAsteroid.body.position * PHYSICS_SCALE
-        self._position = Vector2(pos[0], pos[1])
+        self._position = Vector2(pos[0] - 50, pos[1] - 50)
         self._quad.pos = self._position
         pass
 
     def draw(self, screen):
         self._quad.draw(screen)
+        pass
+
+    def collide(self, other, began):
         pass
