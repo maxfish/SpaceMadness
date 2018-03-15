@@ -5,9 +5,11 @@ from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
 from mgl2d.input.game_controller import GameController
 
+from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.shield import Shield
 from game.turret import Turret
+from physics.physic_ship import PhysicShip
 
 SCALE=0.67
 
@@ -27,6 +29,7 @@ class Ship(Entity):
 
         self._dim = Vector2(130*SCALE, 344*SCALE)
         self._angle = 0
+        self._physicsShip = PhysicShip(world.physicsWorld, x/PHYSICS_SCALE, y/PHYSICS_SCALE)
 
         # Used by ship components to scale themselves
         self.scale = SCALE
@@ -50,6 +53,8 @@ class Ship(Entity):
         ]
 
     def update(self, game_speed):
+        self._physicsShip.update_forces(self.pilotController)
+
         if self.pilotController:
             self.pilotController.update()
 
@@ -76,8 +81,8 @@ class Ship(Entity):
             self.turrets[0].update(game_speed, turret_x, turret_y)
             self.turrets[1].update(game_speed, turret_x, turret_y)
 
-        self._quad.pos = self._position
-        self._quad.angle = self._angle
+        self._quad.pos = self._physicsShip.body.position * PHYSICS_SCALE
+        self._quad.angle = math.degrees(self._physicsShip.body.angle) + 180
 
     def draw(self, screen):
         for shield in self.shields:

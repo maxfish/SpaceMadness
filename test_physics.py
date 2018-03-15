@@ -75,7 +75,6 @@ def run():
                 running = False
                 break
         sdl2.ext.fill(windowsurface, 0)
-        physicsWorld.Step(timeStep, vel_iters, pos_iters)
         physicsWorld.ClearForces()
         pShip.update_forces(controller)
         for fixture in pShip.body.fixtures:
@@ -84,6 +83,7 @@ def run():
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
         for fixture in pBullet.body.fixtures:
             draw_polygon(windowsurface, pBullet.body, fixture.shape)
+        physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()
     return 0
