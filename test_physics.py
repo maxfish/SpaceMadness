@@ -9,6 +9,7 @@ import sdl2
 import sdl2.ext
 from Box2D import (b2PolygonShape, b2CircleShape)
 
+from physics.physics_bullet import PhysicsBullet
 from physics.physic_ship import PhysicShip
 
 GAME_FPS = 50
@@ -37,6 +38,8 @@ def draw_rects(surface, width, height):
 physicsWorld = b2World(gravity=(0, 0))
 pShip = PhysicShip(physicsWorld, 10, 30)
 pShip2 = PhysicShip(physicsWorld, 80, 80)
+pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
+
 
 timeStep = 1.0 / GAME_FPS
 vel_iters, pos_iters = 6, 2
@@ -63,7 +66,6 @@ controller = controllerManager.grab_controller()
 timeStep = 1.0 / GAME_FPS
 vel_iters, pos_iters = 6, 2
 
-
 def run():
     running = True
     while running:
@@ -80,6 +82,8 @@ def run():
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
+        for fixture in pBullet.body.fixtures:
+            draw_polygon(windowsurface, pBullet.body, fixture.shape)
         window.refresh()
     sdl2.ext.quit()
     return 0
