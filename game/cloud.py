@@ -1,0 +1,41 @@
+from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.texture import Texture
+from mgl2d.graphics.shader import Shader
+from mgl2d.math.vector2 import Vector2
+import random
+
+
+class Cloud:
+    def __init__(self, width, height, cloud_list):
+        start_x = random.randint(0, width)
+        start_y = random.randint(0, height)
+        cloud_number = random.randint(0, len(cloud_list))
+
+        size = calculate_size(width, height)
+        self.pos = Vector2(start_x, start_y)
+
+        create_cloud_quad(self, size, cloud_list, cloud_number)
+
+    def update(self, screen):
+        pass
+
+    def draw(self, screen):
+        self.quad.draw(screen)
+
+
+def calculate_size(width, height):
+    percentage = random.randint(0, 100)
+    scale = (width + height) / 2
+    if percentage < 40:
+        size = random.randint(scale * 0.3, scale * 0.5)
+    elif percentage < 90:
+        size = random.randint(scale * 0.5, scale * 0.7)
+    else:
+        size = random.randint(scale * 0.7, scale * 0.9)
+    return size
+
+
+def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
+    cloud.quad = QuadDrawable(cloud.pos.x - size/2, cloud.pos.y - size/2, size, size)
+    cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
+    print("cloud : ", cloud.pos.x - size/2, cloud.pos.y - size/2)

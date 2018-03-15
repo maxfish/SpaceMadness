@@ -4,6 +4,7 @@ from mgl2d.math.vector2 import Vector2
 
 from game.stage import Stage
 from game.planet import Planet
+from game.cloud import Cloud
 from os import listdir
 from os.path import isfile, join
 
@@ -13,16 +14,15 @@ class StageBackground(Stage):
         super().__init__(width, height)
         self.quad = QuadDrawable(0, 0, width, height)
         self.quad.texture = Texture.load_from_file('resources/images/bg.png')
-
-        # Get all the planets pictures
-        planet_picture_list = [f for f in listdir('resources/images/planets') if
-                               isfile(join('resources/images/planets', f))]
-
-        # Init the list of planets
+        number_of_planets = 15
         self.planets = []
-        for x in range(0, 10):
-            p = Planet(width, height, planet_picture_list)
-            self.planets.append(p)
+        number_of_clouds = 10
+        self.clouds = []
+
+        # Generate the list of planets
+        self.generate_planets(number_of_planets, width, height)
+        # Generate the list of clouds
+        self.generate_clouds(number_of_clouds, width, height)
 
         self.hint = QuadDrawable(100, 800, 1000, 200)
         self.hint.texture = Texture.load_from_file('resources/images/hint.png')
@@ -38,7 +38,35 @@ class StageBackground(Stage):
         self.quad.draw(surface)
         for planet in self.planets:
             planet.draw(surface)
+            
+        for cloud in self.clouds:
+            cloud.draw(surface)
+
         self.hint.draw(surface)
 
     def draw_foreground(self, surface, window_x, window_y):
         pass
+
+    def generate_planets(self, number_of_planets, width, height):
+        planet_picture_list = [f for f in listdir('resources/images/planets') if
+                               isfile(join('resources/images/planets', f))]
+        number_per_areas = number_of_planets // 4
+        for x in range(0, number_per_areas):
+            p = Planet(width/2, height/2, width, height, planet_picture_list)
+            self.planets.append(p)
+        for x in range(number_per_areas, number_per_areas*2):
+            p = Planet(width/2, 0, width, height, planet_picture_list)
+            self.planets.append(p)
+        for x in range(number_per_areas*2, number_per_areas * 3):
+            p = Planet(0, height/2, width, height, planet_picture_list)
+            self.planets.append(p)
+        for x in range(number_per_areas*3, number_per_areas * 4):
+            p = Planet(0, 0, width, height, planet_picture_list)
+            self.planets.append(p)
+
+    def generate_clouds(self, number_of_planets, width, height):
+        planet_picture_list = [f for f in listdir('resources/images/clouds') if
+                               isfile(join('resources/images/clouds', f))]
+        for x in range(0, number_of_planets):
+            cloud = Cloud(width, height, planet_picture_list)
+            self.clouds.append(cloud)

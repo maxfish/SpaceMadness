@@ -16,12 +16,13 @@ SCALE = 0.67
 
 class Ship(Entity):
     def __init__(
-            self,
-            world,
-            controllers,
-            x,
-            y,
-            z=0,
+        self,
+        world,
+        bullet_mgr,
+        controllers,
+        x,
+        y,
+        z=0,
     ):
         super().__init__(world, x, y, z)
 
@@ -47,8 +48,8 @@ class Ship(Entity):
             Shield(self),
         ]
         self.turrets = [
-            Turret(self, offset_x=-59 * SCALE, offset_y=2 * SCALE),
-            Turret(self, offset_x=59 * SCALE, offset_y=2 * SCALE),
+            Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
+            Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
         ]
 
     def update(self, game_speed):
@@ -104,7 +105,7 @@ class Ship(Entity):
             )
 
             turret_left_fire = self.turretController.is_button_down(
-                self.turretController.BUTTON_A,
+                self.turretController.BUTTON_LEFTSHOULDER,
             )
             turret_right_fire = self.turretController.is_button_down(
                 self.turretController.BUTTON_RIGHTSHOULDER,

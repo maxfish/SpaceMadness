@@ -13,22 +13,37 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 
+BULLET_VELOCITY = 1
+
 class Turret(Entity):
 
-    def __init__(self, ship, offset_x, offset_y):
+    def __init__(self, ship, bullet_mgr, offset_x, offset_y):
         self._ship = ship
+        self._bullet_mgr = bullet_mgr
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.turret_quad = QuadDrawable(0, 0, 13*self._ship.scale, 46*self._ship.scale)
         self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
         self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
 
-        self.turret_state = TurretState()
-
+        self.turret_state = TurretState(self)
         self.update(0, 0, 0, False)
+
+    def get_angle(self, x, y):
+        return math.degrees(math.atan2(y, x))
 
     def fire(self):
         self.turret_state.fire()
+
+    def fire_bullet(self):
+        # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
+        print("Bullet fired from: {0} {1}".format(self.turret_quad.pos.x, self.turret_quad.pos.y))
+        bullet = self._bullet_mgr.gen_bullet()
+        x = self.turret_quad.pos.x
+        y = self.turret_quad.pos.y
+        angle = self.get_angle(x, y)
+        # TODO: tune the velocity
+        bullet.initialize(x, y, angle, BULLET_VELOCITY)
 
     def hold_fire(self):
         self.turret_state.hold_fire()
@@ -48,7 +63,7 @@ class Turret(Entity):
         )
 
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
-        angle = math.degrees(math.atan2(y, x))
+        angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
 
 
