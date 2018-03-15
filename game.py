@@ -9,6 +9,7 @@ from mgl2d.graphics.screen import Screen
 from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
+from game.bullet import BulletStage
 from game.stage_1 import Stage1
 from game.turret import TurretStage
 from game.world import World
@@ -35,6 +36,8 @@ world = World(bounds=screen.viewport)
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
+elif args.stage == "bullet":
+    world.set_stage(BulletStage(screen.width, screen.height))
 else:
     world.set_stage(Stage1(screen.width, screen.height))
 
