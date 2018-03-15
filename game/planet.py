@@ -8,10 +8,9 @@ import random
 
 
 class Planet:
-
-    def __init__(self, width, height, planet_list):
-        start_x = width/2 + random.randint(-width/2, width/2)
-        start_y = height/2 + random.randint(-height/2, height/2)
+    def __init__(self, begin_x, begin_y, width, height, planet_list):
+        start_x = begin_x + width/8 + random.randint(-width/4, width/4)
+        start_y = begin_y + height/8 + random.randint(-height/4, height/4)
         planet_number = random.randint(0, len(planet_list))
         size = calculate_size(width, height)
         self.pos = Vector2(start_x, start_y)
@@ -21,8 +20,8 @@ class Planet:
         create_planet_quad(self, size, planet_list, planet_number)
 
     def update(self, screen):
-        self.pos.x += 0.00005*self.speed_x
-        self.pos.y += 0.00005*self.speed_y
+        self.pos.x += 0.00008*self.speed_x
+        self.pos.y += 0.00008*self.speed_y
         self.speed_x += random.randint(-20, 20)
         self.speed_y += random.randint(-20, 20)
         self.quad.pos = self.pos
