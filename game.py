@@ -9,6 +9,7 @@ from mgl2d.graphics.screen import Screen
 from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
+from game.bullet import BulletStage
 from game.stage_1 import Stage1
 from game.turret import TurretStage
 from game.world import World
@@ -30,18 +31,24 @@ app = App()
 screen = Screen(args.width, args.height, 'Space Madness')
 screen.print_info()
 
-world = World(bounds=screen.viewport)
+controllerManager = GameControllerManager()
+controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
+# debug: add keyboard
+num_joysticks = max(controllerManager.num_joysticks, 1)
+controllers = [
+    controllerManager.grab_controller()
+    for n in range(num_joysticks)
+]
 
+world = World(bounds=screen.viewport, controllers=controllers)
 
 if args.stage == "turret":
     world.set_stage(TurretStage(screen.width, screen.height))
+elif args.stage == "bullet":
+    world.set_stage(BulletStage(screen.width, screen.height))
 else:
     world.set_stage(Stage1(screen.width, screen.height))
 
-controllerManager = GameControllerManager()
-controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
-
-controller = controllerManager.grab_controller()
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')
 # screen.add_postprocessing_step(ppe)
