@@ -12,13 +12,12 @@ from game.turret import Turret
 SCALE=0.67
 
 
+
 class Ship(Entity):
     def __init__(
         self,
         world,
-        pilotController,
-        shieldController,
-        turretController,
+        controllers,
         x,
         y,
         z=0,
@@ -36,9 +35,10 @@ class Ship(Entity):
         self._quad.anchor = self._dim.__div__(2.0)
         self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
 
-        self.shieldController = shieldController
-        self.pilotController = pilotController
-        self.turretController = turretController
+        self.controllers = controllers
+        self.shieldController = None
+        self.pilotController = None
+        self.turretController = None
 
         self.shields = [
             Shield(self),
@@ -50,12 +50,31 @@ class Ship(Entity):
         ]
 
     def update(self, game_speed):
+        for c in self.controllers:
+            c.update()
+            if c.is_button_pressed(GameController.BUTTON_DPAD_UP):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.pilotController = c
+            elif c.is_button_pressed(GameController.BUTTON_DPAD_DOWN):
+                if self.pilotController == c:
+                    self.pilotController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.turretController = c
+            elif c.is_button_pressed(GameController.BUTTON_DPAD_LEFT):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.pilotController == c:
+                    self.pilotController = None
+                self.shieldController = c
+
         if self.pilotController:
-            self.pilotController.update()
+            pass
 
         if self.shieldController:
-            self.shieldController.update()
-
             shield0_input_values = (
                 self.shieldController.get_axis(0) or 0.0,
                 self.shieldController.get_axis(1) or 0.0,
