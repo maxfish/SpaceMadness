@@ -3,6 +3,8 @@ from mgl2d.input.game_controller import GameController
 
 from physics.physics_gun import PhysicsGun
 
+PROPULSION_INTENSITY = 360
+SIDE_THRUST_INTENSITY = 5100
 
 class PhysicsShip:
     def __init__(self, ship, physicsWorld, x, y):
@@ -50,10 +52,10 @@ class PhysicsShip:
 
         dir = self.body.GetWorldVector(localVector=(0.0, 1.0))
         pos = self.body.GetWorldPoint(localPoint=(0.0, 2.0))
-        intensity = controller.get_axis(GameController.AXIS_TRIGGER_RIGHT) * 200
+        intensity = controller.get_axis(GameController.AXIS_TRIGGER_RIGHT) * PROPULSION_INTENSITY
         self.body.ApplyForce(dir * intensity, pos, True)
 
-        intensity = controller.get_axis(GameController.AXIS_LEFT_X) * 3850
+        intensity = controller.get_axis(GameController.AXIS_LEFT_X) * SIDE_THRUST_INTENSITY
         self.body.ApplyTorque(intensity, True)
 
         if controller.is_button_down(GameController.BUTTON_A):
