@@ -4,13 +4,18 @@ import sys
 from Box2D import b2World, b2FixtureDef, b2BodyDef
 from mgl2d.app import App
 from mgl2d.input.game_controller_manager import GameControllerManager
+from mgl2d.math.vector2 import Vector2
 from random import randint
 import sdl2
 import sdl2.ext
-from Box2D import (b2PolygonShape, b2CircleShape)
+from Box2D import b2PolygonShape
+from Box2D import b2CircleShape
 
+from physics.contact import ContactListener
 from physics.physics_bullet import PhysicsBullet
-from physics.physic_ship import PhysicShip
+from physics.physics_shield import PhysicsShield
+from physics.physics_ship import PhysicsShip
+
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
@@ -22,10 +27,21 @@ def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
     sdl2.ext.line(surface, color, (x1, y1, x2, y2))
 
-physicsWorld = b2World(gravity=(0, 0))
-pShip = PhysicShip(physicsWorld, 50, 50)
-pShip2 = PhysicShip(physicsWorld, 80, 80)
-# pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
+
+def draw_rect(surface, x, y, width, height):
+    color = sdl2.ext.Color(255, 0, 0)
+    sdl2.ext.fill(surface, color, ((x-width/2)*10, (y-height/2)*10, width*10, height*10))
+
+
+contact_listener = ContactListener()
+physicsWorld = b2World(gravity=(0, 0), contactListener=contact_listener)
+
+pShip = PhysicsShip(object(), physicsWorld, 50, 50)
+pShip2 = PhysicsShip(object(), physicsWorld, 80, 80)
+pShield = PhysicsShield(object() ,physicsWorld, Vector2(60, 60), 20)
+# pBullet = PhysicsBullet(object(), physicsWorld, 10, 20, 8, 13)
+
+
 
 sdl2.ext.init()
 window = sdl2.ext.Window("2D drawing primitives", size=(1920, 1080))
@@ -49,6 +65,7 @@ controller = controllerManager.grab_controller()
 timeStep = 1.0 / GAME_FPS
 vel_iters, pos_iters = 6, 2
 
+
 def run():
     running = True
     while running:
@@ -64,13 +81,14 @@ def run():
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
+
+        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
         # for fixture in pBullet.body.fixtures:
         #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()
     return 0
-
 
 
 if __name__ == "__main__":

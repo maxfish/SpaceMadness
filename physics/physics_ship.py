@@ -2,8 +2,8 @@ from Box2D import b2PolygonShape, b2FixtureDef
 from mgl2d.input.game_controller import GameController
 
 
-class PhysicShip:
-    def __init__(self, physicsWorld, x, y):
+class PhysicsShip:
+    def __init__(self, ship, physicsWorld, x, y):
         w = 5
         h = 10
         self.shape = b2PolygonShape(vertices=[
@@ -22,6 +22,7 @@ class PhysicShip:
             angularDamping=4,
             linearDamping=0.1,
             shapeFixture=b2FixtureDef(density=2.0),
+            userData={'type': 'ship', 'obj': ship},
         )
 
     def update_forces(self, controller):

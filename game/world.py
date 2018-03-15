@@ -2,7 +2,8 @@ from Box2D import b2World
 
 from game.ship import Ship
 from game.asteroid import Asteroid
-
+from game.bullet_mgr import BulletManager
+from physics.contact import ContactListener
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -26,7 +27,7 @@ class World:
 
         self.stage = None
 
-        self.physicsWorld = b2World(gravity=(0, 0))
+        self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
 
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
@@ -37,8 +38,12 @@ class World:
         if len(controllers) > 2:
             pilotController = controllers[2]
 
+        # TODO: ships should be initialised in stage
+        bullet_mgr = BulletManager(self, None)
+
         ship = Ship(
             self,
+            bullet_mgr,
             controllers=controllers[:3],
             x=200,
             y=300,
@@ -46,6 +51,7 @@ class World:
 
         ship2 = Ship(
             self,
+            bullet_mgr,
             controllers=[],
             x=500,
             y=300,
@@ -65,6 +71,7 @@ class World:
             ship,
             ship2,
             asteroid,
+            bullet_mgr,
         ]
 
         # self.item_frames = FramesStore()

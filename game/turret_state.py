@@ -7,7 +7,8 @@ class TurretState():
     ammo_clip_size = 20
     reload_time_ms = 5000
 
-    def __init__(self):
+    def __init__(self, turret):
+        self.turret = turret
         self._current_time_ms = 0
         self._state = TurretIdle(self)
 
@@ -93,6 +94,7 @@ class TurretFiring(_TurretState):
 
         self.sm.last_shot_time_ms = self._current_time_ms
         self.sm.cur_loaded_ammo -= 1
+        self.sm.turret.fire_bullet()
         print("_fire_bullet")
 
 

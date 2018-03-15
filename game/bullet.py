@@ -21,6 +21,8 @@ class Bullet(Entity):
         self._physics_world = physics_world
         # Attach physics only in the initialize method
         self._physics = None
+        # Set the angle in the initialize method
+        self._angle = None
 
     @property
     def active(self):
@@ -29,9 +31,16 @@ class Bullet(Entity):
     def initialize(self, x, y, angle, speed):
         # x, y - starting coordinates of the bullet (point at which the bullet was fired)
         self._position = Vector2(x, y)
+        self._quad.pos = self._position
         # Physics object corresponding to the bullet
         if self._physics_world:
-            self._physics = PhysicsBullet(self._position.x, self.position.y, self.width, self.length)
+            self._physics = PhysicsBullet(
+                self,
+                self._position.x,
+                self.position.y,
+                self.width,
+                self.length,
+            )
         self._active = True
 
     def draw(self, screen):
@@ -40,8 +49,8 @@ class Bullet(Entity):
 
     def update(self, screen):
         # TODO: this should call the physics object to update the position
-        self._position += Vector2(0, 1)
-        self._quad.pos = self.position
+        self._position += Vector2(0, -1)
+        self._quad.pos = self._position
 
 
 class BulletStage(Stage):
