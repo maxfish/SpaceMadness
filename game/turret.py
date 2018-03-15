@@ -33,7 +33,8 @@ class Turret(Entity):
         self.update(0, 0, 0, False)
 
     def get_angle(self, x, y):
-        return math.degrees(math.atan2(y, x))
+        # Rotate 90 degrees more to compensate the resource being rotated...
+        return math.degrees(math.atan2(y, x)) + 90
 
     def fire(self):
         self.turret_state.fire()
@@ -75,7 +76,11 @@ class Turret(Entity):
         )
 
         self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
-        angle = self.get_angle(x, y)
+        if (x, y) == (0.0, 0.0):
+            # Align guns with the ship if they're inactive
+            angle = self._ship._quad.angle
+        else:
+            angle = self.get_angle(x, y)
         self.turret_quad.angle = angle
 
     def collide(self, other, began):

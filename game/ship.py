@@ -128,12 +128,12 @@ class Ship(Entity):
 
         if self.turretController:
             turret_left_x, turret_left_y = (
-                self.turretController.get_axis(0) or 0.0,
-                self.turretController.get_axis(1) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
             )
             turret_right_x, turret_right_y = (
-                self.turretController.get_axis(2) or 0.0,
-                self.turretController.get_axis(3) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_RIGHT_X) or 0.0,
+                self.turretController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
             )
 
             turret_left_fire = self.turretController.is_button_down(
