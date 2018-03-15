@@ -18,9 +18,6 @@ from game.turret import TurretStage
 from game.world import World
 from game.bullet_mgr import BulletManager
 
-from Box2D import (b2PolygonShape, b2World)
-
-from physics.physic_ship import PhysicShip
 
 logging.basicConfig(level=logging.INFO)
 

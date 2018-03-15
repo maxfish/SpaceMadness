@@ -34,7 +34,13 @@ class Bullet(Entity):
         self._quad.pos = self._position
         # Physics object corresponding to the bullet
         if self._physics_world:
-            self._physics = PhysicsBullet(self._position.x, self.position.y, self.width, self.length)
+            self._physics = PhysicsBullet(
+                self,
+                self._position.x,
+                self.position.y,
+                self.width,
+                self.length,
+            )
         self._active = True
 
     def draw(self, screen):
@@ -46,6 +52,8 @@ class Bullet(Entity):
         self._position += Vector2(0, -1)
         self._quad.pos = self._position
 
+    def collide(self, other, began):
+        pass
 
 class BulletStage(Stage):
     def __init__(self, width, height, bullet_mgr):

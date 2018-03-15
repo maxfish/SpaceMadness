@@ -1,7 +1,9 @@
 from Box2D import b2World
 
 from game.ship import Ship
+from game.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
+from physics.contact import ContactListener
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -25,7 +27,7 @@ class World:
 
         self.stage = None
 
-        self.physicsWorld = b2World(gravity=(0, 0))
+        self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
 
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
@@ -55,6 +57,12 @@ class World:
             y=300,
         )
 
+        asteroid = Asteroid(
+            self,
+            x=500,
+            y=500,
+        )
+
         self.players = [
             ship,
             ship2,
@@ -62,6 +70,7 @@ class World:
         self.entities = [
             ship,
             ship2,
+            asteroid,
             bullet_mgr,
         ]
 
