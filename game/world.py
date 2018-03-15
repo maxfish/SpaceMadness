@@ -1,3 +1,5 @@
+from Box2D import b2World
+
 from game.ship import Ship
 
 INTRO_DEBUG = 0
@@ -22,29 +24,38 @@ class World:
 
         self.stage = None
 
+        self.physicsWorld = b2World(gravity=(0, 0))
+
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
         if len(controllers) > 0:
-            turretController = controllers[0]
+            shieldController = controllers[0]
         if len(controllers) > 1:
-            shieldController = controllers[1]
+            turretController = controllers[1]
         if len(controllers) > 2:
             pilotController = controllers[2]
 
         ship = Ship(
             self,
-            pilotController=pilotController,
-            shieldController=shieldController,
-            turretController=turretController,
+            controllers=controllers[:3],
             x=200,
+            y=300,
+        )
+
+        ship2 = Ship(
+            self,
+            controllers=[],
+            x=500,
             y=300,
         )
 
         self.players = [
             ship,
+            ship2,
         ]
         self.entities = [
             ship,
+            ship2,
         ]
 
         # self.item_frames = FramesStore()
@@ -64,7 +75,6 @@ class World:
 
     def update(self, game_speed):
         self.stage.update(game_speed)
-
         # for i in self.items:
         #     i.update(game_speed)
         for e in self.entities:

@@ -27,10 +27,7 @@ class Turret(Entity):
         self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
 
         self.turret_state = TurretState(self)
-
-        self.update(0, 0, 0)
-        #if offset_x < 0:
-        self.fire_bullet()
+        self.update(0, 0, 0, False)
 
     def get_angle(self, x, y):
         return math.degrees(math.atan2(y, x))
@@ -54,8 +51,13 @@ class Turret(Entity):
     def draw(self, screen):
         self.turret_quad.draw(screen)
 
-    def update(self, game_speed, x, y):
+    def update(self, game_speed, x, y, fire):
         """x and y are the x and y from the controller joystick"""
+        if fire:
+            self.fire()
+        else:
+            self.hold_fire()
+
         self.turret_state.advance_time(
             time_passed_ms=(game_speed * GAME_FRAME_MS),
         )
