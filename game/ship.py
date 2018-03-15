@@ -102,12 +102,20 @@ class Ship(Entity):
                 self.turretController.get_axis(2) or 0.0,
                 self.turretController.get_axis(3) or 0.0,
             )
+
+            turret_left_fire = self.turretController.is_button_down(
+                self.turretController.BUTTON_A,
+            )
+            turret_right_fire = self.turretController.is_button_down(
+                self.turretController.BUTTON_RIGHTSHOULDER,
+            )
         else:
             turret_left_x, turret_left_y = (0,0)
             turret_right_x, turret_right_y = (0,0)
+            turret_left_fire = turret_right_fire = False
 
-        self.turrets[0].update(game_speed, turret_left_x, turret_left_y)
-        self.turrets[1].update(game_speed, turret_right_x, turret_right_y)
+        self.turrets[0].update(game_speed, turret_left_x, turret_left_y, turret_left_fire)
+        self.turrets[1].update(game_speed, turret_right_x, turret_right_y, turret_right_fire)
 
         self._angle = math.degrees(self._physicsShip.body.angle) + 180
         pos = self._physicsShip.body.position * PHYSICS_SCALE
