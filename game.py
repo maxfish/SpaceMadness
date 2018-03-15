@@ -7,6 +7,7 @@ from mgl2d.graphics.screen import Screen
 from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
+from game.stage_1 import Stage1
 from game.world import World
 
 from Box2D import (b2PolygonShape, b2World)
@@ -17,11 +18,11 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 app = App()
-screen = Screen(1280, 720, '!!!')
+screen = Screen(1920, 1080, '!!!')
 screen.print_info()
 
 world = World(bounds=screen.viewport)
-# world.set_stage(Stage2())
+world.set_stage(Stage1())
 
 
 controllerManager = GameControllerManager()
@@ -49,9 +50,7 @@ vel_iters, pos_iters = 6, 2
 
 
 def draw_frame(screen):
-    # world.draw(screen)
-    pass
-
+    world.draw(screen)
 
 def update_frame(delta_ms):
     # world.update(delta_ms / GAME_FRAME_MS)
