@@ -22,27 +22,10 @@ def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
     sdl2.ext.line(surface, color, (x1, y1, x2, y2))
 
-
-def draw_rects(surface, width, height):
-    # Fill the whole surface with a black color.
-    sdl2.ext.fill(surface, 0)
-    for k in range(15):
-        x, y = randint(0, width), randint(0, height)
-        w, h = randint(1, width // 2), randint(1, height // 2)
-        color = sdl2.ext.Color(randint(0, 255),
-                               randint(0, 255),
-                               randint(0, 255))
-        sdl2.ext.fill(surface, color, (x, y, w, h))
-
-
 physicsWorld = b2World(gravity=(0, 0))
-pShip = PhysicShip(physicsWorld, 10, 30)
+pShip = PhysicShip(physicsWorld, 50, 50)
 pShip2 = PhysicShip(physicsWorld, 80, 80)
-pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
-
-
-timeStep = 1.0 / GAME_FPS
-vel_iters, pos_iters = 6, 2
+# pBullet = PhysicsBullet(physicsWorld, 10, 20, 8, 13)
 
 sdl2.ext.init()
 window = sdl2.ext.Window("2D drawing primitives", size=(1920, 1080))
@@ -81,8 +64,8 @@ def run():
             draw_polygon(windowsurface, pShip.body, fixture.shape)
         for fixture in pShip2.body.fixtures:
             draw_polygon(windowsurface, pShip2.body, fixture.shape)
-        for fixture in pBullet.body.fixtures:
-            draw_polygon(windowsurface, pBullet.body, fixture.shape)
+        # for fixture in pBullet.body.fixtures:
+        #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)
         window.refresh()
     sdl2.ext.quit()
