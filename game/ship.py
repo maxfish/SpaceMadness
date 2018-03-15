@@ -56,7 +56,7 @@ class Ship(Entity):
 
         self.controllers = controllers
         self.shieldController = None
-        self.pilotController = None
+        self.pilotController = controllers[0] if len(controllers) else None
         self.turretController = None
 
         self.shields = [
