@@ -99,3 +99,13 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# MacOS files
+.DS_Store
+
+# Vim swap files
+*.sw[a-z]
+
+# Don't commit pybox2d by mistake
+pybox2d
+pybox2d-master

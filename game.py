@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import logging
 
-import sdl2
+import sdl2.ext as sdl2ext
 from mgl2d.app import App
 from mgl2d.graphics.post_processing_step import PostProcessingStep
 from mgl2d.graphics.screen import Screen
@@ -25,24 +25,22 @@ screen.print_info()
 world = World(bounds=screen.viewport)
 world.set_stage(Stage1(screen.width, screen.height))
 
-
 controllerManager = GameControllerManager()
 controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
 
-# controller = controllerManager.grab_controller()
-
+controller = controllerManager.grab_controller()
+controller.get_axis(GameController.AXIS_LEFT_X)
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')
 # screen.add_postprocessing_step(ppe)
 
 physicsWorld = b2World()  # default gravity is (0,-10) and doSleep is True
 groundBody = physicsWorld.CreateStaticBody(position=(0, -10),
-                                    shapes=b2PolygonShape(box=(50, 10)),
-                                    )
+                                           shapes=b2PolygonShape(box=(50, 10)),
+                                           )
 
 # Create a dynamic body at (0, 4)
 body = physicsWorld.CreateDynamicBody(position=(0, 4))
-# sdl2.ext.fill(screen, 0)
 # And add a box fixture onto it (with a nonzero density, so it will move)
 box = body.CreatePolygonFixture(box=(1, 1), density=1, friction=0.3)
 
