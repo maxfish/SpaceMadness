@@ -33,9 +33,7 @@ class World:
 
         ship = Ship(
             self,
-            pilotController=pilotController,
-            shieldController=shieldController,
-            turretController=turretController,
+            controllers=controllers[:3],
             x=200,
             y=300,
         )
