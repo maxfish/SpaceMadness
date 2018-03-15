@@ -5,6 +5,7 @@ from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
 from game.shield_state import ShieldState
+from physics.physics_shield import PhysicsShield
 
 
 SHIP_SCALE = Vector2(109, 156)
@@ -18,14 +19,20 @@ GAME_FRAME_MS = 1000 / GAME_FPS
 
 
 class Shield(Entity):
-    def __init__(self, ship):
+    def __init__(self, ship, world):
         super().__init__(ship._world, 0, 0)
 
         self._ship = ship
         self._position = self._ship.position
         self._angle = 0
 
-        # self._rad1 = ship._dim.x / 1.8
+        self._physicsShield = PhysicsShield(
+            self,
+            world.physicsWorld,
+            center=Vector2(0, 0),
+            radius=20.0,
+        )
+
         self._rad1 = ship._dim.y / 2.9
         self._rad2 = ship._dim.y / 2.9
         self._angle = 0
@@ -39,7 +46,6 @@ class Shield(Entity):
         self._charge = 0
         self.shield_state = ShieldState(self)
         self.update(0, (0.0, 0.0, 0.0))
-
 
     def calc_angle(self, x, y):
         if INERTIA:

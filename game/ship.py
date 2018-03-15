@@ -51,8 +51,8 @@ class Ship(Entity):
         self.turretController = None
 
         self.shields = [
-            Shield(self),
-            Shield(self),
+            Shield(self, world),
+            Shield(self, world),
         ]
         self.turrets = [
             Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
