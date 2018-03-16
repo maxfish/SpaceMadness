@@ -59,4 +59,5 @@ class Bullet(Entity):
         self._quad.pos = Vector2(pos[0], pos[1])
 
     def collide(self, other, began):
-        self.bullet_mgr.recycle(self)
+        if began:
+            self.bullet_mgr.recycle(self)

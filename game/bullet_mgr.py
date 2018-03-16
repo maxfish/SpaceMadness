@@ -28,8 +28,14 @@ class BulletManager(Entity):
         try:
             self.active_bullets.remove(bullet)
         except ValueError:
-            print("Why?! ERROR!!!")
-        self.bullets_pool.append(bullet)
+            pass
+        else:
+            # If we encounter a ValueError,
+            # it means, bullet is not in active bullets, probably
+            # becaase there were multiple collisions and therefore
+            # multiple calls to recycle.
+            # We assume that the bullet was recycled correctly.
+            self.bullets_pool.append(bullet)
 
     def deactivate(self, bullet):
         if bullet in self.active_bullets:
