@@ -3,9 +3,9 @@ from abc import ABC
 
 class TurretState():
 
-    fire_time_ms = 250
-    ammo_clip_size = 20
-    reload_time_ms = 5000
+    fire_time_ms = 5
+    ammo_clip_size = 200
+    reload_time_ms = 1
 
     def __init__(self, turret):
         self.turret = turret
@@ -95,7 +95,7 @@ class TurretFiring(_TurretState):
         self.sm.last_shot_time_ms = self._current_time_ms
         self.sm.cur_loaded_ammo -= 1
         self.sm.turret.fire_bullet()
-        print("_fire_bullet")
+        # print("_fire_bullet")
 
 
 class TurretReloading(_TurretState):
@@ -107,4 +107,4 @@ class TurretReloading(_TurretState):
 
     def _finish_reloading(self):
         self.sm.cur_loaded_ammo = self.sm.ammo_clip_size
-        print("_finish_reloading")
+        # print("_finish_reloading")

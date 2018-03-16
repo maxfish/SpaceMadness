@@ -32,6 +32,8 @@ class World:
         self.stage = None
 
         self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
+        # Physical bodies should be deleted outside the simulation step.
+        self.physics_to_delete = []
 
         # Grabs controllers if they're present
         pilotController = shieldController = turretController = None
@@ -42,8 +44,7 @@ class World:
         if len(controllers) > 2:
             pilotController = controllers[2]
 
-        # TODO: ships should be initialised in stage
-        bullet_mgr = BulletManager(self, self.physicsWorld)
+        bullet_mgr = BulletManager(self)
 
         ship = Ship(
             self,

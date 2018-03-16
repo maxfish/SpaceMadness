@@ -40,15 +40,14 @@ class Turret(Entity):
     def fire_bullet(self):
         # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
         bullet = self._bullet_mgr.gen_bullet(id(self._ship))
-        print('Bullet {} fired from: {} {}, Owner: {}'.format(
-                id(bullet),
-                self.turret_quad.pos.x,
-                self.turret_quad.pos.y,
-                id(self._ship),
-        ))
+        #print('Bullet {} fired from: {} {}, Owner: {}'.format(
+        #        id(bullet),
+        #        self.turret_quad.pos.x,
+        #        self.turret_quad.pos.y,
+        #        id(self._ship),
+        #))
 
         angle = math.radians(self.turret_quad.angle)
-        print("Angle={}".format(angle))
         direction = Vector2(math.sin(angle), -math.cos(angle))
 
         muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
