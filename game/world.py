@@ -64,6 +64,7 @@ class World:
                 x=x,
                 y=y,
                 # angle=math.degrees(math.atan2(y, x)) - 180
+                color='standard',
             )
             self.players.append(ship)
             self.entities.append(ship)
@@ -75,6 +76,19 @@ class World:
             controllers=[],
             x=700,
             y=400,
+            color='red',
+        )
+
+        self.players.append(ship)
+        self.entities.append(ship)
+
+        ship = Ship(
+            self,
+            bullet_mgr,
+            controllers=[],
+            x=400,
+            y=500,
+            color='green',
         )
 
         self.players.append(ship)

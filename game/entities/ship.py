@@ -21,6 +21,12 @@ from physics.physics_ship import PhysicsShip
 
 SCALE = 0.67
 
+SHIP_TEXTURES = {
+    'standard': 'resources/images/ship/hull.png',
+    'green': 'resources/images/ship/hull_green.png',
+    'red': 'resources/images/ship/hull_red.png',
+}
+
 
 class Ship(Entity):
     def __init__(
@@ -32,6 +38,7 @@ class Ship(Entity):
         y,
         z=0,
         angle=0,
+        color='standard',
     ):
         super().__init__(world, x, y, z)
         self.world = world
@@ -52,7 +59,9 @@ class Ship(Entity):
         self._quad = QuadDrawable(0, 0, self._dim.x, self._dim.y)
         self._quad.pos = self._position
         self._quad.anchor = self._dim.__div__(2.0)
-        self._quad.texture = Texture.load_from_file('resources/images/ship/hull.png')
+
+        texture_file = SHIP_TEXTURES.get(color, SHIP_TEXTURES['standard'])
+        self._quad.texture = Texture.load_from_file(texture_file)
         self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
         self.controllers = controllers
