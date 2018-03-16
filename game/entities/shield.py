@@ -120,6 +120,9 @@ class Shield(Entity):
             self._quad.draw(screen)
 
     def collide(self, other, intensity=0.0, began=False, **kwargs):
+        if not self._enable:
+            return
+
         # TODO: Calculate the damage:
         # Collision between shield and bullet (sensor)
         # Collision between shield and everything else
