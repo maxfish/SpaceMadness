@@ -59,5 +59,8 @@ class Bullet(Entity):
         self._quad.pos = Vector2(pos[0], pos[1])
 
     def collide(self, other, began):
+        # Don't do anything if a bullet is hitting a bullet.
+        if isinstance(other, type(self)):
+            return
         if began:
             self.bullet_mgr.recycle(self)
