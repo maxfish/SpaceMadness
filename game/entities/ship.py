@@ -7,7 +7,7 @@ from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
 
 import config
-from game.entities.healthbar import HealthBar
+# from game.entities.healthbar import HealthBar
 from game.entities.shield import Shield
 from game.entities.ship_state import ShipState
 from game.entities.side_trail import SideTrail
@@ -71,7 +71,7 @@ class Ship(Entity):
         self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
         self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
 
-        self._healthbar = HealthBar(self, world)
+        # self._healthbar = HealthBar(self, world)
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -156,7 +156,7 @@ class Ship(Entity):
             time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
 
-        self._healthbar.update(game_speed)
+        # self._healthbar.update(game_speed)
 
     def draw(self, screen):
         if self.ship_state.state == ShipState.LIVE:
@@ -173,7 +173,7 @@ class Ship(Entity):
 
             for turret in self.turrets:
                 turret.draw(screen)
-            self._healthbar.draw(screen)
+            # self._healthbar.draw(screen)
         elif self.ship_state.state == ShipState.DYING:
             self._quad.shader.bind()
             self._quad.shader.set_uniform_float('mul_r', 0.0)
