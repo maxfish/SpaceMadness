@@ -59,25 +59,5 @@ class Bullet(Entity):
         self._quad.pos = Vector2(pos[0], pos[1])
 
     def collide(self, other, began):
-        pass
-
-class BulletStage(Stage):
-    def __init__(self, width, height, bullet_mgr):
-        super().__init__(width, height)
-        self.quad = QuadDrawable(0, 0, width, height)
-        self.quad.texture = Texture.load_from_file('resources/images/bg.png')
-        self.bullet_mgr = bullet_mgr
-        self.bullet = self.bullet_mgr.gen_bullet()
-        self.bullet.initialize(0, 0, 0, 0)
-
-    def get_width(self):
-        return self.width
-
-    def update(self, game_speed):
-        self.bullet.update(game_speed)
-
-    def draw_background(self, surface, window_x, window_y):
-        self.quad.draw(surface)
-
-    def draw_foreground(self, surface, window_x, window_y):
-        self.bullet.draw(surface)
+        if began:
+            self.bullet_mgr.recycle(self)

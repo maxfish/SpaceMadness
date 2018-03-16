@@ -16,20 +16,10 @@ class ContactListener(b2ContactListener):
         if self.owner_matches(ud_a, ud_b):
             return
 
-        for ud in (ud_a, ud_b):
-            if ud is None:
-                print('Does not have userdata. Whatever...')
-            if ud['type'] == 'ship':
-                print('Collision with ship %r' % ud['obj'])
-            if ud['type'] == 'bullet':
-                print('Collision with bullet %r' % ud['obj'])
-            if ud['type'] == 'shield':
-                print('Collision with shield %r' % ud['obj'])
-
         if 'obj' in ud_a:
-            ud_a['obj'].collide(ud_b['obj'], began)
+            ud_a['obj'].collide(ud_b.get('obj'), began)
         if 'obj' in ud_b:
-            ud_b['obj'].collide(ud_a['obj'], began)
+            ud_b['obj'].collide(ud_a.get('obj'), began)
 
     def BeginContact(self, contact):
         self.handle_contact(contact, True)
