@@ -1,4 +1,6 @@
 import math
+
+from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.laser import Laser
 from mgl2d.graphics.texture import Texture
@@ -7,11 +9,8 @@ from mgl2d.math.vector2 import Vector2
 from game.entities.shield_state import ShieldState
 from physics.physics_shield import PhysicsShield
 
-
-SHIP_SCALE = Vector2(109, 156)
-
+SHIP_SIZE = Vector2(109, 156)
 INERTIA = True
-
 
 # copied from game.py
 GAME_FPS = 50
@@ -30,7 +29,7 @@ class Shield(Entity):
             self,
             world.physicsWorld,
             center=Vector2(0, 0),
-            radius=20.0,
+            radius=SHIP_SIZE.x / PHYSICS_SCALE / 2,
         )
 
         self._rad1 = ship._dim.y / 2.9
@@ -39,9 +38,9 @@ class Shield(Entity):
         self._angle_speed = 1
 
         self._quad = QuadDrawable(0, 0, 0, 0)
-        self._quad.scale = SHIP_SCALE
+        self._quad.scale = SHIP_SIZE
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
-        self._quad.anchor = Vector2(109/2, 156/2)
+        self._quad.anchor = Vector2(SHIP_SIZE.x / 2, SHIP_SIZE.y / 2)
 
         self._charge = 0
         self.shield_state = ShieldState(self)
@@ -49,7 +48,7 @@ class Shield(Entity):
 
     def calc_angle(self, x, y):
         if INERTIA:
-            mag = math.sqrt(x*x+y*y)
+            mag = math.sqrt(x * x + y * y)
             self._angle_speed = max(1, self._angle_speed * mag)
 
             if mag > 0.001:
@@ -71,7 +70,7 @@ class Shield(Entity):
             # If the shields aren't being used, don't display them
             self._quad.scale = Vector2(0, 0)
         else:
-            self._quad.scale = SHIP_SCALE
+            self._quad.scale = SHIP_SIZE
             self.update_angle_position(x, y)
 
         self.shield_state.advance_time(
@@ -115,8 +114,8 @@ class Shield(Entity):
             )
 
         self._quad.scale = Vector2(
-            SHIP_SCALE.x * (1.0 + 2 * self._charge/55.0),
-            SHIP_SCALE.y * (1.0 - self._charge/55.0),
+            SHIP_SIZE.x * (1.0 + 2 * self._charge / 55.0),
+            SHIP_SIZE.y * (1.0 - self._charge / 55.0),
         )
 
     def draw(self, screen):
