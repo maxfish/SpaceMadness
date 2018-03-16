@@ -28,10 +28,6 @@ class StageSky(Stage):
         self.generate_clouds_background(number_of_clouds_background, width, height)
         self.generate_clouds_foreground(number_of_clouds_foreground, width, height)
 
-
-        self.hint = QuadDrawable(100, 800, 1000, 200)
-        self.hint.texture = Texture.load_from_file('resources/images/hint.png')
-
     def get_width(self):
         return self.width
 
@@ -49,8 +45,6 @@ class StageSky(Stage):
             planet.draw(surface)
         for cloud in self.clouds_background:
             cloud.draw(surface)
-
-        self.hint.draw(surface)
 
     def draw_foreground(self, surface, window_x, window_y):
         for cloud in self.clouds_foreground:

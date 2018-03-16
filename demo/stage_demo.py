@@ -13,8 +13,6 @@ class StageDemo(StageSky):
         self._logo.anchor = Vector2(texture.width / 2, texture.height / 2)
         self._logo.texture = texture
 
-        self.hint.scale = Vector2(0, 0)
-
     def update(self, game_speed):
         self._logo.pos = Vector2(self.width / 2, self.height / 2)
 

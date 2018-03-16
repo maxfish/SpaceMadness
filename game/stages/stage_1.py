@@ -19,7 +19,6 @@ class Stage1(Stage):
 
     def draw_background(self, surface, window_x, window_y):
         self.quad.draw(surface)
-        self.hint.draw(surface)
 
     def draw_foreground(self, surface, window_x, window_y):
         pass
