@@ -16,6 +16,7 @@ class Cloud:
         self.speed_x = random.randint(-100, 100)
         self.speed_y = random.randint(-100, 100)
 
+        self.quad = None
         create_cloud_quad(self, size, cloud_list, cloud_number)
 
     def update(self, screen):
@@ -24,6 +25,8 @@ class Cloud:
         self.quad.pos = self.pos
 
     def draw(self, screen):
+        self.quad.shader.bind()
+        self.quad.shader.set_uniform_float('mul_a', 0.4)
         self.quad.draw(screen)
 
 
@@ -42,3 +45,5 @@ def calculate_size(width, height):
 def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
     cloud.quad = QuadDrawable(cloud.pos.x - size/2, cloud.pos.y - size/2, size, size, random.randint(0, 360))
     cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
+    cloud.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+

@@ -18,6 +18,7 @@ class Planet:
         self.speed_y = random.randint(-100, 100)
         self.rotation_speed = random.randint(-100, 100)/100
 
+        self.quad = None
         create_planet_quad(self, size, planet_list, planet_number)
 
     def update(self, screen):
@@ -29,6 +30,10 @@ class Planet:
         self.quad.pos = self.pos
 
     def draw(self, screen):
+        self.quad.shader.bind()
+        self.quad.shader.set_uniform_float('mul_r', 0.6)
+        self.quad.shader.set_uniform_float('mul_g', 0.6)
+        self.quad.shader.set_uniform_float('mul_b', 0.6)
         self.quad.draw(screen)
 
 
@@ -47,4 +52,5 @@ def calculate_size(width, height):
 def create_planet_quad(planet, size, planet_list, planet_picked):
     planet.quad = QuadDrawable(planet.pos.x, planet.pos.y, size, size, random.randint(0, 360))
     planet.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_picked - 1])
-    planet.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/planet.frag')
+    planet.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+
