@@ -25,6 +25,7 @@ SHIP_TEXTURES = {
     'standard': 'resources/images/ship/hull.png',
     'green': 'resources/images/ship/hull_green.png',
     'red': 'resources/images/ship/hull_red.png',
+    'blue': 'resources/images/ship/hull_blue.png',
 }
 
 

@@ -10,6 +10,7 @@ from mgl2d.graphics.texture import Texture
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 import config
 from game.entities.ship import Ship
+from game.entities.ship import SHIP_TEXTURES
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
 from physics.contact import ContactListener
@@ -64,35 +65,11 @@ class World:
                 x=x,
                 y=y,
                 # angle=math.degrees(math.atan2(y, x)) - 180
-                color='standard',
+                color=SHIP_TEXTURES[list(SHIP_TEXTURES.keys())[quadrant]],
             )
             self.players.append(ship)
             self.entities.append(ship)
             quadrant += 1
-
-        ship = Ship(
-            self,
-            bullet_mgr,
-            controllers=[],
-            x=700,
-            y=400,
-            color='red',
-        )
-
-        self.players.append(ship)
-        self.entities.append(ship)
-
-        ship = Ship(
-            self,
-            bullet_mgr,
-            controllers=[],
-            x=400,
-            y=500,
-            color='green',
-        )
-
-        self.players.append(ship)
-        self.entities.append(ship)
 
         self.game_over_quad = QuadDrawable(
             SCREEN_WIDTH / 2 - 496 / 2,
