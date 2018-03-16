@@ -2,7 +2,7 @@ import math
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
@@ -71,6 +71,12 @@ class World:
             bullet_mgr,
         ]
         self.asteroids = []
+        self.asteroids.append(
+            Asteroid(self, 400, 400, Vector2(0, 0), 0, 'resources/images/derelict/part_01.png', SHIP_SCALE))
+        self.asteroids.append(
+            Asteroid(self, 390, 440, Vector2(0, 0), 0, 'resources/images/derelict/part_02.png', SHIP_SCALE))
+        self.asteroids.append(
+            Asteroid(self, 410, 445, Vector2(0, 0), 0, 'resources/images/derelict/part_03.png', SHIP_SCALE))
 
     def set_stage(self, stage):
         self.stage = stage

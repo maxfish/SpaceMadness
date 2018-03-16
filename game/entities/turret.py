@@ -6,6 +6,7 @@ from mgl2d.math.vector2 import Vector2
 
 import config
 from game.entities.turret_state import TurretState
+
 from game.entity import Entity
 from game.stage import Stage
 
@@ -17,9 +18,13 @@ class Turret(Entity):
         self._bullet_mgr = bullet_mgr
         self.offset_x = offset_x
         self.offset_y = offset_y
-        self.turret_quad = QuadDrawable(0, 0, 13*self._ship.scale, 46*self._ship.scale)
-        self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
-        self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
+
+        self.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
+        self.texture_FIRING = Texture.load_from_file('resources/images/guns/minigun_shooting.png')
+
+        self.turret_quad = QuadDrawable(0, 0, 13 * self._ship.scale, 46 * self._ship.scale)
+        self.turret_quad.texture = self.texture
+        self.turret_quad.anchor = Vector2(7 * self._ship.scale, 35 * self._ship.scale)
 
         self.turret_state = TurretState(self)
         self.update(0, 0, 0, False)
@@ -35,10 +40,10 @@ class Turret(Entity):
         # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
         bullet = self._bullet_mgr.gen_bullet(id(self._ship))
         print('Bullet {} fired from: {} {}, Owner: {}'.format(
-                id(bullet),
-                self.turret_quad.pos.x,
-                self.turret_quad.pos.y,
-                id(self._ship),
+            id(bullet),
+            self.turret_quad.pos.x,
+            self.turret_quad.pos.y,
+            id(self._ship),
         ))
 
         angle = math.radians(self.turret_quad.angle)
@@ -47,9 +52,11 @@ class Turret(Entity):
 
         muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
         bullet.initialize(muzzle_pos.x, muzzle_pos.y, direction, config.BULLET_VELOCITY, id(self._ship))
+        self.turret_quad.texture = self.texture_FIRING
 
     def hold_fire(self):
         self.turret_state.hold_fire()
+        self.turret_quad.texture = self.texture
 
     def draw(self, screen):
         self.turret_quad.draw(screen)
@@ -65,14 +72,15 @@ class Turret(Entity):
             time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
 
-        self.turret_quad.pos = config.PHYSICS_SCALE * (self._ship._physicsShip.body.transform * (self.offset_x/config.PHYSICS_SCALE, self.offset_y/config.PHYSICS_SCALE))
+        self.turret_quad.pos = config.PHYSICS_SCALE * (self._ship._physicsShip.body.transform * (
+            self.offset_x / config.PHYSICS_SCALE, self.offset_y / config.PHYSICS_SCALE))
         self.turret_quad.angle = self._ship._quad.angle
         if (x, y) != (0.0, 0.0):
             # Angle the turrets according the controller if we have values
             angle = self.get_angle(x, y)
             self.turret_quad.angle = angle
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, **kwargs):
         pass
 
 
