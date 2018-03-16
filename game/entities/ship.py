@@ -94,7 +94,7 @@ class Ship(Entity):
                     self.pilotController = None
                 self.shieldController = c
 
-        if self.pilotController:
+        if self.pilotController and self.ship_state.state == ShipState.LIVE:
             boost = self.pilotController.is_button_down(GameController.BUTTON_A)
 
             trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
@@ -104,7 +104,7 @@ class Ship(Entity):
             self.side_trail_left.update(game_speed, axis_intensity)
             self.side_trail_right.update(game_speed, -axis_intensity)
 
-        if self.shieldController:
+        if self.shieldController and self.ship_state.state == ShipState.LIVE:
             shield0_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
@@ -122,7 +122,7 @@ class Ship(Entity):
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
 
-        if self.turretController:
+        if self.turretController and self.ship_state.state == ShipState.LIVE:
             turret_left_x, turret_left_y = (
                 self.turretController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.turretController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
@@ -150,7 +150,9 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.angle = self._angle
 
-        self.ship_state.update(game_speed)
+        self.ship_state.update(
+            time_passed_ms=(game_speed * config.GAME_FRAME_MS),
+        )
 
         self._healthbar.update(game_speed)
 
@@ -170,6 +172,22 @@ class Ship(Entity):
             for turret in self.turrets:
                 turret.draw(screen)
             self._healthbar.draw(screen)
+        elif self.ship_state.state == ShipState.DYING:
+            self._quad.shader.bind()
+            self._quad.shader.set_uniform_float('mul_r', 0.0)
+            self._quad.shader.set_uniform_float('mul_g', 0.0)
+            self._quad.shader.set_uniform_float('mul_b', 0.0)
+            self._quad.draw(screen)
+            for turret in self.turrets:
+                turret.draw(screen)
+        elif self.ship_state.state == ShipState.DEAD:
+            self._quad.shader.bind()
+            self._quad.shader.set_uniform_float('mul_r', 0.5)
+            self._quad.shader.set_uniform_float('mul_g', 0.5)
+            self._quad.shader.set_uniform_float('mul_b', 0.5)
+            self._quad.draw(screen)
+            for turret in self.turrets:
+                turret.draw(screen)
 
     def collide(self, other, intensity=10.0, **kwargs):
         # TODO: Calculate the damage:
