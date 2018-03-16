@@ -64,10 +64,10 @@ class Ship(Entity):
             Shield(self, world),
             Shield(self, world),
         ]
-        self.turrets = [
-            Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE),
-            Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE),
-        ]
+
+        self.turret_right = Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE)
+        self.turret_left = Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE)
+
         self.ship_state = ShipState(self)
 
         self.trail = Trail(self, 0, 0)
@@ -144,8 +144,20 @@ class Ship(Entity):
             turret_right_x, turret_right_y = (0,0)
             turret_left_fire = turret_right_fire = False
 
-        self.turrets[0].update(game_speed, turret_left_x, turret_left_y, turret_left_fire)
-        self.turrets[1].update(game_speed, turret_right_x, turret_right_y, turret_right_fire)
+        self.turret_left.update(
+            game_speed,
+            turret_left_x,
+            turret_left_y,
+            turret_left_fire,
+            is_right_wing=False,
+        )
+        self.turret_right.update(
+            game_speed,
+            turret_right_x,
+            turret_right_y,
+            turret_right_fire,
+            is_right_wing=True,
+        )
 
         self._angle = math.degrees(self._physicsShip.body.angle) + 180
         pos = self._physicsShip.body.position * config.PHYSICS_SCALE
@@ -181,13 +193,12 @@ class Ship(Entity):
                 self._quad.shader.set_uniform_float('mul_g', 0.0)
                 self._quad.shader.set_uniform_float('mul_b', 0.0)
 
-            # Important: this has to be drawn AFTER the trails (to be positioned on
-            # top of them)
-            self._quad.draw(screen)
+            self.turret_left.draw(screen)
+            self.turret_right.draw(screen)
 
-            for turret in self.turrets:
-                turret.draw(screen)
-            #self._healthbar.draw(screen)
+            # Important: this has to be drawn AFTER the trails and turrets (to
+            # be positioned on top of them)
+            self._quad.draw(screen)
 
     def destroy_ship(self):
         pos = self._physicsShip.body.position * config.PHYSICS_SCALE
