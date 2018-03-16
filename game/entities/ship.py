@@ -168,6 +168,19 @@ class Ship(Entity):
             self.side_trail_left.draw(screen)
             self.side_trail_right.draw(screen)
 
+            if self.has_recent_damage():
+                energy_ratio = self.ship_state.energy / self.ship_state.MAX_ENERGY
+                damage_ratio = 1.0 - energy_ratio
+                self._quad.shader.bind()
+                self._quad.shader.set_uniform_float('mul_r', 0.0)
+                self._quad.shader.set_uniform_float('mul_g', 0.2 + 0.8 * damage_ratio)
+                self._quad.shader.set_uniform_float('mul_b', 0.2 + 0.8 * damage_ratio)
+            else:
+                self._quad.shader.bind()
+                self._quad.shader.set_uniform_float('mul_r', 0.0)
+                self._quad.shader.set_uniform_float('mul_g', 0.0)
+                self._quad.shader.set_uniform_float('mul_b', 0.0)
+
             # Important: this has to be drawn AFTER the trails (to be positioned on
             # top of them)
             self._quad.draw(screen)
@@ -226,6 +239,9 @@ class Ship(Entity):
 
     def is_live(self):
         return self.ship_state.state == ShipState.LIVE
+
+    def has_recent_damage(self):
+        return self.ship_state.has_recent_damage
 
     def collide(self, other, intensity=10.0, **kwargs):
         # TODO: Calculate the damage:

@@ -9,6 +9,7 @@ class ShipState:
         self.ship = ship
         self.energy = self.MAX_ENERGY
         self.time = 0
+        self.last_damage_time = self.time
         self.state_time = self.time
         self.enter(self.LIVE)
 
@@ -19,6 +20,10 @@ class ShipState:
     def time_since(self, past_time_ms):
         return self.time - past_time_ms
 
+    @property
+    def has_recent_damage(self):
+        return self.time_since(self.last_damage_time) <= 40  # ms
+
     def update(self, time_passed_ms):
         self.time += time_passed_ms
 
@@ -28,6 +33,8 @@ class ShipState:
 
     def damage(self, energy):
         if self.state == self.LIVE:
+            self.last_damage_time = self.time
+
             self.energy -= energy
             if self.energy <= 0:
                 self.energy = 0
