@@ -26,6 +26,7 @@ args = parser.parse_args()
 app = App()
 
 screen = Screen(args.width, args.height, 'Space Madness')
+# sdl2.SDL_SetWindowFullscreen(screen._window, True)
 screen.print_info()
 
 controllerManager = GameControllerManager()
