@@ -56,9 +56,9 @@ class Ship(Entity):
         self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
         self.controllers = controllers
-        self.shieldController = None
         self.pilotController = controllers[0] if len(controllers) else None
-        self.turretController = None
+        self.shieldController = controllers[1] if len(controllers) > 1 else None
+        self.turretController = controllers[2] if len(controllers) > 2 else None
 
         self.shields = [
             Shield(self, world),
