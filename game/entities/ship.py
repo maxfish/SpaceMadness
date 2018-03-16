@@ -1,27 +1,23 @@
 import math
 
+from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
-from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.math.vector2 import Vector2
 from mgl2d.input.game_controller import GameController
+from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
-from game.entity import Entity
+import config
+# from game.entities.healthbar import HealthBar
 from game.entities.shield import Shield
-from game.entities.turret import Turret
-from game.entities.trail import Trail
-from game.entities.side_trail import SideTrail
-from physics.physics_ship import PhysicsShip
 from game.entities.ship_state import ShipState
+from game.entities.side_trail import SideTrail
+from game.entities.trail import Trail
+from game.entities.turret import Turret
+from game.entity import Entity
+from physics.physics_ship import PhysicsShip
 
 
 SCALE = 0.67
-
-
-# copied from game.py
-GAME_FPS = 50
-GAME_FRAME_MS = 1000 / GAME_FPS
 
 
 class Ship(Entity):
@@ -33,16 +29,18 @@ class Ship(Entity):
         x,
         y,
         z=0,
+        angle=0,
     ):
         super().__init__(world, x, y, z)
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
-        self._angle = 0
+        self._angle = angle
         self._physicsShip = PhysicsShip(
             self,
             world.physicsWorld,
-            x / PHYSICS_SCALE,
-            y / PHYSICS_SCALE,
+            x / config.PHYSICS_SCALE,
+            y / config.PHYSICS_SCALE,
+            angle=angle,
         )
 
         # Used by ship components to scale themselves
@@ -73,9 +71,7 @@ class Ship(Entity):
         self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
         self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
 
-        self._healthbar = QuadDrawable(0, 0, self._dim.x, 5)
-        self._healthbar.pos = self._position
-        self._healthbar.texture = Texture.load_from_file('resources/images/health.png')
+        # self._healthbar = HealthBar(self, world)
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -100,15 +96,17 @@ class Ship(Entity):
                     self.pilotController = None
                 self.shieldController = c
 
-        if self.pilotController:
+        if self.pilotController and self.ship_state.state == ShipState.LIVE:
+            boost = self.pilotController.is_button_down(GameController.BUTTON_A)
+
             trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
-            self.trail.update(game_speed, trigger_intensity)
+            self.trail.update(game_speed, trigger_intensity, boost)
 
             axis_intensity = self.pilotController.get_axis(GameController.AXIS_LEFT_X) or 0.0
             self.side_trail_left.update(game_speed, axis_intensity)
             self.side_trail_right.update(game_speed, -axis_intensity)
 
-        if self.shieldController:
+        if self.shieldController and self.ship_state.state == ShipState.LIVE:
             shield0_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
@@ -120,13 +118,13 @@ class Ship(Entity):
                 self.shieldController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0,
             )
         else:
-            shield0_input_values = (0.0,0.0,0.0)
-            shield1_input_values = (0.0,0.0,0.0)
+            shield0_input_values = (0.0, 0.0, 0.0)
+            shield1_input_values = (0.0, 0.0, 0.0)
 
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
 
-        if self.turretController:
+        if self.turretController and self.ship_state.state == ShipState.LIVE:
             turret_left_x, turret_left_y = (
                 self.turretController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.turretController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
@@ -136,12 +134,10 @@ class Ship(Entity):
                 self.turretController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
             )
 
-            turret_left_fire = self.turretController.is_button_down(
-                self.turretController.BUTTON_LEFTSHOULDER,
-            )
-            turret_right_fire = self.turretController.is_button_down(
-                self.turretController.BUTTON_RIGHTSHOULDER,
-            )
+            threshold = 0.2
+            turret_left_fire = (self.turretController.get_axis(GameController.AXIS_TRIGGER_LEFT) or 0.0) > threshold
+            turret_right_fire = (self.turretController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0) > threshold
+
         else:
             turret_left_x, turret_left_y = (0,0)
             turret_right_x, turret_right_y = (0,0)
@@ -151,18 +147,16 @@ class Ship(Entity):
         self.turrets[1].update(game_speed, turret_right_x, turret_right_y, turret_right_fire)
 
         self._angle = math.degrees(self._physicsShip.body.angle) + 180
-        pos = self._physicsShip.body.position * PHYSICS_SCALE
+        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
         self._position = Vector2(pos[0], pos[1])
         self._quad.pos = self._position
         self._quad.angle = self._angle
 
-        self.ship_state.update(game_speed)
-
-        self._healthbar.scale = Vector2(
-            self._dim.x * self.ship_state.energy / ShipState.MAX_ENERGY,
-            self._healthbar.scale.y,
+        self.ship_state.update(
+            time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
-        self._healthbar.pos = self._position + Vector2(-self._dim.x/2, -self._dim.y/3)
+
+        # self._healthbar.update(game_speed)
 
     def draw(self, screen):
         if self.ship_state.state == ShipState.LIVE:
@@ -179,7 +173,26 @@ class Ship(Entity):
 
             for turret in self.turrets:
                 turret.draw(screen)
-            self._healthbar.draw(screen)
+            # self._healthbar.draw(screen)
+        elif self.ship_state.state == ShipState.DYING:
+            self._quad.shader.bind()
+            self._quad.shader.set_uniform_float('mul_r', 0.0)
+            self._quad.shader.set_uniform_float('mul_g', 0.0)
+            self._quad.shader.set_uniform_float('mul_b', 0.0)
+            self._quad.draw(screen)
+            for turret in self.turrets:
+                turret.draw(screen)
+        elif self.ship_state.state == ShipState.DEAD:
+            self._quad.shader.bind()
+            self._quad.shader.set_uniform_float('mul_r', 0.5)
+            self._quad.shader.set_uniform_float('mul_g', 0.5)
+            self._quad.shader.set_uniform_float('mul_b', 0.5)
+            self._quad.draw(screen)
+            for turret in self.turrets:
+                turret.draw(screen)
 
-    def collide(self, other, began):
+    def collide(self, other, intensity=10.0, **kwargs):
+        # TODO: Calculate the damage:
+        # Collision between shield and bullet (sensor)
+        # Collision between shield and everything else
         self.ship_state.damage(energy=10.0)

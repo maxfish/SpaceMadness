@@ -13,5 +13,3 @@ class PhysicsShield:
             shapeFixture=b2FixtureDef(density=2.0, isSensor=True),
             userData={'type': 'shield', 'obj': shield, 'owner': id(shield._ship)},
         )
-
-        self.body.contactListener = self

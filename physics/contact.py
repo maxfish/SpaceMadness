@@ -7,19 +7,27 @@ class ContactListener(b2ContactListener):
         if not contact.enabled:
             return
 
-        fixture_a = contact.fixtureA
-        fixture_b = contact.fixtureB
+        body_a = contact.fixtureA.body
+        body_b = contact.fixtureB.body
 
-        body_a, body_b = fixture_a.body, fixture_b.body
-        ud_a, ud_b = body_a.userData, body_b.userData
+        userdata_a = body_a.userData
+        userdata_b = body_b.userData
 
-        if self.owner_matches(ud_a, ud_b):
+        if self.owner_matches(userdata_a, userdata_b):
             return
 
-        if 'obj' in ud_a:
-            ud_a['obj'].collide(ud_b.get('obj'), began)
-        if 'obj' in ud_b:
-            ud_b['obj'].collide(ud_a.get('obj'), began)
+        if 'obj' in userdata_a:
+            userdata_a['obj'].collide(
+                userdata_b.get('obj'),
+                body=body_a,
+                began=began,
+            )
+        if 'obj' in userdata_b:
+            userdata_b['obj'].collide(
+                userdata_a.get('obj'),
+                body=body_b,
+                began=began,
+            )
 
     def BeginContact(self, contact):
         self.handle_contact(contact, True)
@@ -36,3 +44,12 @@ class ContactListener(b2ContactListener):
 
     def owner_matches(self, uda, udb):
         return 'owner' in uda and 'owner' in udb and uda['owner'] == udb['owner']
+
+
+def calc_intensity(contact) -> float:
+    other = contact.fixtureB.body
+    speed = other.linearVelocity.length
+    mass = other.body.mass
+    angle = other.body.angle
+
+    return speed * mass  # how to add the angle?

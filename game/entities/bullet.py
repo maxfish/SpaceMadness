@@ -57,10 +57,11 @@ class Bullet(Entity):
         return pos.x < 0 or pos.x > self._world.bounds.w \
             or pos.y < 0 or pos.y > self._world.bounds.h
 
-    def collide(self, other, began):
+    def collide(self, other, began=False, **kwargs):
         # Don't do anything if a bullet is hitting a bullet.
         if isinstance(other, type(self)):
             return
+        # If a bullet is hit by anything else, recycle it.
         if began:
             self.remove_bullet()
 

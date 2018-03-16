@@ -2,7 +2,7 @@ import math
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
@@ -46,32 +46,48 @@ class World:
 
         bullet_mgr = BulletManager(self)
 
+        self.players = []
+        self.entities = [bullet_mgr]
+
+        def batch(iterable, n=1):
+            l = len(iterable)
+            for ndx in range(0, l, n):
+                yield iterable[ndx:min(ndx + n, l)]
+
+        quadrant=0
+        for cs in batch(controllers, 3):
+            x = 300 + (SCREEN_WIDTH-600) * (quadrant & 1) + 100 * random.uniform(-1, 1)
+            y = 200 + (SCREEN_HEIGHT-400) * (quadrant >> 1 & 1) + 50 * random.uniform(-1, 1)
+            ship = Ship(
+                self,
+                bullet_mgr,
+                controllers=cs,
+                x=x,
+                y=y,
+                angle=math.degrees(math.atan2(y, x))-180
+            )
+            self.players.append(ship)
+            self.entities.append(ship)
+            quadrant += 1
+
         ship = Ship(
             self,
             bullet_mgr,
-            controllers=controllers[:3],
-            x=200,
-            y=300,
-        )
-
-        ship2 = Ship(
-            self,
-            bullet_mgr,
             controllers=[],
-            x=500,
-            y=300,
+            x=700,
+            y=400,
         )
 
-        self.players = [
-            ship,
-            ship2,
-        ]
-        self.entities = [
-            ship,
-            ship2,
-            bullet_mgr,
-        ]
+        self.players.append(ship)
+        self.entities.append(ship)
+
         self.asteroids = []
+        self.asteroids.append(
+            Asteroid(self, 400, 400, Vector2(0, 0), 0, 'resources/images/derelict/part_01.png', SHIP_SCALE))
+        self.asteroids.append(
+            Asteroid(self, 390, 440, Vector2(0, 0), 0, 'resources/images/derelict/part_02.png', SHIP_SCALE))
+        self.asteroids.append(
+            Asteroid(self, 410, 445, Vector2(0, 0), 0, 'resources/images/derelict/part_03.png', SHIP_SCALE))
 
     def set_stage(self, stage):
         self.stage = stage
@@ -92,8 +108,10 @@ class World:
         for e in self.entities:
             e.update(game_speed)
 
-        if random.randint(0, 10000) < 60:
-            self.generate_asteroid()
+        if random.randint(0, 10000) < 100:
+           self.generate_asteroid()
+
+        self.check_asteroids()
 
         # Check position of physical objects
         for e in self.entities:
@@ -145,3 +163,9 @@ class World:
         torque = 1 * random.random()
         asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque)
         self.asteroids.append(asteroid)
+
+    def check_asteroids(self):
+        for asteroid in self.asteroids:
+            if asteroid.destroy():
+                self.asteroids.remove(asteroid)
+                print('asteroid removed')

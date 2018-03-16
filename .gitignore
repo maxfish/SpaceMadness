@@ -109,3 +109,6 @@ ENV/
 # Don't commit pybox2d by mistake
 pybox2d
 pybox2d-master
+
+# PyCharm
+.idea
