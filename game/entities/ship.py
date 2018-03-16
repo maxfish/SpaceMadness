@@ -1,10 +1,12 @@
 import math
+from random import random
 
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
+from game.entities.asteroid import Asteroid
 
 import config
 # from game.entities.healthbar import HealthBar
@@ -32,6 +34,7 @@ class Ship(Entity):
         angle=0,
     ):
         super().__init__(world, x, y, z)
+        self.world = world
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
         self._angle = angle
@@ -173,23 +176,33 @@ class Ship(Entity):
 
             for turret in self.turrets:
                 turret.draw(screen)
-            # self._healthbar.draw(screen)
-        elif self.ship_state.state == ShipState.DYING:
-            self._quad.shader.bind()
-            self._quad.shader.set_uniform_float('mul_r', 0.0)
-            self._quad.shader.set_uniform_float('mul_g', 0.0)
-            self._quad.shader.set_uniform_float('mul_b', 0.0)
-            self._quad.draw(screen)
-            for turret in self.turrets:
-                turret.draw(screen)
-        elif self.ship_state.state == ShipState.DEAD:
-            self._quad.shader.bind()
-            self._quad.shader.set_uniform_float('mul_r', 0.5)
-            self._quad.shader.set_uniform_float('mul_g', 0.5)
-            self._quad.shader.set_uniform_float('mul_b', 0.5)
-            self._quad.draw(screen)
-            for turret in self.turrets:
-                turret.draw(screen)
+            #self._healthbar.draw(screen)
+
+    def destroy_ship(self):
+        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
+        x, y = pos
+
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x, y - 30,
+            Vector2(random() * 30 - 15, random() * -100),
+            random() * 3.0,
+            'resources/images/derelict/part_01.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x + 30, y + 30,
+            Vector2(random() * 60 + 30, random() * 60 + 30),
+            random() * 3.0,
+            'resources/images/derelict/part_02.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x - 30, y + 30,
+            Vector2(random() * -60 - 30, random() * 60 + 30),
+            random() * 3.0,
+            'resources/images/derelict/part_03.png', config.SHIP_SCALE
+        ))
 
     def collide(self, other, intensity=10.0, **kwargs):
         # TODO: Calculate the damage:

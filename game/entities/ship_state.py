@@ -3,8 +3,7 @@ class ShipState:
     DYING = 2
     DEAD = 3
 
-    MAX_ENERGY = 1000.0
-    DYING_TIME_MS = 2000
+    MAX_ENERGY = 1.0
 
     def __init__(self, ship):
         self.ship = ship
@@ -24,8 +23,8 @@ class ShipState:
         self.time += time_passed_ms
 
         if self.state == self.DYING:
-            if self.time_in_state >= self.DYING_TIME_MS:
-                self.enter(self.DEAD)
+            self.ship.destroy_ship()
+            self.enter(self.DEAD)
 
     def damage(self, energy):
         if self.state == self.LIVE:
