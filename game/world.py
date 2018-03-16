@@ -32,6 +32,14 @@ class World:
         self.game_over_timer = 0
         self.stage = stage
 
+        self.game_over_quad = QuadDrawable(
+            SCREEN_WIDTH/2-496/2,
+            SCREEN_HEIGHT/2-321/2,
+            496,
+            321,
+        )
+        self.game_over_quad.texture = Texture.load_from_file('resources/images/game_over.png')
+
         self.bounds = bounds
         self.debug = debug
 
@@ -112,10 +120,7 @@ class World:
 
         self.game_over_timer -= time_delta
 
-        if self.game_over_timer > 0:
-            # show game over
-            pass
-        else:
+        if self.game_over_timer <= 0:
             self.game_over_timer = 0
 
         self.stage.update(game_speed)
