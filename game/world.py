@@ -1,4 +1,7 @@
+import ctypes
 import math
+
+import sdl2
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
 from mgl2d.graphics.quad_drawable import QuadDrawable
@@ -50,17 +53,17 @@ class World:
             for ndx in range(0, l, n):
                 yield iterable[ndx:min(ndx + n, l)]
 
-        quadrant=0
+        quadrant = 0
         for cs in batch(controllers, 3):
-            x = 300 + (SCREEN_WIDTH-600) * (quadrant & 1) + 100 * random.uniform(-1, 1)
-            y = 200 + (SCREEN_HEIGHT-400) * (quadrant >> 1 & 1) + 50 * random.uniform(-1, 1)
+            x = 300 + (SCREEN_WIDTH - 600) * (quadrant & 1) + 100 * random.uniform(-1, 1)
+            y = 200 + (SCREEN_HEIGHT - 400) * (quadrant >> 1 & 1) + 50 * random.uniform(-1, 1)
             ship = Ship(
                 self,
                 bullet_mgr,
                 controllers=cs,
                 x=x,
                 y=y,
-                angle=math.degrees(math.atan2(y, x))-180
+                angle=math.degrees(math.atan2(y, x)) - 180
             )
             self.players.append(ship)
             self.entities.append(ship)
@@ -78,8 +81,8 @@ class World:
         self.entities.append(ship)
 
         self.game_over_quad = QuadDrawable(
-            SCREEN_WIDTH/2-496/2,
-            SCREEN_HEIGHT/2-321/2,
+            SCREEN_WIDTH / 2 - 496 / 2,
+            SCREEN_HEIGHT / 2 - 321 / 2,
             496,
             321,
         )
@@ -102,6 +105,12 @@ class World:
         #     character.begin()
 
     def update(self, game_speed):
+        # Mouse controlling an asteroid
+        # x, y = ctypes.c_int(0), ctypes.c_int(0)
+        # buttonstate = sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
+        # self.asteroids[0]._physicAsteroid.body.velocity = (0,0)
+        # self.asteroids[0]._physicAsteroid.body.position = (x.value/PHYSICS_SCALE, y.value/PHYSICS_SCALE)
+
         time_delta = game_speed * config.GAME_FRAME_MS
         alive = 0
         for p in self.players:
@@ -130,7 +139,7 @@ class World:
             e.update(game_speed)
 
         if random.randint(0, 10000) < 100:
-           self.generate_asteroid()
+            self.generate_asteroid()
 
         self.check_asteroids()
 

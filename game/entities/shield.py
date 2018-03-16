@@ -13,7 +13,7 @@ from game.entity import Entity
 from physics.physics_shield import PhysicsShield
 
 SHIP_SIZE = Vector2(109, 156)
-HALF_ARC_DEGREES = 22
+HALF_ARC_DEGREES = 40
 INERTIA = True
 
 
@@ -84,31 +84,13 @@ class Shield(Entity):
         self._quad.pos = self._ship._position
         self._quad.angle = self._angle
 
-    # def update_charge(self, trigger):
-    #     if trigger > 0:
-    #         self._charge += trigger
-    #     else:
-    #         self._charge -= 0.4
-    #         if self._charge < 0:
-    #             self._charge = 0
-    #
-    #     if self._charge >= 50:
-    #         self._charge = 0
-    #         self._world.entities.append(
-    #             Laser(self.position.x, self.position.y, 1000, self._angle),
-    #         )
-    #
-    #     self._quad.scale = Vector2(
-    #         SHIP_SIZE.x * (1.0 + 2 * self._charge / 55.0),
-    #         SHIP_SIZE.y * (1.0 - self._charge / 55.0),
-    #     )
-
     def draw(self, screen):
         if not self._enable:
             return
 
         self._quad.shader.bind()
         if self._collision_timer > 0:
+            self._quad.shader.set_uniform_float('mul_r', 0)
             self._quad.shader.set_uniform_float('mul_g', 0.8)
             self._quad.shader.set_uniform_float('mul_b', 0.8)
         else:
@@ -120,16 +102,19 @@ class Shield(Entity):
             self._quad.draw(screen)
 
     def collide(self, other, intensity=0.0, began=False, **kwargs):
-        # TODO: Calculate the damage:
-        # Collision between shield and bullet (sensor)
-        # Collision between shield and everything else
+        if not self._enable:
+            return
+
+        body = kwargs['body']
+        other_body = kwargs['other_body']
+
         self.shield_state.damage(energy=10.0)
         if began:
-            incoming_pos = other.position
-            vector = incoming_pos - self._physicsShield.body.position
+            incoming_pos = other_body.position
+            vector = incoming_pos - body.position
             versor = b2Vec2(vector.x, vector.y)
             versor.Normalize()
-            incoming_angle = math.degrees(math.acos(versor.x))
+            incoming_angle = math.degrees(math.atan2(versor.y, versor.x))
+            incoming_angle = (incoming_angle+360) % 360
             if self._angle - HALF_ARC_DEGREES < incoming_angle < self._angle + HALF_ARC_DEGREES:
                 self._collision_timer = 400
-                # Check if the distance is within acceptable range

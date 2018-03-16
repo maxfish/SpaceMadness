@@ -20,12 +20,14 @@ class ContactListener(b2ContactListener):
             userdata_a['obj'].collide(
                 userdata_b.get('obj'),
                 body=body_a,
+                other_body=body_b,
                 began=began,
             )
         if 'obj' in userdata_b:
             userdata_b['obj'].collide(
                 userdata_a.get('obj'),
                 body=body_b,
+                other_body=body_a,
                 began=began,
             )
 
