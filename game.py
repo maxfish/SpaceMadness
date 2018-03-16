@@ -18,12 +18,14 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
 parser.add_argument("--width", default=SCREEN_WIDTH, type=int, help="screen width. Defaults to 1920")
 parser.add_argument("--height", default=SCREEN_HEIGHT, type=int, help="screen height. Defaults to 1080.")
+parser.add_argument("--fullscreen", default=False, type=bool, help="Do fullscreen, baby!")
 args = parser.parse_args()
 
 app = App()
 
 screen = Screen(args.width, args.height, 'Space Madness')
-sdl2.SDL_SetWindowFullscreen(screen._window, True)
+if args.fullscreen:
+    sdl2.SDL_SetWindowFullscreen(screen._window, True)
 screen.print_info()
 
 controllerManager = GameControllerManager()
