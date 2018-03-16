@@ -13,7 +13,7 @@ GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
 
 
-BULLET_VELOCITY = 1
+BULLET_VELOCITY = 0.5
 
 
 class Turret(Entity):
