@@ -3,7 +3,7 @@ class ShipState:
     DYING = 2
     DEAD = 3
 
-    MAX_ENERGY = 1.0
+    MAX_ENERGY = 1000.0
     DYING_TIME_MS = 2000
 
     def __init__(self, ship):
