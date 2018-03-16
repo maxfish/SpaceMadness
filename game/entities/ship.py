@@ -1,27 +1,22 @@
 import math
 
+from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
-from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.math.vector2 import Vector2
 from mgl2d.input.game_controller import GameController
+from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
-from game.entity import Entity
+import config
 from game.entities.shield import Shield
-from game.entities.turret import Turret
-from game.entities.trail import Trail
-from game.entities.side_trail import SideTrail
-from physics.physics_ship import PhysicsShip
 from game.entities.ship_state import ShipState
+from game.entities.side_trail import SideTrail
+from game.entities.trail import Trail
+from game.entities.turret import Turret
+from game.entity import Entity
+from physics.physics_ship import PhysicsShip
 
 
 SCALE = 0.67
-
-
-# copied from game.py
-GAME_FPS = 50
-GAME_FRAME_MS = 1000 / GAME_FPS
 
 
 class Ship(Entity):
@@ -41,8 +36,8 @@ class Ship(Entity):
         self._physicsShip = PhysicsShip(
             self,
             world.physicsWorld,
-            x / PHYSICS_SCALE,
-            y / PHYSICS_SCALE,
+            x / config.PHYSICS_SCALE,
+            y / config.PHYSICS_SCALE,
         )
 
         # Used by ship components to scale themselves
@@ -120,8 +115,8 @@ class Ship(Entity):
                 self.shieldController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0,
             )
         else:
-            shield0_input_values = (0.0,0.0,0.0)
-            shield1_input_values = (0.0,0.0,0.0)
+            shield0_input_values = (0.0, 0.0, 0.0)
+            shield1_input_values = (0.0, 0.0, 0.0)
 
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
@@ -136,12 +131,10 @@ class Ship(Entity):
                 self.turretController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,
             )
 
-            turret_left_fire = self.turretController.is_button_down(
-                self.turretController.BUTTON_LEFTSHOULDER,
-            )
-            turret_right_fire = self.turretController.is_button_down(
-                self.turretController.BUTTON_RIGHTSHOULDER,
-            )
+            threshold = 0.2
+            turret_left_fire = (self.turretController.get_axis(GameController.AXIS_TRIGGER_LEFT) or 0.0) > threshold
+            turret_right_fire = (self.turretController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0) > threshold
+
         else:
             turret_left_x, turret_left_y = (0,0)
             turret_right_x, turret_right_y = (0,0)
@@ -151,7 +144,7 @@ class Ship(Entity):
         self.turrets[1].update(game_speed, turret_right_x, turret_right_y, turret_right_fire)
 
         self._angle = math.degrees(self._physicsShip.body.angle) + 180
-        pos = self._physicsShip.body.position * PHYSICS_SCALE
+        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
         self._position = Vector2(pos[0], pos[1])
         self._quad.pos = self._position
         self._quad.angle = self._angle
