@@ -120,13 +120,6 @@ class World:
         #     character.begin()
 
     def update(self, game_speed):
-        # Mouse controlling an asteroid
-        if len(self.asteroids)>0:
-            x, y = ctypes.c_int(0), ctypes.c_int(0)
-            buttonstate = sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
-            self.asteroids[0]._physicAsteroid.body.velocity = (0,0)
-            self.asteroids[0]._physicAsteroid.body.position = (x.value/PHYSICS_SCALE, y.value/PHYSICS_SCALE)
-
         time_delta = game_speed * config.GAME_FRAME_MS
         alive = 0
         for p in self.players:
