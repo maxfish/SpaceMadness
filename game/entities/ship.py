@@ -29,16 +29,18 @@ class Ship(Entity):
         x,
         y,
         z=0,
+        angle=0,
     ):
         super().__init__(world, x, y, z)
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
-        self._angle = 0
+        self._angle = angle
         self._physicsShip = PhysicsShip(
             self,
             world.physicsWorld,
             x / config.PHYSICS_SCALE,
             y / config.PHYSICS_SCALE,
+            angle=angle,
         )
 
         # Used by ship components to scale themselves
