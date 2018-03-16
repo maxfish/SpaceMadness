@@ -5,7 +5,6 @@ from mgl2d.math.vector2 import Vector2
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
-from game.bullet_mgr import BulletManager
 from physics.contact import ContactListener
 import random
 
@@ -35,10 +34,8 @@ class DemoWorld:
         # Physical bodies should be deleted outside the simulation step.
         self.physics_to_delete = []
 
-        bullet_mgr = BulletManager(self)
-
         self.players = []
-        self.entities = [bullet_mgr]
+        self.entities = []
 
         def batch(iterable, n=1):
             l = len(iterable)
@@ -66,7 +63,12 @@ class DemoWorld:
         for e in self.entities:
             e.update(game_speed)
 
-        if random.randint(0, 10000) < 100:
+        should_gen_asteroid = random.randint(0, 10000)
+        if should_gen_asteroid < 10:
+            self.generate_person()
+        elif should_gen_asteroid < 20:
+            self.generate_derelict()
+        elif should_gen_asteroid < 100:
             self.generate_asteroid()
 
         self.check_asteroids()
@@ -117,9 +119,77 @@ class DemoWorld:
         position.x = SCREEN_WIDTH / 2 + direction.x * (SCREEN_WIDTH / 1.5)
         position.y = SCREEN_HEIGHT / 2 + direction.y * (SCREEN_HEIGHT / 1.5)
 
-        speed = -Vector2(direction.x, direction.y) * 1000 * random.random()
+        assets = [
+            'resources/images/asteroides/asteroid_01.png',
+            'resources/images/asteroides/asteroid_02.png',
+            'resources/images/asteroides/asteroid_03.png',
+            'resources/images/asteroides/asteroid_04.png',
+            'resources/images/asteroides/asteroid_05.png',
+            'resources/images/asteroides/asteroid_06.png',
+            'resources/images/asteroides/asteroid_07.png',
+            'resources/images/asteroides/asteroid_08.png',
+            'resources/images/asteroides/asteroid_09.png',
+            'resources/images/asteroides/asteroid_10.png',
+            'resources/images/asteroides/asteroid_11.png',
+            'resources/images/asteroides/asteroid_12.png',
+            'resources/images/asteroides/asteroid_13.png',
+            'resources/images/asteroides/asteroid_14.png',
+        ]
+
+        speed = -Vector2(direction.x, direction.y) * 500 * random.random()
         torque = 1 * random.random()
-        asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque)
+        asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque,
+                            asset=assets[random.randint(0, len(assets) - 1)])
+        self.asteroids.append(asteroid)
+
+    def generate_derelict(self):
+        # Picks a random movement direction
+        direction = Vector2()
+        angle = random.randint(0, 359)
+        direction.x = math.cos(math.radians(angle))
+        direction.y = math.sin(math.radians(angle))
+
+        # Places the asteroid outside of the screen
+        position = Vector2()
+        position.x = SCREEN_WIDTH / 2 + direction.x * (SCREEN_WIDTH / 1.5)
+        position.y = SCREEN_HEIGHT / 2 + direction.y * (SCREEN_HEIGHT / 1.5)
+
+        speed = -Vector2(direction.x, direction.y) * 200 * random.random()
+        torque = 0.5 * random.random()
+
+        assets = [
+            'resources/images/derelict/part_01.png',
+            'resources/images/derelict/part_02.png',
+            'resources/images/derelict/part_03.png'
+        ]
+
+        asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque,
+                            asset=assets[random.randint(0, len(assets) - 1)])
+        self.asteroids.append(asteroid)
+
+    def generate_person(self):
+        # Picks a random movement direction
+        direction = Vector2()
+        angle = random.randint(0, 359)
+        direction.x = math.cos(math.radians(angle))
+        direction.y = math.sin(math.radians(angle))
+
+        # Places the asteroid outside of the screen
+        position = Vector2()
+        position.x = SCREEN_WIDTH / 2 + direction.x * (SCREEN_WIDTH / 1.5)
+        position.y = SCREEN_HEIGHT / 2 + direction.y * (SCREEN_HEIGHT / 1.5)
+
+        speed = -Vector2(direction.x, direction.y) * 200 * random.random()
+        torque = 0.5 * random.random()
+
+        assets = [
+            'resources/images/people/pilot.png',
+            'resources/images/people/gunner.png',
+            'resources/images/people/technician.png'
+        ]
+
+        asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque,
+                            asset=assets[random.randint(0, len(assets) - 1)])
         self.asteroids.append(asteroid)
 
     def check_asteroids(self):
