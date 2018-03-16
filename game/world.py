@@ -45,31 +45,41 @@ class World:
         # TODO: ships should be initialised in stage
         bullet_mgr = BulletManager(self, self.physicsWorld)
 
+        self.players = []
+        self.entities = [bullet_mgr]
+
+        def batch(iterable, n=1):
+            l = len(iterable)
+            for ndx in range(0, l, n):
+                yield iterable[ndx:min(ndx + n, l)]
+
+        quadrant=0
+        for cs in batch(controllers, 3):
+            x = 300 + (SCREEN_WIDTH-600) * (quadrant & 1) + 100 * random.uniform(-1, 1)
+            y = 200 + (SCREEN_HEIGHT-400) * (quadrant >> 1 & 1) + 50 * random.uniform(-1, 1)
+            ship = Ship(
+                self,
+                bullet_mgr,
+                controllers=cs,
+                x=x,
+                y=y,
+                angle=math.degrees(math.atan2(y, x))-180
+            )
+            self.players.append(ship)
+            self.entities.append(ship)
+            quadrant += 1
+
         ship = Ship(
             self,
             bullet_mgr,
-            controllers=controllers[:3],
-            x=200,
-            y=300,
-        )
-
-        ship2 = Ship(
-            self,
-            bullet_mgr,
             controllers=[],
-            x=500,
-            y=300,
+            x=700,
+            y=400,
         )
 
-        self.players = [
-            ship,
-            ship2,
-        ]
-        self.entities = [
-            ship,
-            ship2,
-            bullet_mgr,
-        ]
+        self.players.append(ship)
+        self.entities.append(ship)
+
         self.asteroids = []
         self.asteroids.append(
             Asteroid(self, 400, 400, Vector2(0, 0), 0, 'resources/images/derelict/part_01.png', SHIP_SCALE))
