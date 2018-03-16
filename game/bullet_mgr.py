@@ -1,5 +1,5 @@
 from game.entity import Entity
-from .bullet import Bullet
+from game.entities.bullet import Bullet
 
 
 class BulletManager(Entity):

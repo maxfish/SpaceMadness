@@ -1,16 +1,10 @@
-import math
-
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
-from mgl2d.input.game_controller import GameController
 
 from config import PHYSICS_SCALE
 from game.entity import Entity
-from game.shield import Shield
-from game.turret import Turret
 from physics.physics_asteroid import PhysicsAsteroid
-from physics.physics_ship import PhysicsShip
 
 SCALE = 0.67
 

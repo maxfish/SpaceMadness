@@ -1,7 +1,7 @@
 from Box2D import b2World
 
-from game.ship import Ship
-from game.asteroid import Asteroid
+from game.entities.ship import Ship
+from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
 from physics.contact import ContactListener
 import random

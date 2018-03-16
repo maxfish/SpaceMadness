@@ -8,12 +8,12 @@ from mgl2d.input.game_controller import GameController
 
 from config import PHYSICS_SCALE
 from game.entity import Entity
-from game.shield import Shield
-from game.turret import Turret
-from game.trail import Trail
-from game.side_trail import SideTrail
+from game.entities.shield import Shield
+from game.entities.turret import Turret
+from game.entities.trail import Trail
+from game.entities.side_trail import SideTrail
 from physics.physics_ship import PhysicsShip
-from game.ship_state import ShipState
+from game.entities.ship_state import ShipState
 
 
 SCALE = 0.67

@@ -1,14 +1,11 @@
 import math
-import numpy as np
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
-from mgl2d.math.matrix4 import Matrix4
-
 
 from game.stage import Stage
 from game.entity import Entity
-from game.turret_state import TurretState
+from game.entities.turret_state import TurretState
 
 
 # copied from game.py

@@ -10,7 +10,7 @@ from mgl2d.input.game_controller_manager import GameControllerManager
 
 from config import GAME_FPS, GAME_FRAME_MS
 from game.stages.stage_sky import StageSky
-from game.turret import TurretStage
+from game.entities.turret import TurretStage
 from game.world import World
 
 logging.basicConfig(level=logging.INFO)
