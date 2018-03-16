@@ -95,23 +95,25 @@ class World:
             self.generate_asteroid()
 
         # Check position of physical objects
-        # for e in self.entities:
-        #     if not isinstance(e, Ship):
-        #         continue
-        #
-        #     pos = e._physicsShip.body.position
-        #     if not (0 < pos.x < self.bounds.w/PHYSICS_SCALE and 0 < pos.y < self.bounds.h/PHYSICS_SCALE):
-        #         physics_center = Vector2(self.bounds.center_x, self.bounds.center_y) / PHYSICS_SCALE
-        #         pos.x -= physics_center.x
-        #         pos.y -= physics_center.y
-        #         intensity = 1000
-        #         force_dir = Vector2(pos.x, pos.y)
-        #         force_dir.normalise()
-        #         force_dir = Vector2(0, -1)
-        #         force_dir *= intensity
-        #         force_apply_pos = e._physicsShip.body.GetWorldPoint(localPoint=(0.0, 0.0))
-        #         e._physicsShip.body.ApplyForce((force_dir.x, force_dir.y), force_apply_pos, True)
+        for e in self.entities:
+            if not isinstance(e, Ship):
+                continue
 
+            pos = e._physicsShip.body.position
+            force_dir = Vector2()
+            if pos.x < 0:
+                force_dir = Vector2(1, 0)
+            elif pos.x > self.bounds.w / PHYSICS_SCALE:
+                force_dir = Vector2(-1, 0)
+            elif pos.y < 0:
+                force_dir = Vector2(0, 1)
+            elif pos.y > self.bounds.h / PHYSICS_SCALE:
+                force_dir = Vector2(0, -1)
+
+            intensity = 100
+            force_dir *= intensity
+            force_apply_pos = e._physicsShip.body.GetWorldPoint(localPoint=(0.0, 0.0))
+            e._physicsShip.body.ApplyLinearImpulse((force_dir.x, force_dir.y), force_apply_pos, True)
 
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
