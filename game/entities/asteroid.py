@@ -5,7 +5,7 @@ from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
 from game.entity import Entity
 from physics.physics_asteroid import PhysicsAsteroid
 
@@ -55,3 +55,14 @@ class Asteroid(Entity):
 
     def collide(self, other, body=None, began=False):
         pass
+
+    def destroy(self):
+        goes_to_left = self._physicAsteroid.body.linearVelocity.x < 0
+        goes_to_right = not goes_to_left
+        goes_to_top = self._physicAsteroid.body.linearVelocity.y < 0
+        goes_to_bottom = not goes_to_top
+
+        return (goes_to_left and self._physicAsteroid.body.position.x < 0) or \
+               (goes_to_right and (self._physicAsteroid.body.position.x * PHYSICS_SCALE > SCREEN_WIDTH)) or \
+               (goes_to_top and (self._physicAsteroid.body.position.y < 0)) or \
+               (goes_to_bottom and (self._physicAsteroid.body.position.y * PHYSICS_SCALE > SCREEN_HEIGHT))

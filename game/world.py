@@ -91,8 +91,10 @@ class World:
         for e in self.entities:
             e.update(game_speed)
 
-        if random.randint(0, 10000) < 60:
-            self.generate_asteroid()
+        if random.randint(0, 10000) < 100:
+           self.generate_asteroid()
+
+        self.check_asteroids()
 
         # Check position of physical objects
         for e in self.entities:
@@ -144,3 +146,9 @@ class World:
         torque = 1 * random.random()
         asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque)
         self.asteroids.append(asteroid)
+
+    def check_asteroids(self):
+        for asteroid in self.asteroids:
+            if asteroid.destroy():
+                self.asteroids.remove(asteroid)
+                print('asteroid removed')
