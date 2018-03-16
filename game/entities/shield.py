@@ -7,8 +7,6 @@ from mgl2d.math.vector2 import Vector2
 import config
 from game.entities.shield_state import ShieldState
 from game.entity import Entity
-from game.entity import Entity
-from game.laser import Laser
 from game.laser import Laser
 from physics.physics_shield import PhysicsShield
 
