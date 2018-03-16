@@ -53,6 +53,7 @@ class Bullet(Entity):
             pos *= PHYSICS_SCALE
             self._quad.pos = Vector2(pos[0], pos[1])
             self._quad.angle = math.degrees(self._physics.body.angle)
+            pos /= PHYSICS_SCALE
 
     def collide(self, other, began=False, **kwargs):
         # Don't do anything if a bullet is hitting a bullet.
