@@ -119,15 +119,15 @@ class Shield(Entity):
         if self.shield_state.is_healthy:
             self._quad.draw(screen)
 
-    def collide(self, other, intensity=0.0, **kwargs):
+    def collide(self, other, intensity=0.0, began=False, **kwargs):
         # TODO: Calculate the damage:
         # Collision between shield and bullet (sensor)
         # Collision between shield and everything else
         self.shield_state.damage(energy=10.0)
         if began:
-            incoming_pos = body.position
+            incoming_pos = other.position
             vector = incoming_pos - self._physicsShield.body.position
-            versor = b2Vec2(vector)
+            versor = b2Vec2(vector.x, vector.y)
             versor.Normalize()
             incoming_angle = math.degrees(math.acos(versor.x))
             if self._angle - HALF_ARC_DEGREES < incoming_angle < self._angle + HALF_ARC_DEGREES:

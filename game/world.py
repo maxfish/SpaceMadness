@@ -1,6 +1,8 @@
 import math
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
+from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.texture import Texture
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 import config
@@ -75,6 +77,14 @@ class World:
         self.players.append(ship)
         self.entities.append(ship)
 
+        self.game_over_quad = QuadDrawable(
+            SCREEN_WIDTH/2-496/2,
+            SCREEN_HEIGHT/2-321/2,
+            496,
+            321,
+        )
+        self.game_over_quad.texture = Texture.load_from_file('resources/images/game_over.png')
+
         self.asteroids = []
 
     def restart_game(self):
@@ -99,11 +109,9 @@ class World:
                 alive += 1
 
         if alive <= 1 and self.game_over_timer <= 0:
-            print("game over started")
             self.game_over_timer = 5000
 
         if self.game_over_timer > 0 and self.game_over_timer < time_delta:
-            print("game over ended")
             self.restart_game()
             return
 
@@ -156,6 +164,9 @@ class World:
             e.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
+
+        if self.game_over_timer > 0:
+            self.game_over_quad.draw(screen)
 
     def game_over(self):
         self.scene = self.SCENE_GAME_OVER
