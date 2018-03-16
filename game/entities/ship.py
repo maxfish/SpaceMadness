@@ -204,6 +204,28 @@ class Ship(Entity):
             'resources/images/derelict/part_03.png', config.SHIP_SCALE
         ))
 
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x, y - 30,
+            Vector2(random() * 3.0 - 1.5, random() * -10),
+            random() * 3.0,
+            'resources/images/people/pilot.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x + 30, y + 30,
+            Vector2(random() * 6.0 + 3.0, random() * 6.0 + 3.0),
+            random() * 3.0,
+            'resources/images/people/gunner.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x - 30, y + 30,
+            Vector2(random() * -6.0 - 3.0, random() * 6.0 + 3.0),
+            random() * 3.0,
+            'resources/images/people/technician.png', config.SHIP_SCALE
+        ))
+
     def collide(self, other, intensity=10.0, **kwargs):
         # TODO: Calculate the damage:
         # Collision between shield and bullet (sensor)
