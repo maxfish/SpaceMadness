@@ -21,3 +21,6 @@ class PhysicsAsteroid:
 
         self.body.ApplyLinearImpulse(tuple(speed.to_list()), (0, 0), True)
         self.body.angularVelocity = torque
+
+    def update_forces(self):
+        pass
