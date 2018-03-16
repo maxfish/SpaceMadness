@@ -1,4 +1,6 @@
-from Box2D import b2PolygonShape, b2CircleShape
+from Box2D import b2CircleShape
+from Box2D import b2FixtureDef
+from Box2D import b2PolygonShape
 
 
 class PhysicsBullet:
@@ -6,6 +8,7 @@ class PhysicsBullet:
         self.body = physics_world.CreateDynamicBody(
             position=(x, y),
             shapes=b2CircleShape(radius=r),
+            shapeFixture=b2FixtureDef(density=2.0, isSensor=True),
             angularDamping=0,
             linearDamping=0,
             userData={'type': 'bullet', 'obj': bullet, 'owner': owner},

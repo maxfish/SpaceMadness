@@ -22,11 +22,18 @@ class BulletManager(Entity):
         self.active_bullets.append(bullet)
         return bullet
 
+    def recycle(self, bullet):
+        bullet.owner = None
+        bullet._active = False
+        try:
+            self.active_bullets.remove(bullet)
+        except ValueError:
+            print("Why?! ERROR!!!")
+        self.bullets_pool.append(bullet)
+
     def deactivate(self, bullet):
         if bullet in self.active_bullets:
-            bullet._active = False
-            self.active_bullets.remove(bullet)
-            self.bullets_pool.append(bullet)
+            self.recycle(bullet)
 
     def draw(self, screen):
         for bullet in self.active_bullets:
