@@ -62,7 +62,7 @@ class Bullet(Entity):
             return
         # If a bullet is hit by anything else, recycle it.
         if began:
-            print('bullet collision')
+            print('bullet began collision')
             self.remove_bullet()
 
     def remove_bullet(self):
