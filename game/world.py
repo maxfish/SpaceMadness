@@ -60,7 +60,7 @@ class World:
                 controllers=cs,
                 x=x,
                 y=y,
-                angle=math.degrees(math.atan2(y, x))-180
+                angle=random.uniform(0,360)
             )
             self.players.append(ship)
             self.entities.append(ship)
