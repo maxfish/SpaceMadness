@@ -1,10 +1,9 @@
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
-from mgl2d.math.vector2 import Vector2
 
 from game.stage import Stage
-from game.planet import Planet
-from game.cloud import Cloud
+from game.stages.planet import Planet
+from game.stages.cloud import Cloud
 from os import listdir
 from os.path import isfile, join
 

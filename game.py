@@ -5,19 +5,13 @@ import logging
 import sdl2
 import sdl2.ext as sdl2ext
 from mgl2d.app import App
-from mgl2d.graphics.post_processing_step import PostProcessingStep
 from mgl2d.graphics.screen import Screen
-from mgl2d.graphics.shader import Shader
 from mgl2d.input.game_controller_manager import GameControllerManager
 
 from config import GAME_FPS, GAME_FRAME_MS
-from game.bullet import BulletStage
-from game.stage_1 import Stage1
-from game.stage_background import StageBackground
+from game.stages.stage_background import StageBackground
 from game.turret import TurretStage
 from game.world import World
-from game.bullet_mgr import BulletManager
-
 
 logging.basicConfig(level=logging.INFO)
 
