@@ -197,7 +197,6 @@ class World:
         self.scene = self.SCENE_GAME_OVER
 
     def generate_asteroid(self):
-        return
         # Picks a random movement direction
         direction = Vector2()
         angle = random.randint(0, 359)
