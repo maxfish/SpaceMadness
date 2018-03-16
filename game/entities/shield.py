@@ -1,9 +1,8 @@
 import math
 
+from Box2D import b2Vec2
 from mgl2d.graphics.shader import Shader
 from config import PHYSICS_SCALE
-from game.entity import Entity
-from game.laser import Laser
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
@@ -11,19 +10,17 @@ from mgl2d.math.vector2 import Vector2
 import config
 from game.entities.shield_state import ShieldState
 from game.entity import Entity
-from game.laser import Laser
 from physics.physics_shield import PhysicsShield
 
 SHIP_SIZE = Vector2(109, 156)
+HALF_ARC_DEGREES = 40
 INERTIA = True
 
 
 class Shield(Entity):
     def __init__(self, ship, world):
         super().__init__(ship._world, 0, 0)
-
         self._ship = ship
-        self._angle = 0
 
         self._quad = QuadDrawable(0, 0, 0, 0)
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
@@ -33,10 +30,12 @@ class Shield(Entity):
 
         self._physicsShield = PhysicsShield(
             self,
+            ship._physicsShip,
             world.physicsWorld,
             center=self._ship._physicsShip.body.position,
-            radius=self._quad.scale.x / PHYSICS_SCALE,
+            radius=(self._quad.scale.x / PHYSICS_SCALE) * 1.1,
         )
+        self._collision_timer = 0
 
         self._rad1 = ship._dim.y / 2.9
         self._rad2 = ship._dim.y / 2.9
@@ -44,7 +43,6 @@ class Shield(Entity):
         self._angle_speed = 1
         self._enable = False
         self._charge = 0
-        self._collision_timer = 0
         self.shield_state = ShieldState(self)
         self.update(0, (0.0, 0.0, 0.0))
 
@@ -75,62 +73,54 @@ class Shield(Entity):
             self._enable = True
             self.update_angle_position(x, y)
 
+        self._physicsShield.body.position = self._ship._physicsShip.body.position
         self.shield_state.advance_time(
             time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
-        self._collision_timer -= game_speed
+        self._collision_timer -= game_speed * config.GAME_FRAME_MS
 
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
-
-        pos = Vector2(
-            math.cos(math.radians(self._angle)),
-            math.sin(math.radians(self._angle)),
-        )
-        # pos = Vector2(
-        #     pos.x * math.cos(math.radians(self._ship._angle)) - \
-        #     pos.y * math.sin(math.radians(self._ship._angle)),
-        #     pos.x * math.sin(math.radians(self._ship._angle)) + \
-        #     pos.y * math.cos(math.radians(self._ship._angle)),
-        # )
-
         self._quad.pos = self._ship._position
         self._quad.angle = self._angle
-
-    def update_charge(self, trigger):
-        if trigger > 0:
-            self._charge += trigger
-        else:
-            self._charge -= 0.4
-            if self._charge < 0:
-                self._charge = 0
-
-        if self._charge >= 50:
-            self._charge = 0
-            self._world.entities.append(
-                Laser(self.position.x, self.position.y, 1000, self._angle),
-            )
-
-        self._quad.scale = Vector2(
-            SHIP_SIZE.x * (1.0 + 2 * self._charge / 55.0),
-            SHIP_SIZE.y * (1.0 - self._charge / 55.0),
-        )
 
     def draw(self, screen):
         if not self._enable:
             return
 
+        self._quad.shader.bind()
         if self._collision_timer > 0:
-            self._quad.shader.bind()
+            self._quad.shader.set_uniform_float('mul_r', 0)
             self._quad.shader.set_uniform_float('mul_g', 0.8)
             self._quad.shader.set_uniform_float('mul_b', 0.8)
+        else:
+            self._quad.shader.set_uniform_float('mul_g', 0)
+            self._quad.shader.set_uniform_float('mul_b', 1)
+            self._quad.shader.set_uniform_float('mul_r', 1)
 
-        if self.shield_state.is_healthy:
-            self._quad.draw(screen)
+        # if self.shield_state.is_healthy:
+        self._quad.draw(screen)
 
-    def collide(self, other, intensity=0.0, **kwargs):
-        # TODO: Calculate the damage:
-        # Collision between shield and bullet (sensor)
+    def collide(self, other, intensity=0.0, began=False, **kwargs):
+        if not self._enable:
+            return
+
+        body = kwargs['body']
+        other_body = kwargs['other_body']
         # Collision between shield and everything else
         self.shield_state.damage(energy=10.0)
-        self._collision_timer = 2
+        if began:
+            incoming_pos = other_body.position
+            vector = incoming_pos - body.position
+            versor = b2Vec2(vector.x, vector.y)
+            versor.Normalize()
+            incoming_angle = math.degrees(math.atan2(versor.y, versor.x))
+            incoming_angle = (incoming_angle+360) % 360
+            shield_angle = (self._angle+360) % 360
+            shield_angle2 = (self._angle+360) % 360 + 360
+            shield_angle3 = (self._angle+360) % 360 - 360
+            print(f'incoming:{incoming_angle} shield:{shield_angle-HALF_ARC_DEGREES}/{shield_angle+HALF_ARC_DEGREES}')
+            if (shield_angle - HALF_ARC_DEGREES < incoming_angle < shield_angle + HALF_ARC_DEGREES) or \
+               (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or\
+               (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):
+                self._collision_timer = 400

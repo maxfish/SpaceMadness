@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import argparse
 import logging
-import time
 
 import sdl2
 import sdl2.ext as sdl2ext
@@ -11,7 +10,6 @@ from mgl2d.input.game_controller_manager import GameControllerManager
 
 from config import GAME_FPS, GAME_FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH
 from game.stages.stage_sky import StageSky
-from game.entities.turret import TurretStage
 from game.world import World
 
 logging.basicConfig(level=logging.INFO)
@@ -36,46 +34,41 @@ controllers = [
     for n in range(num_joysticks)
 ]
 
-
-world = World(bounds=screen.viewport, controllers=controllers)
-
-if args.stage == "turret":
-    world.set_stage(TurretStage(screen.width, screen.height))
-else:
-    world.set_stage(StageSky(screen.width, screen.height))
+world = World(
+    bounds=screen.viewport,
+    controllers=controllers,
+    stage=StageSky(screen.width, screen.height)
+)
 
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')
 # screen.add_postprocessing_step(ppe)
 
 
-timeStep = (1.0 / GAME_FPS) *4
+timeStep = (1.0 / GAME_FPS) * 4
 vel_iters, pos_iters = 6, 2
 
 global prev_deletion
 global deletion_freq
 
+
 def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
     sdl2.ext.line(surface, color, (x1, y1, x2, y2))
 
+
 def draw_frame(screen):
     world.draw(screen)
 
+
 def update_frame(delta_ms):
-    for body in world.physics_to_delete:
-        body.position = (-100, -100)
-        #world.physicsWorld.DestroyBody(body)
-        print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
-    world.physics_to_delete = []
+    world.bullet_mgr.recycle_all()
 
     world.physicsWorld.ClearForces()
     world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:
         p.handle_input()
     world.physicsWorld.Step(timeStep, vel_iters, pos_iters)
-
-    # world.update(0)
 
 
 app.run(screen, draw_frame, update_frame, fps=GAME_FPS)

@@ -7,38 +7,40 @@ class BulletManager(Entity):
         self.world = world
         self.bullets_pool = [self._create_bullet() for _ in range(100)]
         self.active_bullets = []
+        self.bullets_to_recycle = set()
 
-    def _create_bullet(self, owner=None):
-        return Bullet(self, self.world, owner)
+    def _create_bullet(self):
+        return Bullet(self, self.world)
 
-    def gen_bullet(self, owner):
+    def gen_bullet(self):
         if not self.bullets_pool:
-            bullet = self._create_bullet(owner)
+            bullet = self._create_bullet()
         else:
             bullet = self.bullets_pool.pop()
-            bullet.owner = owner
 
         self.active_bullets.append(bullet)
         return bullet
 
+    def mark_for_recycle(self, bullet):
+        # will be in active bullets and bullets to recycle
+        assert bullet._physics
+        self.bullets_to_recycle.add(bullet)
+
+    def recycle_all(self):
+        bodies = []
+        for bullet in self.bullets_to_recycle:
+            bodies.append(bullet._physics.body)
+            self.recycle(bullet)
+        self.bullets_to_recycle = set()
+
+        for body in bodies:
+            self.world.physicsWorld.DestroyBody(body)
+        #print("--- NUM bodies: {0}".format(len(self.world.physicsWorld.bodies)))
+
     def recycle(self, bullet):
         bullet.owner = None
-        bullet._active = False
-        try:
-            self.active_bullets.remove(bullet)
-        except ValueError:
-            pass
-        else:
-            # If we encounter a ValueError,
-            # it means, bullet is not in active bullets, probably
-            # becaase there were multiple collisions and therefore
-            # multiple calls to recycle.
-            # We assume that the bullet was recycled correctly.
-            self.bullets_pool.append(bullet)
-
-    def deactivate(self, bullet):
-        if bullet in self.active_bullets:
-            self.recycle(bullet)
+        bullet._physics = None
+        self.active_bullets.remove(bullet)
 
     def draw(self, screen):
         for bullet in self.active_bullets:
