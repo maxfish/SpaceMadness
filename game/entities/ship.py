@@ -96,8 +96,10 @@ class Ship(Entity):
                 self.shieldController = c
 
         if self.pilotController:
+            boost = self.pilotController.is_button_down(GameController.BUTTON_A)
+
             trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
-            self.trail.update(game_speed, trigger_intensity)
+            self.trail.update(game_speed, trigger_intensity, boost)
 
             axis_intensity = self.pilotController.get_axis(GameController.AXIS_LEFT_X) or 0.0
             self.side_trail_left.update(game_speed, axis_intensity)
