@@ -8,7 +8,7 @@ from mgl2d.app import App
 from mgl2d.graphics.screen import Screen
 from mgl2d.input.game_controller_manager import GameControllerManager
 
-from config import GAME_FPS, GAME_FRAME_MS
+from config import GAME_FPS, GAME_FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH
 from game.stages.stage_sky import StageSky
 from game.entities.turret import TurretStage
 from game.world import World
@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage", help="stage to initiate the game with. Defaults to the default stage.py")
-parser.add_argument("--width", default=1920, type=int, help="screen width. Defaults to 1920")
-parser.add_argument("--height", default=1080, type=int, help="screen height. Defaults to 1080.")
+parser.add_argument("--width", default=SCREEN_WIDTH, type=int, help="screen width. Defaults to 1920")
+parser.add_argument("--height", default=SCREEN_HEIGHT, type=int, help="screen height. Defaults to 1080.")
 args = parser.parse_args()
 
 app = App()

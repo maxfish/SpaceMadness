@@ -5,23 +5,22 @@ from mgl2d.math.vector2 import Vector2
 
 
 class PhysicsAsteroid:
-    def __init__(self, asteroid, physicsWorld, center, radius, speed_x, speed_y):
+    def __init__(self, asteroid, physicsWorld, center, radius, speed, torque):
         self.shape = b2CircleShape(radius=radius)
         self.shape.local_position = Vector2(center.x, center.y)
 
+        self.speed = speed
         self.body = physicsWorld.CreateDynamicBody(
             position=(center.x, center.y),
             shapes=self.shape,
-            angularDamping=5,
-            linearDamping=0.1,
-            shapeFixture=b2FixtureDef(density=1.0),
+            angularDamping=0,
+            linearDamping=0,
+            shapeFixture=b2FixtureDef(density=3.0),
             userData={'type': 'ship', 'obj': asteroid},
         )
 
-        self.dir = self.body.GetWorldVector(localVector=(speed_x, speed_y))
-
+        self.body.ApplyLinearImpulse(tuple(speed.to_list()), (0, 0), True)
+        self.body.angularVelocity = torque
 
     def update_forces(self):
-        pos = self.body.GetWorldPoint(localPoint=(0.0, 1.0))
-        self.body.ApplyForce(self.dir * 100, pos, True)
-
+        pass

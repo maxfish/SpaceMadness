@@ -1,5 +1,8 @@
+import math
 from Box2D import b2World
+from mgl2d.math.vector2 import Vector2
 
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
@@ -68,9 +71,6 @@ class World:
             bullet_mgr,
         ]
         self.asteroids = []
-        self.val = 0
-        # self.item_frames = FramesStore()
-        # self.item_frames.load('resources/sprites/items', 'sprites.json')
 
     def set_stage(self, stage):
         self.stage = stage
@@ -93,8 +93,7 @@ class World:
         for e in self.asteroids:
             e.update(game_speed)
 
-        self.val += 1
-        if(self.val%100 == 0):
+        if random.randint(0, 10000) < 60:
             self.generate_asteroid()
 
     def draw(self, screen):
@@ -112,30 +111,18 @@ class World:
         self.scene = self.SCENE_GAME_OVER
 
     def generate_asteroid(self):
-        side = random.randint(1, 4)
-        speed_x = random.randint(-100, 100) / 100
-        speed_y = random.randint(-100, 100) / 100
-        if side == 1:
-            self.generate_asteroid_left(speed_x, speed_y)
-        elif side == 2:
-            self.generate_asteroid_right(speed_x, speed_y)
-        elif side == 3:
-            self.generate_asteroid_top(speed_x, speed_y)
-        else:
-            self.generate_asteroid_bottom(speed_x, speed_y)
+        # Picks a random movement direction
+        direction = Vector2()
+        angle = random.randint(0, 359)
+        direction.x = math.cos(math.radians(angle))
+        direction.y = math.sin(math.radians(angle))
 
-    def generate_asteroid_left(self, speed_x, speed_y):
-        asteroid = Asteroid(self, 0, random.randint(0, self.stage.height), speed_x=abs(speed_x), speed_y=speed_y)
-        self.asteroids.append(asteroid)
+        # Places the asteroid outside of the screen
+        position = Vector2()
+        position.x = SCREEN_WIDTH / 2 + direction.x * (SCREEN_WIDTH / 1.5)
+        position.y = SCREEN_HEIGHT / 2 + direction.y * (SCREEN_HEIGHT / 1.5)
 
-    def generate_asteroid_right(self, speed_x, speed_y):
-        asteroid = Asteroid(self, self.stage.width, random.randint(0, self.stage.height), speed_x=- abs(speed_x), speed_y=speed_y)
-        self.asteroids.append(asteroid)
-
-    def generate_asteroid_top(self, speed_x, speed_y):
-        asteroid = Asteroid(self, random.randint(0, self.stage.width), 0, speed_x=speed_x, speed_y=abs(speed_y))
-        self.asteroids.append(asteroid)
-
-    def generate_asteroid_bottom(self, speed_x, speed_y):
-        asteroid = Asteroid(self, random.randint(0, self.stage.width), self.stage.height, speed_x=speed_x, speed_y=- abs(speed_y) )
+        speed = -Vector2(direction.x, direction.y) * 1000 * random.random()
+        torque = 1 * random.random()
+        asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque)
         self.asteroids.append(asteroid)
