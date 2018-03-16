@@ -46,4 +46,4 @@ class PhysicsShip:
 
         if controller.is_button_down(GameController.BUTTON_A):
             intensity = 50
-            self.body.ApplyLinearImpulse(dir * intensity, pos, True)
+            self.body.ApplyLinearImpulse(direction * intensity, pos, True)
