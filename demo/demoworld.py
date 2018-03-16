@@ -196,4 +196,3 @@ class DemoWorld:
         for asteroid in self.asteroids:
             if asteroid.destroy():
                 self.asteroids.remove(asteroid)
-                print('asteroid removed')

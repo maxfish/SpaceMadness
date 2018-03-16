@@ -53,7 +53,7 @@ class _ShieldState(ABC):
         return self
 
     def _entered(self):
-        print(self.__class__.__name__)
+        pass
 
     @property
     def _current_time_ms(self):

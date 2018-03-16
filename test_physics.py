@@ -31,7 +31,6 @@ class MockCollidable:
 
     def collide(self, other, began=False, **kwargs):
         state = 'began' if began else 'ended'
-        print(f'collosion between {self.name} and {other.name} {state}')
 
 
 def draw_line(surface, x1, y1, x2, y2):

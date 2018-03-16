@@ -62,7 +62,6 @@ def update_frame(delta_ms):
     for body in world.physics_to_delete:
         body.position = (-100, -100)
         #world.physicsWorld.DestroyBody(body)
-        print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
     world.physics_to_delete = []
 
     world.physicsWorld.ClearForces()

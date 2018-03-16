@@ -58,11 +58,9 @@ class Bullet(Entity):
     def collide(self, other, began=False, **kwargs):
         # Don't do anything if a bullet is hitting a bullet.
         if isinstance(other, type(self)):
-            print('bullet only collision')
             return
         # If a bullet is hit by anything else, recycle it.
         if not began:
-            print('bullet began collision')
             self.remove_bullet()
 
     def remove_bullet(self):

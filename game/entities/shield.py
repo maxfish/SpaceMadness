@@ -109,7 +109,6 @@ class Shield(Entity):
         other_body = kwargs['other_body']
         # Collision between shield and everything else
         self.shield_state.damage(energy=10.0)
-        print(self._ship)
         # Heal the ship so it has a purpose -- take less damage
         # self._ship.heal(5.0)
         if began:
@@ -122,7 +121,6 @@ class Shield(Entity):
             shield_angle = (self._angle+360) % 360
             shield_angle2 = (self._angle+360) % 360 + 360
             shield_angle3 = (self._angle+360) % 360 - 360
-            print(f'incoming:{incoming_angle} shield:{shield_angle-HALF_ARC_DEGREES}/{shield_angle+HALF_ARC_DEGREES}')
             if (shield_angle - HALF_ARC_DEGREES < incoming_angle < shield_angle + HALF_ARC_DEGREES) or \
                (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or\
                (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):

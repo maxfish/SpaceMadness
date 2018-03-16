@@ -29,8 +29,6 @@ class BulletManager(Entity):
                 pass
         self.bullets_to_recycle = set()
 
-        print("--- NUM bodies: {0}".format(len(self.world.physicsWorld.bodies)))
-
     def draw(self, screen):
         for bullet in self.active_bullets:
             bullet.draw(screen)
