@@ -53,5 +53,5 @@ class Asteroid(Entity):
         self._quad.draw(screen)
         pass
 
-    def collide(self, *args):
+    def collide(self, other, body=None, began=False):
         pass

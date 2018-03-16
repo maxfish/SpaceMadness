@@ -1,22 +1,21 @@
 import math
 
 from mgl2d.graphics.shader import Shader
-
 from config import PHYSICS_SCALE
 from game.entity import Entity
 from game.laser import Laser
 from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
+
+import config
 from game.entities.shield_state import ShieldState
+from game.entity import Entity
+from game.laser import Laser
 from physics.physics_shield import PhysicsShield
 
 SHIP_SIZE = Vector2(109, 156)
 INERTIA = True
-
-# copied from game.py
-GAME_FPS = 50
-GAME_FRAME_MS = 1000 / GAME_FPS
 
 
 class Shield(Entity):
@@ -44,7 +43,6 @@ class Shield(Entity):
         self._angle = 0
         self._angle_speed = 1
         self._enable = False
-
         self._charge = 0
         self._collision_timer = 0
         self.shield_state = ShieldState(self)
@@ -78,7 +76,7 @@ class Shield(Entity):
             self.update_angle_position(x, y)
 
         self.shield_state.advance_time(
-            time_passed_ms=(game_speed * GAME_FRAME_MS),
+            time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
         self._collision_timer -= game_speed
 
@@ -130,6 +128,6 @@ class Shield(Entity):
         if self.shield_state.is_healthy:
             self._quad.draw(screen)
 
-    def collide(self, other, began):
+    def collide(self, other, body=None, began=False):
         self.shield_state.damage(energy=10.0)
         self._collision_timer = 2
