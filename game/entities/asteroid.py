@@ -47,9 +47,9 @@ class Asteroid(Entity):
 
     def draw(self, screen):
         self._quad.shader.bind()
-        self._quad.shader.set_uniform_float('mul_r', 0.4)
-        self._quad.shader.set_uniform_float('mul_g', 0.4)
-        self._quad.shader.set_uniform_float('mul_b', 0.4)
+        self._quad.shader.set_uniform_float('mul_r', 0.3)
+        self._quad.shader.set_uniform_float('mul_g', 0.3)
+        self._quad.shader.set_uniform_float('mul_b', 0.3)
         self._quad.draw(screen)
         pass
 
