@@ -65,7 +65,15 @@ class Asteroid(Entity):
         goes_to_top = self._physicAsteroid.body.linearVelocity.y < 0
         goes_to_bottom = not goes_to_top
 
-        return (goes_to_left and self._physicAsteroid.body.position.x < 0) or \
-               (goes_to_right and (self._physicAsteroid.body.position.x * PHYSICS_SCALE > SCREEN_WIDTH)) or \
-               (goes_to_top and (self._physicAsteroid.body.position.y < 0)) or \
-               (goes_to_bottom and (self._physicAsteroid.body.position.y * PHYSICS_SCALE > SCREEN_HEIGHT))
+        return (goes_to_left and
+                self._physicAsteroid.body.position.x <
+                0 - self._physicAsteroid.shape.radius) or \
+               (goes_to_right and
+                (self._physicAsteroid.body.position.x * PHYSICS_SCALE >
+                 SCREEN_WIDTH + self._physicAsteroid.shape.radius)) or \
+               (goes_to_top and
+                (self._physicAsteroid.body.position.y <
+                 0 - self._physicAsteroid.shape.radius)) or \
+               (goes_to_bottom and
+                (self._physicAsteroid.body.position.y * PHYSICS_SCALE >
+                 SCREEN_HEIGHT + - self._physicAsteroid.shape.radius))
