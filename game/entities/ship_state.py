@@ -43,6 +43,9 @@ class ShipState:
                 self.energy = 0
                 self.enter(self.DYING)
 
+    def heal(self, energy):
+        self.energy += energy
+
     def enter(self, state):
         self.state = state
         self.state_time = self.time

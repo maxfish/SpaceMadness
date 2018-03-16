@@ -268,3 +268,6 @@ class Ship(Entity):
         # Collision between shield and bullet (sensor)
         # Collision between shield and everything else
         self.ship_state.damage(energy=10.0)
+
+    def heal(self, amount):
+        self.ship_state.heal(amount)
