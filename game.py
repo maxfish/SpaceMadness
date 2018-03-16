@@ -54,10 +54,6 @@ vel_iters, pos_iters = 6, 2
 
 global prev_deletion
 global deletion_freq
-# Frequency of deleting the physics objects (in seconds)
-deletion_freq = 5000
-# Last time the objects were deleted.
-prev_deletion = round(time.time())
 
 def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
@@ -67,14 +63,12 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
-    # Physical bodies should be removed outside the step.
-    global prev_deletion
-    if round(time.time()) - prev_deletion > deletion_freq:
-        for body in world.physics_to_delete:
-            world.physicsWorld.DestroyBody(body)
-        # print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
-        prev_deletion = round(time.time())
-        world.physics_to_delete = []
+    for body in world.physics_to_delete:
+        body.position = (-100, -100)
+        #world.physicsWorld.DestroyBody(body)
+        print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
+    world.physics_to_delete = []
+
     world.physicsWorld.ClearForces()
     world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:

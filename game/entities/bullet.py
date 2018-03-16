@@ -24,15 +24,16 @@ class Bullet(Entity):
         self.bullet_radius = min(self._quad.scale.x, self._quad.scale.y) / PHYSICS_SCALE / 2
         self._angle = None
         self.bullet_mgr = bullet_mgr
+        self._physics = PhysicsBullet(self, self._world.physicsWorld, -100, -100, self.bullet_radius, owner)
 
 
     def initialize(self, x, y, direction, speed, owner):
-        self._physics = PhysicsBullet(self, self._world.physicsWorld, -100, -100, self.bullet_radius, owner)
+        #self._physics = PhysicsBullet(self, self._world.physicsWorld, -100, -100, self.bullet_radius, owner)
 
         # Physics object corresponding to the bullet
+        self._physics.body.userData = {'type': 'bullet', 'obj': self, 'owner': owner}
         self._physics.body.position = (x / PHYSICS_SCALE, y / PHYSICS_SCALE)
         self._physics.body.angle = math.atan2(-direction.x, direction.y)
-
         force_dir = b2Vec2(float(direction.x), float(direction.y))
         force_pos = self._physics.body.GetWorldPoint(localPoint=(0.0, 0.0))
         self._physics.body.ApplyLinearImpulse(force_dir * speed, force_pos, True)
