@@ -65,13 +65,12 @@ class Turret(Entity):
             time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
 
-        self.turret_quad.pos = self._ship._quad.pos + Vector2(self.offset_x, self.offset_y)
-        if (x, y) == (0.0, 0.0):
-            # Align guns with the ship if they're inactive
-            angle = self._ship._quad.angle
-        else:
+        self.turret_quad.pos = config.PHYSICS_SCALE * (self._ship._physicsShip.body.transform * (self.offset_x/config.PHYSICS_SCALE, self.offset_y/config.PHYSICS_SCALE))
+        self.turret_quad.angle = self._ship._quad.angle
+        if (x, y) != (0.0, 0.0):
+            # Angle the turrets according the controller if we have values
             angle = self.get_angle(x, y)
-        self.turret_quad.angle = angle
+            self.turret_quad.angle = angle
 
     def collide(self, other, body=None, began=False):
         pass
