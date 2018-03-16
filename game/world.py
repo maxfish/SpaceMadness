@@ -79,14 +79,6 @@ class World:
             self.entities.append(ship)
             quadrant += 1
 
-        self.game_over_quad = QuadDrawable(
-            SCREEN_WIDTH / 2 - 496 / 2,
-            SCREEN_HEIGHT / 2 - 321 / 2,
-            496,
-            321,
-        )
-        self.game_over_quad.texture = Texture.load_from_file('resources/images/game_over.png')
-
         self.asteroids = []
         # self.generate_asteroid()
 

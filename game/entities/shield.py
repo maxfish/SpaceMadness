@@ -111,7 +111,7 @@ class Shield(Entity):
         self.shield_state.damage(energy=10.0)
         print(self._ship)
         # Heal the ship so it has a purpose -- take less damage
-        self._ship.heal(5.0)
+        # self._ship.heal(5.0)
         if began:
             incoming_pos = other_body.position
             vector = incoming_pos - body.position
