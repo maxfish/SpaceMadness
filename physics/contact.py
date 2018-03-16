@@ -45,7 +45,9 @@ class ContactListener(b2ContactListener):
             contact.enabled = False
 
     def owner_matches(self, uda, udb):
-        return 'owner' in uda and 'owner' in udb and uda['owner'] == udb['owner']
+        uda_owner = uda.get('owner')
+        udb_owner = udb.get('owner')
+        return uda_owner and uda_owner == udb_owner
 
 
 def calc_intensity(contact) -> float:

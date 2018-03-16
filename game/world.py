@@ -43,7 +43,7 @@ class World:
 
         self.controllers = controllers
 
-        bullet_mgr = BulletManager(self)
+        self.bullet_mgr = bullet_mgr = BulletManager(self)
 
         self.players = []
         self.entities = [bullet_mgr]

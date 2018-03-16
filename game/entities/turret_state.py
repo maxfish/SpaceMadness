@@ -4,8 +4,8 @@ from abc import ABC
 class TurretState():
 
     fire_time_ms = 100
-    ammo_clip_size = 10
-    reload_time_ms = 500
+    ammo_clip_size = 20
+    reload_time_ms = 1000
     recently_fired_ms = fire_time_ms
 
     def __init__(self, turret):
@@ -67,7 +67,8 @@ class _TurretState(ABC):
         return self
 
     def _entered(self):
-        print(self.__class__.__name__)
+        # print(self.__class__.__name__)
+        pass
 
     @property
     def _current_time_ms(self):

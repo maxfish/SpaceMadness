@@ -62,19 +62,13 @@ def draw_frame(screen):
 
 
 def update_frame(delta_ms):
-    for body in world.physics_to_delete:
-        body.position = (-100, -100)
-        # world.physicsWorld.DestroyBody(body)
-        print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
-    world.physics_to_delete = []
+    world.bullet_mgr.recycle_all()
 
     world.physicsWorld.ClearForces()
     world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:
         p.handle_input()
     world.physicsWorld.Step(timeStep, vel_iters, pos_iters)
-
-    # world.update(0)
 
 
 app.run(screen, draw_frame, update_frame, fps=GAME_FPS)
