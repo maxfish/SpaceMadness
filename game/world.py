@@ -2,7 +2,7 @@ import math
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
@@ -86,23 +86,39 @@ class World:
 
     def update(self, game_speed):
         self.stage.update(game_speed)
-        # for i in self.items:
-        #     i.update(game_speed)
-        for e in self.entities:
-            e.update(game_speed)
         for e in self.asteroids:
+            e.update(game_speed)
+        for e in self.entities:
             e.update(game_speed)
 
         if random.randint(0, 10000) < 60:
             self.generate_asteroid()
 
+        # Check position of physical objects
+        # for e in self.entities:
+        #     if not isinstance(e, Ship):
+        #         continue
+        #
+        #     pos = e._physicsShip.body.position
+        #     if not (0 < pos.x < self.bounds.w/PHYSICS_SCALE and 0 < pos.y < self.bounds.h/PHYSICS_SCALE):
+        #         physics_center = Vector2(self.bounds.center_x, self.bounds.center_y) / PHYSICS_SCALE
+        #         pos.x -= physics_center.x
+        #         pos.y -= physics_center.y
+        #         intensity = 1000
+        #         force_dir = Vector2(pos.x, pos.y)
+        #         force_dir.normalise()
+        #         force_dir = Vector2(0, -1)
+        #         force_dir *= intensity
+        #         force_apply_pos = e._physicsShip.body.GetWorldPoint(localPoint=(0.0, 0.0))
+        #         e._physicsShip.body.ApplyForce((force_dir.x, force_dir.y), force_apply_pos, True)
+
+
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
 
-        # TODO: Draw objects
-        for e in self.entities:
-            e.draw(screen)
         for e in self.asteroids:
+            e.draw(screen)
+        for e in self.entities:
             e.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
