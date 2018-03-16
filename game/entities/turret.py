@@ -80,7 +80,7 @@ class Turret(Entity):
             angle = self.get_angle(x, y)
             self.turret_quad.angle = angle
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, **kwargs):
         pass
 
 

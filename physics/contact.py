@@ -44,3 +44,12 @@ class ContactListener(b2ContactListener):
 
     def owner_matches(self, uda, udb):
         return 'owner' in uda and 'owner' in udb and uda['owner'] == udb['owner']
+
+
+def calc_intensity(contact) -> float:
+    other = contact.fixtureB.body
+    speed = other.linearVelocity.length
+    mass = other.body.mass
+    angle = other.body.angle
+
+    return speed * mass  # how to add the angle?

@@ -52,9 +52,10 @@ class Bullet(Entity):
         self._quad.pos = Vector2(pos[0], pos[1])
         self._quad.angle = math.degrees(self._physics.body.angle)
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, began=False, **kwargs):
         # Don't do anything if a bullet is hitting a bullet.
         if isinstance(other, type(self)):
             return
+        # If a bullet is hit by anything else, recycle it.
         if began:
             self.bullet_mgr.recycle(self)

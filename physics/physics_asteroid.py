@@ -16,11 +16,8 @@ class PhysicsAsteroid:
             angularDamping=0,
             linearDamping=0,
             shapeFixture=b2FixtureDef(density=3.0),
-            userData={'type': 'ship', 'obj': asteroid},
+            userData={'type': 'asteroid', 'obj': asteroid},
         )
 
         self.body.ApplyLinearImpulse(tuple(speed.to_list()), (0, 0), True)
         self.body.angularVelocity = torque
-
-    def update_forces(self):
-        pass

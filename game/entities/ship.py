@@ -171,5 +171,8 @@ class Ship(Entity):
                 turret.draw(screen)
             self._healthbar.draw(screen)
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, intensity=10.0, **kwargs):
+        # TODO: Calculate the damage:
+        # Collision between shield and bullet (sensor)
+        # Collision between shield and everything else
         self.ship_state.damage(energy=10.0)
