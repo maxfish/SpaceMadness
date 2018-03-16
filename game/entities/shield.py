@@ -107,7 +107,7 @@ class Shield(Entity):
 
         body = kwargs['body']
         other_body = kwargs['other_body']
-
+        # Collision between shield and everything else
         self.shield_state.damage(energy=10.0)
         if began:
             incoming_pos = other_body.position

@@ -58,10 +58,10 @@ class Turret(Entity):
         self.turret_state.hold_fire()
 
     def draw(self, screen):
-        if self.turret_state.is_reloading:
-            self.turret_quad.texture = self.texture_RELOADING
-        elif self.turret_state.has_recently_fired:
+        if self.turret_state.has_recently_fired:
             self.turret_quad.texture = self.texture_FIRING
+        elif self.turret_state.is_reloading:
+            self.turret_quad.texture = self.texture_RELOADING
         else:
             self.turret_quad.texture = self.texture
 
