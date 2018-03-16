@@ -160,7 +160,7 @@ class Ship(Entity):
         # self._healthbar.update(game_speed)
 
     def draw(self, screen):
-        if self.ship_state.state == ShipState.LIVE:
+        if self.is_live():
             for shield in self.shields:
                 shield.draw(screen)
 
@@ -223,6 +223,9 @@ class Ship(Entity):
             random() * 3.0,
             'resources/images/people/technician.png', config.SHIP_SCALE
         ))
+
+    def is_live(self):
+        return self.ship_state.state == ShipState.LIVE
 
     def collide(self, other, intensity=10.0, **kwargs):
         # TODO: Calculate the damage:

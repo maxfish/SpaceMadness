@@ -3,6 +3,7 @@ from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
+import config
 from game.entities.ship import Ship
 from game.entities.asteroid import Asteroid
 from game.bullet_mgr import BulletManager
@@ -20,8 +21,10 @@ class World:
     SCENE_GAME = 2
     SCENE_GAME_OVER = 4
 
-    def __init__(self, bounds, controllers, debug=0):
+    def __init__(self, bounds, controllers, stage, debug=0):
         self.scene = self.SCENE_TITLE
+        self.game_over_timer = 0
+        self.stage = stage
 
         self.bounds = bounds
         self.debug = debug
@@ -29,20 +32,11 @@ class World:
         self.window_x = 0
         self.window_y = 0
 
-        self.stage = None
-
         self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
         # Physical bodies should be deleted outside the simulation step.
         self.physics_to_delete = []
 
-        # Grabs controllers if they're present
-        pilotController = shieldController = turretController = None
-        if len(controllers) > 0:
-            shieldController = controllers[0]
-        if len(controllers) > 1:
-            turretController = controllers[1]
-        if len(controllers) > 2:
-            pilotController = controllers[2]
+        self.controllers = controllers
 
         bullet_mgr = BulletManager(self)
 
@@ -83,12 +77,14 @@ class World:
 
         self.asteroids = []
 
-    def set_stage(self, stage):
-        self.stage = stage
-
     def restart_game(self):
         # This is not enough, you need to re-init players
-        self.init(self.bounds, self.stage, self.debug)
+        self.__init__(
+            bounds=self.bounds,
+            controllers=self.controllers,
+            stage=self.stage,
+            debug=self.debug,
+        )
 
     def begin(self):
         self.scene = self.SCENE_GAME
@@ -96,6 +92,29 @@ class World:
         #     character.begin()
 
     def update(self, game_speed):
+        time_delta = game_speed * config.GAME_FRAME_MS
+        alive = 0
+        for p in self.players:
+            if p.is_live():
+                alive += 1
+
+        if alive <= 1 and self.game_over_timer <= 0:
+            print("game over started")
+            self.game_over_timer = 5000
+
+        if self.game_over_timer > 0 and self.game_over_timer < time_delta:
+            print("game over ended")
+            self.restart_game()
+            return
+
+        self.game_over_timer -= time_delta
+
+        if self.game_over_timer > 0:
+            # show game over
+            pass
+        else:
+            self.game_over_timer = 0
+
         self.stage.update(game_speed)
         for e in self.asteroids:
             e.update(game_speed)

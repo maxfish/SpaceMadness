@@ -37,12 +37,11 @@ controllers = [
 ]
 
 
-world = World(bounds=screen.viewport, controllers=controllers)
-
-if args.stage == "turret":
-    world.set_stage(TurretStage(screen.width, screen.height))
-else:
-    world.set_stage(StageSky(screen.width, screen.height))
+world = World(
+    bounds=screen.viewport,
+    controllers=controllers,
+    stage=StageSky(screen.width, screen.height)
+)
 
 # ppe = PostProcessingStep(screen.width, screen.height)
 # ppe.drawable.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/postprocessing_retro.frag')
