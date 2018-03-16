@@ -39,23 +39,20 @@ class Turret(Entity):
 
     def fire_bullet(self):
         # print("Bullet fired from offset : {0} {1}".format(self.offset_x, self.offset_y))
-        print("Bullet fired from: {0} {1}".format(self.turret_quad.pos.x, self.turret_quad.pos.y))
-        print("Bullet owner: {0}".format(id(self._ship)))
         bullet = self._bullet_mgr.gen_bullet(id(self._ship))
-        x = self.turret_quad.pos.x
-        y = self.turret_quad.pos.y
+        print('Bullet {} fired from: {} {}, Owner: {}'.format(
+                id(bullet),
+                self.turret_quad.pos.x,
+                self.turret_quad.pos.y,
+                id(self._ship),
+        ))
 
         angle = math.radians(self.turret_quad.angle)
-        z_sin = math.sin(angle)
-        z_cos = math.cos(angle)
-        direction = Vector2(z_sin, -z_cos)
+        print("Angle={}".format(angle))
+        direction = Vector2(math.sin(angle), -math.cos(angle))
 
-        muzzle_pos = Vector2(x, y) + (direction * 25)
-        x = muzzle_pos.x
-        y = muzzle_pos.y
-
-        bullet.initialize(x, y, direction, BULLET_VELOCITY, id(self._ship))
-        print("Angle={0}".format(angle))
+        muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
+        bullet.initialize(muzzle_pos.x, muzzle_pos.y, direction, BULLET_VELOCITY, id(self._ship))
 
     def hold_fire(self):
         self.turret_state.hold_fire()
