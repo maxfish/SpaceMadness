@@ -181,5 +181,5 @@ class Ship(Entity):
                 turret.draw(screen)
             self._healthbar.draw(screen)
 
-    def collide(self, other, began):
+    def collide(self, other, body=None, began=False):
         self.ship_state.damage(energy=10.0)
