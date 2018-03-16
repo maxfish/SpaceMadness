@@ -90,24 +90,24 @@ class Ship(Entity):
         self._physicsShip.update_forces(self.pilotController)
         for c in self.controllers:
             c.update()
-            if c.is_button_pressed(GameController.BUTTON_DPAD_UP):
-                if self.turretController == c:
-                    self.turretController = None
-                if self.shieldController == c:
-                    self.shieldController = None
-                self.pilotController = c
-            elif c.is_button_pressed(GameController.BUTTON_DPAD_DOWN):
-                if self.pilotController == c:
-                    self.pilotController = None
-                if self.shieldController == c:
-                    self.shieldController = None
-                self.turretController = c
-            elif c.is_button_pressed(GameController.BUTTON_DPAD_LEFT):
-                if self.turretController == c:
-                    self.turretController = None
-                if self.pilotController == c:
-                    self.pilotController = None
-                self.shieldController = c
+            # if c.is_button_pressed(GameController.BUTTON_DPAD_UP):
+            #     if self.turretController == c:
+            #         self.turretController = None
+            #     if self.shieldController == c:
+            #         self.shieldController = None
+            #     self.pilotController = c
+            # elif c.is_button_pressed(GameController.BUTTON_DPAD_DOWN):
+            #     if self.pilotController == c:
+            #         self.pilotController = None
+            #     if self.shieldController == c:
+            #         self.shieldController = None
+            #     self.turretController = c
+            # elif c.is_button_pressed(GameController.BUTTON_DPAD_LEFT):
+            #     if self.turretController == c:
+            #         self.turretController = None
+            #     if self.pilotController == c:
+            #         self.pilotController = None
+            #     self.shieldController = c
 
         if self.pilotController and self.ship_state.state == ShipState.LIVE:
             boost = self.pilotController.is_button_down(GameController.BUTTON_A)
