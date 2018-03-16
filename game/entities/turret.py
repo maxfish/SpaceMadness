@@ -12,13 +12,18 @@ from game.stage import Stage
 
 class Turret(Entity):
 
+
     def __init__(self, ship, bullet_mgr, offset_x, offset_y):
         self._ship = ship
         self._bullet_mgr = bullet_mgr
         self.offset_x = offset_x
         self.offset_y = offset_y
+
+        self.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
+        self.texture_FIRING = Texture.load_from_file('resources/images/guns/minigun_shooting.png')
+
         self.turret_quad = QuadDrawable(0, 0, 13*self._ship.scale, 46*self._ship.scale)
-        self.turret_quad.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
+        self.turret_quad.texture = self.texture
         self.turret_quad.anchor = Vector2(7*self._ship.scale, 35*self._ship.scale)
 
         self.turret_state = TurretState(self)
@@ -47,9 +52,11 @@ class Turret(Entity):
 
         muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
         bullet.initialize(muzzle_pos.x, muzzle_pos.y, direction, config.BULLET_VELOCITY, id(self._ship))
+        self.turret_quad.texture = self.texture_FIRING
 
     def hold_fire(self):
         self.turret_state.hold_fire()
+        self.turret_quad.texture = self.texture
 
     def draw(self, screen):
         self.turret_quad.draw(screen)
