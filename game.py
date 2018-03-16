@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import logging
+import time
 
 import sdl2
 import sdl2.ext as sdl2ext
@@ -51,6 +52,8 @@ else:
 timeStep = (1.0 / GAME_FPS) *4
 vel_iters, pos_iters = 6, 2
 
+global prev_deletion
+global deletion_freq
 
 def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
@@ -60,6 +63,12 @@ def draw_frame(screen):
     world.draw(screen)
 
 def update_frame(delta_ms):
+    for body in world.physics_to_delete:
+        body.position = (-100, -100)
+        #world.physicsWorld.DestroyBody(body)
+        print("--- NUM bodies: {0}".format(len(world.physicsWorld.bodies)))
+    world.physics_to_delete = []
+
     world.physicsWorld.ClearForces()
     world.update(delta_ms / GAME_FRAME_MS)
     for p in world.players:

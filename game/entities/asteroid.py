@@ -5,11 +5,9 @@ from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
 from game.entity import Entity
 from physics.physics_asteroid import PhysicsAsteroid
-
-IMAGE_SIZE = 100
 
 
 class Asteroid(Entity):
@@ -20,10 +18,20 @@ class Asteroid(Entity):
             y,
             speed,
             torque,
+            asset='resources/images/asteroides/asteroid_01.png',
+            scale=1,
     ):
         super().__init__(world, x, y, 0)
         # Slightly smaller than the image
-        radius = ((IMAGE_SIZE / PHYSICS_SCALE) / 2) * 0.8
+        texture = Texture.load_from_file(asset)
+        image_size = min(texture.width, texture.height)
+
+        radius = ((image_size / PHYSICS_SCALE) / 2) * 0.8
+
+        self._quad = QuadDrawable(x, y, texture.width * scale, texture.height * scale)
+        self._quad.anchor = self._quad.scale / 2
+        self._quad.texture = texture
+        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
         self._physicAsteroid = PhysicsAsteroid(
             self,
@@ -33,11 +41,6 @@ class Asteroid(Entity):
             speed=speed,
             torque=torque,
         )
-
-        self._quad = QuadDrawable(x, y, IMAGE_SIZE, IMAGE_SIZE)
-        self._quad.anchor = self._quad.scale / 2
-        self._quad.texture = Texture.load_from_file('resources/images/asteroides/asteroid_01.png')
-        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
     def update(self, game_speed):
         self._physicAsteroid.update_forces()
@@ -53,5 +56,24 @@ class Asteroid(Entity):
         self._quad.draw(screen)
         pass
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, **kwargs):
         pass
+
+    def destroy(self):
+        goes_to_left = self._physicAsteroid.body.linearVelocity.x < 0
+        goes_to_right = not goes_to_left
+        goes_to_top = self._physicAsteroid.body.linearVelocity.y < 0
+        goes_to_bottom = not goes_to_top
+
+        return (goes_to_left and
+                self._physicAsteroid.body.position.x <
+                0 - self._physicAsteroid.shape.radius) or \
+               (goes_to_right and
+                (self._physicAsteroid.body.position.x * PHYSICS_SCALE >
+                 SCREEN_WIDTH + self._physicAsteroid.shape.radius)) or \
+               (goes_to_top and
+                (self._physicAsteroid.body.position.y <
+                 0 - self._physicAsteroid.shape.radius)) or \
+               (goes_to_bottom and
+                (self._physicAsteroid.body.position.y * PHYSICS_SCALE >
+                 SCREEN_HEIGHT + - self._physicAsteroid.shape.radius))

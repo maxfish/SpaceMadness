@@ -2,12 +2,13 @@ from Box2D import b2PolygonShape, b2FixtureDef
 from mgl2d.input.game_controller import GameController
 
 from physics.physics_gun import PhysicsGun
+import math
 
 PROPULSION_INTENSITY = 360
 SIDE_THRUST_INTENSITY = 5100
 
 class PhysicsShip:
-    def __init__(self, ship, physicsWorld, x, y):
+    def __init__(self, ship, physicsWorld, x, y, angle=0):
         w = 5
         h = 10
         self.shape = b2PolygonShape(vertices=[
@@ -22,6 +23,7 @@ class PhysicsShip:
 
         self.body = physicsWorld.CreateDynamicBody(
             position=(x, y),
+            angle=math.radians(angle-180),
             shapes=self.shape,
             angularDamping=4,
             linearDamping=0.1,

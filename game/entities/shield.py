@@ -119,7 +119,10 @@ class Shield(Entity):
         if self.shield_state.is_healthy:
             self._quad.draw(screen)
 
-    def collide(self, other, body=None, began=False):
+    def collide(self, other, intensity=0.0, **kwargs):
+        # TODO: Calculate the damage:
+        # Collision between shield and bullet (sensor)
+        # Collision between shield and everything else
         self.shield_state.damage(energy=10.0)
         if began:
             incoming_pos = body.position

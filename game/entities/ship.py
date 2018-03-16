@@ -1,13 +1,15 @@
 import math
+from random import random
 
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
+from game.entities.asteroid import Asteroid
 
 import config
-from game.entities.healthbar import HealthBar
+# from game.entities.healthbar import HealthBar
 from game.entities.shield import Shield
 from game.entities.ship_state import ShipState
 from game.entities.side_trail import SideTrail
@@ -29,16 +31,19 @@ class Ship(Entity):
         x,
         y,
         z=0,
+        angle=0,
     ):
         super().__init__(world, x, y, z)
+        self.world = world
 
         self._dim = Vector2(130 * SCALE, 344 * SCALE)
-        self._angle = 0
+        self._angle = angle
         self._physicsShip = PhysicsShip(
             self,
             world.physicsWorld,
             x / config.PHYSICS_SCALE,
             y / config.PHYSICS_SCALE,
+            angle=angle,
         )
 
         # Used by ship components to scale themselves
@@ -69,7 +74,7 @@ class Ship(Entity):
         self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
         self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
 
-        self._healthbar = HealthBar(self, world)
+        # self._healthbar = HealthBar(self, world)
 
     def update(self, game_speed):
         self._physicsShip.update_forces(self.pilotController)
@@ -94,7 +99,7 @@ class Ship(Entity):
                     self.pilotController = None
                 self.shieldController = c
 
-        if self.pilotController:
+        if self.pilotController and self.ship_state.state == ShipState.LIVE:
             boost = self.pilotController.is_button_down(GameController.BUTTON_A)
 
             trigger_intensity = self.pilotController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0
@@ -104,7 +109,7 @@ class Ship(Entity):
             self.side_trail_left.update(game_speed, axis_intensity)
             self.side_trail_right.update(game_speed, -axis_intensity)
 
-        if self.shieldController:
+        if self.shieldController and self.ship_state.state == ShipState.LIVE:
             shield0_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,0.0,
@@ -120,7 +125,7 @@ class Ship(Entity):
         self.shields[0].update(game_speed, shield0_input_values)
         self.shields[1].update(game_speed, shield1_input_values)
 
-        if self.turretController:
+        if self.turretController and self.ship_state.state == ShipState.LIVE:
             turret_left_x, turret_left_y = (
                 self.turretController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
                 self.turretController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,
@@ -148,9 +153,11 @@ class Ship(Entity):
         self._quad.pos = self._position
         self._quad.angle = self._angle
 
-        self.ship_state.update(game_speed)
+        self.ship_state.update(
+            time_passed_ms=(game_speed * config.GAME_FRAME_MS),
+        )
 
-        self._healthbar.update(game_speed)
+        # self._healthbar.update(game_speed)
 
     def draw(self, screen):
         if self.ship_state.state == ShipState.LIVE:
@@ -167,7 +174,58 @@ class Ship(Entity):
 
             for turret in self.turrets:
                 turret.draw(screen)
-            self._healthbar.draw(screen)
+            #self._healthbar.draw(screen)
 
-    def collide(self, other, body=None, began=False):
+    def destroy_ship(self):
+        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
+        x, y = pos
+
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x, y - 30,
+            Vector2(random() * 30 - 15, random() * -100),
+            random() * 3.0,
+            'resources/images/derelict/part_01.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x + 30, y + 30,
+            Vector2(random() * 60 + 30, random() * 60 + 30),
+            random() * 3.0,
+            'resources/images/derelict/part_02.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x - 30, y + 30,
+            Vector2(random() * -60 - 30, random() * 60 + 30),
+            random() * 3.0,
+            'resources/images/derelict/part_03.png', config.SHIP_SCALE
+        ))
+
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x, y - 30,
+            Vector2(random() * 3.0 - 1.5, random() * -10),
+            random() * 3.0,
+            'resources/images/people/pilot.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x + 30, y + 30,
+            Vector2(random() * 6.0 + 3.0, random() * 6.0 + 3.0),
+            random() * 3.0,
+            'resources/images/people/gunner.png', config.SHIP_SCALE
+        ))
+        self.world.asteroids.append(Asteroid(
+            self.world,
+            x - 30, y + 30,
+            Vector2(random() * -6.0 - 3.0, random() * 6.0 + 3.0),
+            random() * 3.0,
+            'resources/images/people/technician.png', config.SHIP_SCALE
+        ))
+
+    def collide(self, other, intensity=10.0, **kwargs):
+        # TODO: Calculate the damage:
+        # Collision between shield and bullet (sensor)
+        # Collision between shield and everything else
         self.ship_state.damage(energy=10.0)

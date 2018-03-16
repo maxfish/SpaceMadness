@@ -3,14 +3,13 @@ from game.entities.bullet import Bullet
 
 
 class BulletManager(Entity):
-    def __init__(self, gWorld, pWorld):
-        self.gWorld = gWorld
-        self.pWorld = pWorld
-        self.bullets_pool = [self._create_bullet() for i in range(100)]
+    def __init__(self, world):
+        self.world = world
+        self.bullets_pool = [self._create_bullet() for _ in range(100)]
         self.active_bullets = []
 
     def _create_bullet(self, owner=None):
-        return Bullet(self, self.gWorld, self.pWorld, owner)
+        return Bullet(self, self.world, owner)
 
     def gen_bullet(self, owner):
         if not self.bullets_pool:
@@ -46,5 +45,6 @@ class BulletManager(Entity):
             bullet.draw(screen)
 
     def update(self, screen):
+        # print("NUM of active  bullets: {0}, in pool: {1}".format(len(self.active_bullets), len(self.bullets_pool)))
         for bullet in self.active_bullets:
             bullet.update(screen)

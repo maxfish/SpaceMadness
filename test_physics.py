@@ -29,7 +29,7 @@ class MockCollidable:
     def __init__(self, name):
         self.name = name
 
-    def collide(self, other, physical_object=None, began=False):
+    def collide(self, other, began=False, **kwargs):
         state = 'began' if began else 'ended'
         print(f'collosion between {self.name} and {other.name} {state}')
 
