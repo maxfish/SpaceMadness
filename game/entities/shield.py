@@ -73,12 +73,10 @@ class Shield(Entity):
         else:
             self._quad.scale = SHIP_SCALE
             self.update_angle_position(x, y)
-            self.update_charge(trigger)
 
         self.shield_state.advance_time(
             time_passed_ms=(game_speed * GAME_FRAME_MS),
         )
-
 
     def update_angle_position(self, x, y):
         self._angle = self.calc_angle(x, y)
@@ -117,7 +115,7 @@ class Shield(Entity):
             )
 
         self._quad.scale = Vector2(
-            SHIP_SCALE.x * (1.0 + 2*self._charge/55.0),
+            SHIP_SCALE.x * (1.0 + 2 * self._charge/55.0),
             SHIP_SCALE.y * (1.0 - self._charge/55.0),
         )
 
