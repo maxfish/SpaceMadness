@@ -22,8 +22,11 @@ class BulletManager(Entity):
     def recycle_all(self):
         for bullet in self.bullets_to_recycle:
             body = bullet._physics.body
-            self.world.physicsWorld.DestroyBody(body)
-            self.active_bullets.remove(bullet)
+            # self.world.physicsWorld.DestroyBody(body)
+            try:
+                self.active_bullets.remove(bullet)
+            except Exception:
+                pass
         self.bullets_to_recycle = set()
 
         print("--- NUM bodies: {0}".format(len(self.world.physicsWorld.bodies)))
