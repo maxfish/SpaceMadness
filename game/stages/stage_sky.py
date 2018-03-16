@@ -8,15 +8,15 @@ from os import listdir
 from os.path import isfile, join
 
 
-class StageBackground(Stage):
+class StageSky(Stage):
     def __init__(self, width, height):
         super().__init__(width, height)
         self.quad = QuadDrawable(0, 0, width, height)
         self.quad.texture = Texture.load_from_file('resources/images/bg.png')
-        number_of_planets = 15
+        number_of_planets = 9
         self.planets = []
-        number_of_clouds_background = 10
-        number_of_clouds_foreground = 10
+        number_of_clouds_background = 5
+        number_of_clouds_foreground = 5
 
         self.clouds_background = []
         self.clouds_foreground = []

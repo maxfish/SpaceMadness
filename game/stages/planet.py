@@ -31,9 +31,9 @@ class Planet:
 
     def draw(self, screen):
         self.quad.shader.bind()
-        self.quad.shader.set_uniform_float('mul_r', 0.6)
-        self.quad.shader.set_uniform_float('mul_g', 0.6)
-        self.quad.shader.set_uniform_float('mul_b', 0.6)
+        self.quad.shader.set_uniform_float('mul_r', 0.7)
+        self.quad.shader.set_uniform_float('mul_g', 0.7)
+        self.quad.shader.set_uniform_float('mul_b', 0.7)
         self.quad.draw(screen)
 
 
