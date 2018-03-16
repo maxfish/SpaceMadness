@@ -1,9 +1,12 @@
+from config import SHIP_MAX_ENERGY
+
+
 class ShipState:
     LIVE = 1
     DYING = 2
     DEAD = 3
 
-    MAX_ENERGY = 200.0
+    MAX_ENERGY = SHIP_MAX_ENERGY
 
     def __init__(self, ship):
         self.ship = ship

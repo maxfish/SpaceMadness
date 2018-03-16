@@ -63,7 +63,7 @@ class World:
                 controllers=cs,
                 x=x,
                 y=y,
-                angle=math.degrees(math.atan2(y, x)) - 180
+                # angle=math.degrees(math.atan2(y, x)) - 180
             )
             self.players.append(ship)
             self.entities.append(ship)
@@ -89,6 +89,7 @@ class World:
         self.game_over_quad.texture = Texture.load_from_file('resources/images/game_over.png')
 
         self.asteroids = []
+        # self.generate_asteroid()
 
     def restart_game(self):
         # This is not enough, you need to re-init players
@@ -106,10 +107,11 @@ class World:
 
     def update(self, game_speed):
         # Mouse controlling an asteroid
-        # x, y = ctypes.c_int(0), ctypes.c_int(0)
-        # buttonstate = sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
-        # self.asteroids[0]._physicAsteroid.body.velocity = (0,0)
-        # self.asteroids[0]._physicAsteroid.body.position = (x.value/PHYSICS_SCALE, y.value/PHYSICS_SCALE)
+        if len(self.asteroids)>0:
+            x, y = ctypes.c_int(0), ctypes.c_int(0)
+            buttonstate = sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
+            self.asteroids[0]._physicAsteroid.body.velocity = (0,0)
+            self.asteroids[0]._physicAsteroid.body.position = (x.value/PHYSICS_SCALE, y.value/PHYSICS_SCALE)
 
         time_delta = game_speed * config.GAME_FRAME_MS
         alive = 0

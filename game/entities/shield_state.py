@@ -1,9 +1,11 @@
 from abc import ABC
 
+from config import SHIELD_MAX_ENERGY
+
 
 class ShieldState():
 
-    max_energy = 100.0
+    max_energy = SHIELD_MAX_ENERGY
     recharge_per_s = 2.0  # energy recharged per s on healthy shield
     restore_time_s = 20  # seconds to restore damaged shield
     restore_energy = 50.0  # how much energy shields have when restored

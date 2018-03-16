@@ -98,8 +98,8 @@ class Shield(Entity):
             self._quad.shader.set_uniform_float('mul_b', 1)
             self._quad.shader.set_uniform_float('mul_r', 1)
 
-        if self.shield_state.is_healthy:
-            self._quad.draw(screen)
+        # if self.shield_state.is_healthy:
+        self._quad.draw(screen)
 
     def collide(self, other, intensity=0.0, began=False, **kwargs):
         if not self._enable:
@@ -116,5 +116,11 @@ class Shield(Entity):
             versor.Normalize()
             incoming_angle = math.degrees(math.atan2(versor.y, versor.x))
             incoming_angle = (incoming_angle+360) % 360
-            if self._angle - HALF_ARC_DEGREES < incoming_angle < self._angle + HALF_ARC_DEGREES:
+            shield_angle = (self._angle+360) % 360
+            shield_angle2 = (self._angle+360) % 360 + 360
+            shield_angle3 = (self._angle+360) % 360 - 360
+            print(f'incoming:{incoming_angle} shield:{shield_angle-HALF_ARC_DEGREES}/{shield_angle+HALF_ARC_DEGREES}')
+            if (shield_angle - HALF_ARC_DEGREES < incoming_angle < shield_angle + HALF_ARC_DEGREES) or \
+               (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or\
+               (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):
                 self._collision_timer = 400
