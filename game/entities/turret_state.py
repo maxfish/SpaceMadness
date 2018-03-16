@@ -3,9 +3,10 @@ from abc import ABC
 
 class TurretState():
 
-    fire_time_ms = 5
-    ammo_clip_size = 200
-    reload_time_ms = 1
+    fire_time_ms = 100
+    ammo_clip_size = 10
+    reload_time_ms = 500
+    recently_fired_ms = fire_time_ms
 
     def __init__(self, turret):
         self.turret = turret
@@ -14,6 +15,9 @@ class TurretState():
 
         self.last_shot_time_ms = self._current_time_ms - self.fire_time_ms
         self.cur_loaded_ammo = self.ammo_clip_size
+
+    def _time_since(self, past_time_ms):
+        return self._current_time_ms - past_time_ms
 
     def _set_state(self, state=None):
         if state:
@@ -29,6 +33,14 @@ class TurretState():
         self._set_state(
             self._state.hold_fire(),
         )
+
+    @property
+    def has_recently_fired(self):
+        return self._time_since(self.last_shot_time_ms) <= self.recently_fired_ms
+
+    @property
+    def is_reloading(self):
+        return isinstance(self._state, TurretReloading)
 
     def advance_time(self, time_passed_ms):
         self._current_time_ms += time_passed_ms
@@ -71,11 +83,17 @@ class _TurretState(ABC):
 
 class TurretIdle(_TurretState):
 
+    def __init__(self, sm):
+        super().__init__(sm)
+
     def fire(self):
         return TurretFiring(self.sm)
 
 
 class TurretFiring(_TurretState):
+
+    def __init__(self, sm):
+        super().__init__(sm)
 
     def advanced_time(self):
         if self.sm.cur_loaded_ammo == 0:
@@ -100,6 +118,9 @@ class TurretFiring(_TurretState):
 
 class TurretReloading(_TurretState):
 
+    def __init__(self, sm):
+        super().__init__(sm)
+
     def advanced_time(self):
         if self._time_in_state >= self.sm.reload_time_ms:
             self._finish_reloading()
@@ -107,4 +128,3 @@ class TurretReloading(_TurretState):
 
     def _finish_reloading(self):
         self.sm.cur_loaded_ammo = self.sm.ammo_clip_size
-        # print("_finish_reloading")

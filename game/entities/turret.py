@@ -21,6 +21,7 @@ class Turret(Entity):
 
         self.texture = Texture.load_from_file('resources/images/guns/minigun_right.png')
         self.texture_FIRING = Texture.load_from_file('resources/images/guns/minigun_shooting.png')
+        self.texture_RELOADING = Texture.load_from_file('resources/images/guns/minigun_reloading.png')
 
         self.turret_quad = QuadDrawable(0, 0, 13 * self._ship.scale, 46 * self._ship.scale)
         self.turret_quad.texture = self.texture
@@ -52,13 +53,18 @@ class Turret(Entity):
 
         muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
         bullet.initialize(muzzle_pos.x, muzzle_pos.y, direction, config.BULLET_VELOCITY, id(self._ship))
-        self.turret_quad.texture = self.texture_FIRING
 
     def hold_fire(self):
         self.turret_state.hold_fire()
-        self.turret_quad.texture = self.texture
 
     def draw(self, screen):
+        if self.turret_state.is_reloading:
+            self.turret_quad.texture = self.texture_RELOADING
+        elif self.turret_state.has_recently_fired:
+            self.turret_quad.texture = self.texture_FIRING
+        else:
+            self.turret_quad.texture = self.texture
+
         self.turret_quad.draw(screen)
 
     def update(self, game_speed, x, y, fire):
