@@ -8,7 +8,7 @@ class PhysicsBullet:
         self.body = physics_world.CreateDynamicBody(
             position=(x, y),
             shapes=b2CircleShape(radius=r),
-            shapeFixture=b2FixtureDef(density=2.0, isSensor=True),
+            shapeFixture=b2FixtureDef(density=0.1, isSensor=True),
             angularDamping=0,
             linearDamping=0,
             userData={'type': 'bullet', 'obj': bullet, 'owner': owner},
