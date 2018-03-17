@@ -1,20 +1,18 @@
-import ctypes
 import math
+import random
 
-import sdl2
 from Box2D import b2World
-from mgl2d.math.vector2 import Vector2
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
+from mgl2d.math.vector2 import Vector2
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
 import config
-from game.entities.ship import Ship
-from game.entities.ship import SHIP_TEXTURES
-from game.entities.asteroid import Asteroid
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
 from game.bullet_mgr import BulletManager
-from physics.contact import ContactListener
-import random
+from game.entities.asteroid import Asteroid
+from game.entities.ship import SHIP_TEXTURES
+from game.entities.ship import Ship
+from physics.contact_listener import ContactListener
 
 INTRO_DEBUG = 0
 DEBUG = 0
@@ -33,8 +31,8 @@ class World:
         self.stage = stage
 
         self.game_over_quad = QuadDrawable(
-            SCREEN_WIDTH/2-496/2,
-            SCREEN_HEIGHT/2-321/2,
+            SCREEN_WIDTH / 2 - 496 / 2,
+            SCREEN_HEIGHT / 2 - 321 / 2,
             496,
             321,
         )

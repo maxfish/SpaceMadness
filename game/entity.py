@@ -13,7 +13,6 @@ class Entity:
     def position(self):
         return self._position
 
-
     def draw(self, screen):
         pass
 
