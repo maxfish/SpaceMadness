@@ -1,5 +1,4 @@
 from Box2D import b2FixtureDef, b2CircleShape
-import random
 
 from mgl2d.math.vector2 import Vector2
 

@@ -2,7 +2,6 @@ from abc import ABC
 
 
 class TurretState():
-
     fire_time_ms = 100
     ammo_clip_size = 20
     reload_time_ms = 1000
@@ -83,7 +82,6 @@ class _TurretState(ABC):
 
 
 class TurretIdle(_TurretState):
-
     def __init__(self, sm):
         super().__init__(sm)
 
@@ -92,7 +90,6 @@ class TurretIdle(_TurretState):
 
 
 class TurretFiring(_TurretState):
-
     def __init__(self, sm):
         super().__init__(sm)
 
@@ -118,7 +115,6 @@ class TurretFiring(_TurretState):
 
 
 class TurretReloading(_TurretState):
-
     def __init__(self, sm):
         super().__init__(sm)
 

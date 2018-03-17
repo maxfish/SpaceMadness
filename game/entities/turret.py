@@ -6,13 +6,11 @@ from mgl2d.math.vector2 import Vector2
 
 import config
 from game.entities.turret_state import TurretState
-
 from game.entity import Entity
 from game.stage import Stage
 
 
 class Turret(Entity):
-
     def __init__(self, ship, bullet_mgr, offset_x, offset_y):
         self._ship = ship
         self._bullet_mgr = bullet_mgr
@@ -108,7 +106,8 @@ class Turret(Entity):
                 turret_angle = self.normalize(joystick_angle + 90)
                 self.turret_quad.angle = turret_angle
             else:
-                if abs(self.diff_angle(normalized_ship_angle+90 + angle_constraints[0], joystick_angle)) < abs(self.diff_angle(normalized_ship_angle+90 + angle_constraints[1], joystick_angle)):
+                if abs(self.diff_angle(normalized_ship_angle + 90 + angle_constraints[0], joystick_angle)) < abs(
+                        self.diff_angle(normalized_ship_angle + 90 + angle_constraints[1], joystick_angle)):
                     bound_angle = angle_constraints[1] if is_right_wing else angle_constraints[0]
                 else:
                     bound_angle = angle_constraints[0] if is_right_wing else angle_constraints[1]
@@ -116,12 +115,11 @@ class Turret(Entity):
                 turret_angle = self.normalize(normalized_ship_angle - bound_angle + 90)
                 self.turret_quad.angle = turret_angle
 
-
     def diff_angle(self, angle_a, angle_b):
         """Returns the difference in degrees between 2 angles in degrees"""
         a = self.normalize(angle_a)
         b = self.normalize(angle_b)
-        diff =  b - (a+360)
+        diff = b - (a + 360)
         return (diff + 180) % 360 - 180
 
     def collide(self, other, **kwargs):

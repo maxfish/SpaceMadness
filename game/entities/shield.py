@@ -1,13 +1,13 @@
 import math
 
 from Box2D import b2Vec2
-from mgl2d.graphics.shader import Shader
-from config import PHYSICS_SCALE
-from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.shader import Shader
+from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
 import config
+from config import PHYSICS_SCALE
 from game.entities.shield_state import ShieldState
 from game.entity import Entity
 from physics.physics_shield import PhysicsShield
@@ -117,11 +117,11 @@ class Shield(Entity):
             versor = b2Vec2(vector.x, vector.y)
             versor.Normalize()
             incoming_angle = math.degrees(math.atan2(versor.y, versor.x))
-            incoming_angle = (incoming_angle+360) % 360
-            shield_angle = (self._angle+360) % 360
-            shield_angle2 = (self._angle+360) % 360 + 360
-            shield_angle3 = (self._angle+360) % 360 - 360
+            incoming_angle = (incoming_angle + 360) % 360
+            shield_angle = (self._angle + 360) % 360
+            shield_angle2 = (self._angle + 360) % 360 + 360
+            shield_angle3 = (self._angle + 360) % 360 - 360
             if (shield_angle - HALF_ARC_DEGREES < incoming_angle < shield_angle + HALF_ARC_DEGREES) or \
-               (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or\
-               (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):
+                    (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or \
+                    (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):
                 self._collision_timer = 400

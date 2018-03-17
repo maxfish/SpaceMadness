@@ -2,7 +2,6 @@ from Box2D import b2ContactListener
 
 
 class ContactListener(b2ContactListener):
-
     def handle_contact(self, contact, began):
         if not contact.enabled:
             return

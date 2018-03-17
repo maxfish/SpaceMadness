@@ -1,22 +1,17 @@
 """2D drawing examples."""
 import sys
 
-from Box2D import b2World, b2FixtureDef, b2BodyDef
+import sdl2
+import sdl2.ext
+from Box2D import b2World
 from mgl2d.app import App
 from mgl2d.input.game_controller_manager import GameControllerManager
 from mgl2d.math.vector2 import Vector2
-from random import randint
-import sdl2
-import sdl2.ext
-from Box2D import b2PolygonShape
-from Box2D import b2CircleShape
-
 from physics.contact import ContactListener
-from physics.physics_bullet import PhysicsBullet
+
+from physics.physics_asteroid import PhysicsAsteroid
 from physics.physics_shield import PhysicsShield
 from physics.physics_ship import PhysicsShip
-from physics.physics_asteroid import PhysicsAsteroid
-
 
 GAME_FPS = 50
 GAME_FRAME_MS = 1000 / GAME_FPS
@@ -25,7 +20,6 @@ app = App()
 
 
 class MockCollidable:
-
     def __init__(self, name):
         self.name = name
 
@@ -48,10 +42,9 @@ physicsWorld = b2World(gravity=(0, 0), contactListener=contact_listener)
 
 pShip = PhysicsShip(object(), physicsWorld, 50, 50)
 pShip2 = PhysicsShip(object(), physicsWorld, 80, 80)
-pShield = PhysicsShield(object() ,physicsWorld, Vector2(60, 60), 20)
+pShield = PhysicsShield(object(), physicsWorld, Vector2(60, 60), 20)
 # pBullet = PhysicsBullet(object(), physicsWorld, 10, 20, 8, 13)
 pAsteroid = PhysicsAsteroid(object(), physicsWorld, 100, 100)
-
 
 sdl2.ext.init()
 window = sdl2.ext.Window("2D drawing primitives", size=(1920, 1080))
@@ -99,7 +92,7 @@ def run():
         for fixture in pShip._gun_left.body.fixtures:
             draw_polygon(windowsurface, pShip._gun_left.body, fixture.shape)
 
-        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40,40)
+        draw_rect(windowsurface, pShield.body.position.x, pShield.body.position.y, 40, 40)
         # for fixture in pBullet.body.fixtures:
         #     draw_polygon(windowsurface, pBullet.body, fixture.shape)
         physicsWorld.Step(timeStep, vel_iters, pos_iters)

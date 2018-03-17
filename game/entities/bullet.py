@@ -1,13 +1,12 @@
 import math
 
 from Box2D import b2Vec2
-from mgl2d.math.vector2 import Vector2
-from mgl2d.graphics.texture import Texture
 from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.texture import Texture
+from mgl2d.math.vector2 import Vector2
 
 from config import PHYSICS_SCALE
 from game.entity import Entity
-from game.stage import Stage
 from physics.physics_bullet import PhysicsBullet
 
 
@@ -26,10 +25,10 @@ class Bullet(Entity):
         self._angle = None
         self.bullet_mgr = bullet_mgr
 
-
     def initialize(self, x, y, direction, speed, owner):
         self.owner = owner
-        self._physics = PhysicsBullet(self, self._world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE, self.bullet_radius, owner)
+        self._physics = PhysicsBullet(self, self._world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE,
+                                      self.bullet_radius, owner)
 
         # Physics object corresponding to the bullet
         # self._physics.body.userData = {'type': 'bullet', 'obj': self, 'owner': owner}
@@ -45,7 +44,7 @@ class Bullet(Entity):
     def update(self, screen):
         pos = self._physics.body.position
         if pos.x < 0 or pos.x > self._world.bounds.w / PHYSICS_SCALE or \
-                pos.y < 0 or pos.y > self._world.bounds.h / PHYSICS_SCALE:
+                        pos.y < 0 or pos.y > self._world.bounds.h / PHYSICS_SCALE:
             # Bullet is outside the screen
             self.remove_bullet()
         else:

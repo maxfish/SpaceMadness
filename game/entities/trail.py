@@ -1,9 +1,5 @@
-import math
-
-from mgl2d.graphics.shader import Shader
-
-from config import PHYSICS_SCALE
 from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 

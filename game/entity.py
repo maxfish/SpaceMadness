@@ -1,4 +1,3 @@
-from mgl2d.graphics.sprite import Sprite
 from mgl2d.math.vector2 import Vector2
 
 

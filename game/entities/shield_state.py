@@ -4,7 +4,6 @@ from config import SHIELD_MAX_ENERGY
 
 
 class ShieldState():
-
     max_energy = SHIELD_MAX_ENERGY
     recharge_per_s = 2.0  # energy recharged per s on healthy shield
     restore_time_s = 20  # seconds to restore damaged shield
@@ -68,7 +67,6 @@ class _ShieldState(ABC):
 
 
 class ShieldHealthy(_ShieldState):
-
     def damage(self, energy):
         self.sm.cur_energy = max(
             0,
@@ -86,7 +84,6 @@ class ShieldHealthy(_ShieldState):
 
 
 class ShieldRestoring(_ShieldState):
-
     def advanced_time(self, time_passed_ms):
         restore_time_ms = self.sm.restore_time_s * 1000
         if self._time_in_state >= restore_time_ms:

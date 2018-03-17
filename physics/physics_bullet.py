@@ -1,6 +1,5 @@
 from Box2D import b2CircleShape
 from Box2D import b2FixtureDef
-from Box2D import b2PolygonShape
 
 
 class PhysicsBullet:

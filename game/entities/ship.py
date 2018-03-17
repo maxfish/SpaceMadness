@@ -6,9 +6,9 @@ from mgl2d.graphics.shader import Shader
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
-from game.entities.asteroid import Asteroid
 
 import config
+from game.entities.asteroid import Asteroid
 # from game.entities.healthbar import HealthBar
 from game.entities.shield import Shield
 from game.entities.ship_state import ShipState
@@ -17,7 +17,6 @@ from game.entities.trail import Trail
 from game.entities.turret import Turret
 from game.entity import Entity
 from physics.physics_ship import PhysicsShip
-
 
 SCALE = 0.67
 
@@ -31,15 +30,15 @@ SHIP_TEXTURES = {
 
 class Ship(Entity):
     def __init__(
-        self,
-        world,
-        bullet_mgr,
-        controllers,
-        x,
-        y,
-        z=0,
-        angle=0,
-        color='standard',
+            self,
+            world,
+            bullet_mgr,
+            controllers,
+            x,
+            y,
+            z=0,
+            angle=0,
+            color='standard',
     ):
         super().__init__(world, x, y, z)
         self.world = world
@@ -75,14 +74,14 @@ class Ship(Entity):
             Shield(self, world),
         ]
 
-        self.turret_right = Turret(self, bullet_mgr, offset_x=-59*SCALE, offset_y=2*SCALE)
-        self.turret_left = Turret(self, bullet_mgr, offset_x=59*SCALE, offset_y=2*SCALE)
+        self.turret_right = Turret(self, bullet_mgr, offset_x=-59 * SCALE, offset_y=2 * SCALE)
+        self.turret_left = Turret(self, bullet_mgr, offset_x=59 * SCALE, offset_y=2 * SCALE)
 
         self.ship_state = ShipState(self)
 
         self.trail = Trail(self, 0, 0)
-        self.side_trail_left = SideTrail(self, 28*SCALE, 40*SCALE, -45)
-        self.side_trail_right = SideTrail(self, -25*SCALE, 40*SCALE, 225)
+        self.side_trail_left = SideTrail(self, 28 * SCALE, 40 * SCALE, -45)
+        self.side_trail_right = SideTrail(self, -25 * SCALE, 40 * SCALE, 225)
 
         # self._healthbar = HealthBar(self, world)
 
@@ -122,11 +121,11 @@ class Ship(Entity):
         if self.shieldController and self.ship_state.state == ShipState.LIVE:
             shield0_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_LEFT_X) or 0.0,
-                self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0,0.0,
+                self.shieldController.get_axis(GameController.AXIS_LEFT_Y) or 0.0, 0.0,
             )
             shield1_input_values = (
                 self.shieldController.get_axis(GameController.AXIS_RIGHT_X) or 0.0,
-                self.shieldController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0,0.0,
+                self.shieldController.get_axis(GameController.AXIS_RIGHT_Y) or 0.0, 0.0,
             )
         else:
             shield0_input_values = (0.0, 0.0, 0.0)
@@ -150,8 +149,8 @@ class Ship(Entity):
             turret_right_fire = (self.turretController.get_axis(GameController.AXIS_TRIGGER_RIGHT) or 0.0) > threshold
 
         else:
-            turret_left_x, turret_left_y = (0,0)
-            turret_right_x, turret_right_y = (0,0)
+            turret_left_x, turret_left_y = (0, 0)
+            turret_right_x, turret_right_y = (0, 0)
             turret_left_fire = turret_right_fire = False
 
         self.turret_left.update(
@@ -218,7 +217,7 @@ class Ship(Entity):
             self.world,
             x, y - 30,
             Vector2(random() * 30 - 15, random() * -100),
-            random() * 3.0,
+               random() * 3.0,
             'resources/images/derelict/part_01.png', config.SHIP_SCALE
         ))
         self.world.asteroids.append(Asteroid(
@@ -240,7 +239,7 @@ class Ship(Entity):
             self.world,
             x, y - 30,
             Vector2(random() * 3.0 - 1.5, random() * -10),
-            random() * 3.0,
+               random() * 3.0,
             'resources/images/people/pilot.png', config.SHIP_SCALE
         ))
         self.world.asteroids.append(Asteroid(

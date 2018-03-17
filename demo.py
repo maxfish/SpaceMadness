@@ -11,9 +11,6 @@ from mgl2d.input.game_controller_manager import GameControllerManager
 from config import GAME_FPS, GAME_FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH
 from demo.demoworld import DemoWorld
 from demo.stage_demo import StageDemo
-from game.stages.stage_sky import StageSky
-from game.entities.turret import TurretStage
-from game.world import World
 
 logging.basicConfig(level=logging.INFO)
 
@@ -35,7 +32,6 @@ controllerManager.load_joysticks_database('resources/gamecontrollerdb.txt')
 num_joysticks = max(controllerManager.num_joysticks, 1)
 controllers = []
 
-
 world = DemoWorld(bounds=screen.viewport, controllers=controllers)
 
 world.set_stage(StageDemo(screen.width, screen.height))
@@ -45,23 +41,26 @@ world.set_stage(StageDemo(screen.width, screen.height))
 # screen.add_postprocessing_step(ppe)
 
 
-timeStep = (1.0 / GAME_FPS) *4
+timeStep = (1.0 / GAME_FPS) * 4
 vel_iters, pos_iters = 6, 2
 
 global prev_deletion
 global deletion_freq
 
+
 def draw_line(surface, x1, y1, x2, y2):
     color = sdl2.ext.Color(255, 255, 255)
     sdl2.ext.line(surface, color, (x1, y1, x2, y2))
 
+
 def draw_frame(screen):
     world.draw(screen)
+
 
 def update_frame(delta_ms):
     for body in world.physics_to_delete:
         body.position = (-100, -100)
-        #world.physicsWorld.DestroyBody(body)
+        # world.physicsWorld.DestroyBody(body)
     world.physics_to_delete = []
 
     world.physicsWorld.ClearForces()

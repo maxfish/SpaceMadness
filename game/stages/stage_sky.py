@@ -1,11 +1,12 @@
+from os import listdir
+from os.path import isfile, join
+
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 
 from game.stage import Stage
-from game.stages.planet import Planet
 from game.stages.cloud import Cloud
-from os import listdir
-from os.path import isfile, join
+from game.stages.planet import Planet
 
 
 class StageSky(Stage):
@@ -20,7 +21,6 @@ class StageSky(Stage):
 
         self.clouds_background = []
         self.clouds_foreground = []
-
 
         # Generate the list of planets
         self.generate_planets(number_of_planets, width, height)
@@ -55,15 +55,15 @@ class StageSky(Stage):
                                isfile(join('resources/images/planets', f))]
         number_per_areas = number_of_planets // 4
         for x in range(0, number_per_areas):
-            p = Planet(width/2, height/2, width, height, planet_picture_list)
+            p = Planet(width / 2, height / 2, width, height, planet_picture_list)
             self.planets.append(p)
-        for x in range(number_per_areas, number_per_areas*2):
-            p = Planet(width/2, 0, width, height, planet_picture_list)
+        for x in range(number_per_areas, number_per_areas * 2):
+            p = Planet(width / 2, 0, width, height, planet_picture_list)
             self.planets.append(p)
-        for x in range(number_per_areas*2, number_per_areas * 3):
-            p = Planet(0, height/2, width, height, planet_picture_list)
+        for x in range(number_per_areas * 2, number_per_areas * 3):
+            p = Planet(0, height / 2, width, height, planet_picture_list)
             self.planets.append(p)
-        for x in range(number_per_areas*3, number_per_areas * 4):
+        for x in range(number_per_areas * 3, number_per_areas * 4):
             p = Planet(0, 0, width, height, planet_picture_list)
             self.planets.append(p)
 

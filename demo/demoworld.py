@@ -1,12 +1,13 @@
 import math
+import random
+
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
-
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE, SHIP_SCALE
-from game.entities.ship import Ship
-from game.entities.asteroid import Asteroid
 from physics.contact import ContactListener
-import random
+
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from game.entities.asteroid import Asteroid
+from game.entities.ship import Ship
 
 INTRO_DEBUG = 0
 DEBUG = 0
