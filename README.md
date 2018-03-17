@@ -1,21 +1,32 @@
-INSTALL
-=======
+# SPACE MADNESS
+This game was created during Yelp's Hackathon 25. Here's a video:
 
-NOTE: You will need 'swig' to generate the bindings for PyBox2D
+[![Space Madness Video](https://img.youtube.com/vi/7qCSeqjKI3c/0.jpg)](https://www.youtube.com/watch?v=7qCSeqjKI3c)
 
-python3 -m venv <name-of-venv>
+# INSTALL
+**NOTE: these instructions were tested exclusively on MacOS**
 
-source <name-of-venv>/bin/activate
+## Install system dependencies and libraries
 
-pip install -r requirements.txt
+* Install the support for the XBOX360 controllers following the instructions [here](https://github.com/360Controller/360Controller/releases)
+* Download SDL2 from [this download page](https://www.libsdl.org/download-2.0.php)
+* The installer contains `SDL2.Framework` inside. Move it to `/Library/Frameworks`
+* Make sure you have python **3.6** installed. See [the official download page](https://www.python.org/downloads/) (or use `brew`)
+* Install `swig` with `brew install swig`
 
+## Download and install code requirements
+
+* Clone SpaceMadness repo:
+    git clone git@github.com:maxfish/SpaceMadness.git
+* cd `SpaceMadness`
+* Create a new virtualenv: `python3.6 -m venv venv`
+* Activate it: `venv/bin/activate`
+* Get `pybox2d` by cloning it (git clone https://github.com/pybox2d/pybox2d) or downloading it (`curl -o pybox2d.zip https://codeload.github.com/pybox2d/pybox2d/zip/master && unzip pybox2d.zip`) within the game folder
+* Build `pybox2d`: `cd pybox2d && python setup.py build && python setup.py develop && cd ..`
+* Install the requirements: `pip install -r requirements.txt`
 
 RUN
 ===
 
-python game.py
-
-XBOX 360 ON MAC
-===============
-
-https://github.com/360Controller/360Controller/releases
+    $ python game.py
+    $ python game.py --width=1000 --height=800 (custom width/height)
