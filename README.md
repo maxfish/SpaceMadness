@@ -22,7 +22,7 @@ This game was created during Yelp's Hackathon 25. Here's a video:
 * Create a new virtualenv: `python3.6 -m venv venv`
 * Activate it: `venv/bin/activate`
 * Get `pybox2d` by cloning it (git clone https://github.com/pybox2d/pybox2d) or downloading it (`curl -o pybox2d.zip https://codeload.github.com/pybox2d/pybox2d/zip/master && unzip pybox2d.zip`) within the game folder
-* Build `pybox2d`: `cd pybox2d && python setup.py build && python setup.py develop && cd ..`
+* Build `pybox2d`: `cd pybox2d-master && python setup.py build && python setup.py develop && cd ..`
 * Install the requirements: `pip install -r requirements.txt`
 
 ## Hardware requirements
