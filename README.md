@@ -25,6 +25,11 @@ This game was created during Yelp's Hackathon 25. Here's a video:
 * Build `pybox2d`: `cd pybox2d && python setup.py build && python setup.py develop && cd ..`
 * Install the requirements: `pip install -r requirements.txt`
 
+## Hardware requirements
+
+* **OpenGL**: The game requires OpenGL v4.1 (core profile)
+* **Joysticks**: You will need 3 joypads to control each single ship. The joysticks handling is done via SDL2 but right now only XBox360 and PS4 controller are supported. To support more joysticks models, or another OS, please have a look at the SDL2 database here: https://github.com/gabomdq/SDL_GameControllerDB
+
 RUN
 ===
 
