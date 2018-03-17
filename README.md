@@ -3,6 +3,9 @@ This game was created during Yelp's Hackathon 25. Here's a video:
 
 [![Space Madness Video](https://img.youtube.com/vi/7qCSeqjKI3c/0.jpg)](https://www.youtube.com/watch?v=7qCSeqjKI3c)
 
+**NOTE:** Part of the game assets are coming from the [Space Game Art Pack - extended](https://opengameart.org/content/space-game-art-pack-extended) made by [Tatermand](https://opengameart.org/users/tatermand) ([CC](https://creativecommons.org/licenses/by-sa/3.0/))
+
+
 # INSTALL
 **NOTE: these instructions were tested exclusively on MacOS**
 
