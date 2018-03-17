@@ -1,1 +1,2 @@
-git+https://github.com/maxfish/mgl2d.git#egg=mgl2d
+mgl2d==0.9.1
+
