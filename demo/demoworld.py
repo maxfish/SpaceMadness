@@ -3,7 +3,7 @@ import random
 
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
-from physics.contact import ContactListener
+from physics.contact_listener import ContactListener
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
 from game.entities.asteroid import Asteroid
