@@ -9,16 +9,17 @@ SIDE_THRUST_INTENSITY = 5100
 
 class PhysicsShip:
     def __init__(self, ship, physicsWorld, x, y, angle=0):
-        w = 5
+        w = 7
         h = 10
+        ty = 0.2
         self.shape = b2PolygonShape(vertices=[
-            (0, -(h * 0.5)),
-            (-w * 0.5, -(h * 0.5 - w * 0.5)),
-            (-w * 0.5, -(-h * 0.5 + w * 0.3)),
-            (-w * 0.25, -(-h * 0.5)),
-            (w * 0.25, -(-h * 0.5)),
-            (w * 0.5, -(-h * 0.5 + w * 0.3)),
-            (w * 0.5, -(h * 0.5 - w * 0.5)),
+            (0, (h * 0.5) + ty),
+            (-w * 0.5, (h * 0.5 - w * 0.5) + ty),
+            (-w * 0.5, (-h * 0.5 + w * 0.3) + ty),
+            (-w * 0.25, (-h * 0.5) + ty),
+            (w * 0.25, (-h * 0.5) + ty),
+            (w * 0.5, (-h * 0.5 + w * 0.3) + ty),
+            (w * 0.5, (h * 0.5 - w * 0.5) + ty),
         ])
 
         self.body = physicsWorld.CreateDynamicBody(
