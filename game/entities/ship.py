@@ -1,8 +1,10 @@
 import math
 from random import random
 
+from mgl2d.graphics.color import Color
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader import Shader
+from mgl2d.graphics.shapes import Shapes
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
@@ -54,7 +56,7 @@ class Ship(Entity):
         )
 
         # Used by ship components to scale themselves
-        self.scale = SCALE
+        self.size = SCALE
 
         self._quad = QuadDrawable(0, 0, self._dim.x, self._dim.y)
         self._quad.pos = self._position
@@ -193,14 +195,14 @@ class Ship(Entity):
                 energy_ratio = self.ship_state.energy / self.ship_state.MAX_ENERGY
                 damage_ratio = 1.0 - energy_ratio
                 self._quad.shader.bind()
-                self._quad.shader.set_uniform_float('mul_r', 0.0)
-                self._quad.shader.set_uniform_float('mul_g', 0.2 + 0.8 * damage_ratio)
-                self._quad.shader.set_uniform_float('mul_b', 0.2 + 0.8 * damage_ratio)
+                self._quad.shader.set_uniform_1f('mul_r', 0.0)
+                self._quad.shader.set_uniform_1f('mul_g', 0.2 + 0.8 * damage_ratio)
+                self._quad.shader.set_uniform_1f('mul_b', 0.2 + 0.8 * damage_ratio)
             else:
                 self._quad.shader.bind()
-                self._quad.shader.set_uniform_float('mul_r', 0.0)
-                self._quad.shader.set_uniform_float('mul_g', 0.0)
-                self._quad.shader.set_uniform_float('mul_b', 0.0)
+                self._quad.shader.set_uniform_1f('mul_r', 0.0)
+                self._quad.shader.set_uniform_1f('mul_g', 0.0)
+                self._quad.shader.set_uniform_1f('mul_b', 0.0)
 
             self.turret_left.draw(screen)
             self.turret_right.draw(screen)

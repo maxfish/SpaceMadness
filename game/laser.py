@@ -15,10 +15,10 @@ class Laser:
         self.should_be_removed = False
 
     def update(self, screen):
-        self.quadm.scale = Vector2(self.quadm.scale.x, self.quadm.scale.y * 0.9)
+        self.quadm.size = Vector2(self.quadm.scale.x, self.quadm.scale.y * 0.9)
         if self.quadm.scale.x < 0.01:
             self.should_be_removed = True
-            self.quadm.scale = Vector2(0, 0)
+            self.quadm.size = Vector2(0, 0)
 
     def draw(self, screen):
         # self.quadb.draw(screen)

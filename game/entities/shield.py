@@ -25,15 +25,15 @@ class Shield(Entity):
         self._quad = QuadDrawable(0, 0, 0, 0)
         self._quad.texture = Texture.load_from_file('resources/images/shield_arc.png')
         self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
-        self._quad.scale = Vector2(self._quad.texture.width, self._quad.texture.height) * 0.67
-        self._quad.anchor = Vector2(0, self._quad.scale.y / 2)
+        self._quad.size = Vector2(self._quad.texture.width, self._quad.texture.height) * 0.67
+        self._quad.anchor = Vector2(0, self._quad.size.y / 2)
 
         self._physicsShield = PhysicsShield(
             self,
             ship._physicsShip,
             world.physicsWorld,
             center=self._ship._physicsShip.body.position,
-            radius=(self._quad.scale.x / PHYSICS_SCALE) * 1.1,
+            radius=(self._quad.size.x / PHYSICS_SCALE) * 1.1,
         )
         self._collision_timer = 0
 
@@ -90,13 +90,13 @@ class Shield(Entity):
 
         self._quad.shader.bind()
         if self._collision_timer > 0:
-            self._quad.shader.set_uniform_float('mul_r', 0)
-            self._quad.shader.set_uniform_float('mul_g', 0.8)
-            self._quad.shader.set_uniform_float('mul_b', 0.8)
+            self._quad.shader.set_uniform_1f('mul_r', 0)
+            self._quad.shader.set_uniform_1f('mul_g', 0.8)
+            self._quad.shader.set_uniform_1f('mul_b', 0.8)
         else:
-            self._quad.shader.set_uniform_float('mul_g', 0)
-            self._quad.shader.set_uniform_float('mul_b', 1)
-            self._quad.shader.set_uniform_float('mul_r', 1)
+            self._quad.shader.set_uniform_1f('mul_g', 0)
+            self._quad.shader.set_uniform_1f('mul_b', 1)
+            self._quad.shader.set_uniform_1f('mul_r', 1)
 
         # if self.shield_state.is_healthy:
         self._quad.draw(screen)

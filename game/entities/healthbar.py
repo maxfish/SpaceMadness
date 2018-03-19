@@ -14,9 +14,9 @@ class HealthBar(Entity):
         self._quad.texture = Texture.load_from_file('resources/images/health.png')
 
     def update(self, game_speed):
-        self._quad.scale = Vector2(
+        self._quad.size = Vector2(
             self._ship._dim.x * self._ship.ship_state.energy / ShipState.MAX_ENERGY,
-            self._quad.scale.y,
+            self._quad.size.y,
         )
         self._quad.pos = self._position + Vector2(-self._ship._dim.x / 2, -self._ship._dim.y / 3)
 

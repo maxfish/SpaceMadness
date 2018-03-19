@@ -27,7 +27,7 @@ class Cloud:
 
     def draw(self, screen):
         self.quad.shader.bind()
-        self.quad.shader.set_uniform_float('mul_a', 0.4)
+        self.quad.shader.set_uniform_1f('mul_a', 0.4)
         self.quad.draw(screen)
 
 
@@ -44,6 +44,7 @@ def calculate_size(width, height):
 
 
 def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
-    cloud.quad = QuadDrawable(cloud.pos.x - size / 2, cloud.pos.y - size / 2, size, size, random.randint(0, 360))
+    cloud.quad = QuadDrawable(cloud.pos.x, cloud.pos.y, size, size, angle=random.randint(0, 360))
     cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
     cloud.quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+    cloud.quad.anchor_to_center()

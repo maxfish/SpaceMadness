@@ -18,10 +18,10 @@ class Bullet(Entity):
         self._world = world
         self._quad = QuadDrawable()
         self._quad.texture = Texture.load_from_file('resources/images/bullet.png')
-        self._quad.scale = Vector2(self._quad.texture.width, self._quad.texture.height)
-        self._quad.anchor = self._quad.scale / 2
+        self._quad.size = Vector2(self._quad.texture.width, self._quad.texture.height)
+        self._quad.anchor_to_center()
         # Attach physics only in the initialize method
-        self.bullet_radius = min(self._quad.scale.x, self._quad.scale.y) / PHYSICS_SCALE / 2
+        self.bullet_radius = min(self._quad.size.x, self._quad.size.y) / PHYSICS_SCALE / 2
         self._angle = None
         self.bullet_mgr = bullet_mgr
 

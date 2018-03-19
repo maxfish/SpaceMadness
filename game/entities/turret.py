@@ -21,9 +21,9 @@ class Turret(Entity):
         self.texture_FIRING = Texture.load_from_file('resources/images/guns/minigun_shooting.png')
         self.texture_RELOADING = Texture.load_from_file('resources/images/guns/minigun_reloading.png')
 
-        self.turret_quad = QuadDrawable(0, 0, 13 * self._ship.scale, 46 * self._ship.scale)
+        self.turret_quad = QuadDrawable(0, 0, 13 * self._ship.size, 46 * self._ship.size)
         self.turret_quad.texture = self.texture
-        self.turret_quad.anchor = Vector2(7 * self._ship.scale, 35 * self._ship.scale)
+        self.turret_quad.anchor = Vector2(7 * self._ship.size, 35 * self._ship.size)
 
         self.turret_state = TurretState(self)
         self.update(0, 0, 0, False, False)

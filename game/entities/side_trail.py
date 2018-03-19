@@ -13,10 +13,10 @@ class SideTrail(Entity):
         self.offset_y = offset_y
         self.offset_angle = offset_angle
 
-        self.side_trail_dimensions = Vector2(56 * self._ship.scale, 11 * self._ship.scale)
+        self.side_trail_dimensions = Vector2(56 * self._ship.size, 11 * self._ship.size)
         self.side_trail = QuadDrawable(0, 0, self.side_trail_dimensions.x, self.side_trail_dimensions.y)
         self.side_trail.texture = Texture.load_from_file('resources/images/ship/side_trail.png')
-        self.side_trail.anchor = Vector2(56 * self._ship.scale, 5 * self._ship.scale)
+        self.side_trail.anchor = Vector2(56 * self._ship.size, 5 * self._ship.size)
         self.side_trail.angle = offset_angle
 
         self.update(0, 0)
@@ -26,9 +26,9 @@ class SideTrail(Entity):
 
     def update(self, game_speed, axis):
         if axis > 0:
-            self.side_trail.scale = self.side_trail_dimensions
+            self.side_trail.size = self.side_trail_dimensions
             self.side_trail.pos = PHYSICS_SCALE * (
                 self._ship._physicsShip.body.transform * (self.offset_x / PHYSICS_SCALE, self.offset_y / PHYSICS_SCALE))
             self.side_trail.angle = self.offset_angle + self._ship._quad.angle
         else:
-            self.side_trail.scale = Vector2(0, 0)
+            self.side_trail.size = Vector2(0, 0)

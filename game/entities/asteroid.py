@@ -29,7 +29,7 @@ class Asteroid(Entity):
         radius = ((image_size / PHYSICS_SCALE) / 2) * 0.8
 
         self._quad = QuadDrawable(x, y, texture.width * scale, texture.height * scale)
-        self._quad.anchor = self._quad.scale / 2
+        self._quad.anchor_to_center()
         self._quad.texture = texture
         self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
 
@@ -50,9 +50,9 @@ class Asteroid(Entity):
 
     def draw(self, screen):
         self._quad.shader.bind()
-        self._quad.shader.set_uniform_float('mul_r', 0.3)
-        self._quad.shader.set_uniform_float('mul_g', 0.3)
-        self._quad.shader.set_uniform_float('mul_b', 0.3)
+        self._quad.shader.set_uniform_1f('mul_r', 0.3)
+        self._quad.shader.set_uniform_1f('mul_g', 0.3)
+        self._quad.shader.set_uniform_1f('mul_b', 0.3)
         self._quad.draw(screen)
         pass
 
