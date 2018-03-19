@@ -1,8 +1,10 @@
 import math
 import random
 
-from Box2D import b2World
+from Box2D import b2World, b2PolygonShape
+from mgl2d.graphics.color import Color
 from mgl2d.graphics.quad_drawable import QuadDrawable
+from mgl2d.graphics.shapes import Shapes
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
@@ -47,6 +49,7 @@ class World:
         self.physicsWorld = b2World(gravity=(0, 0), contactListener=ContactListener())
         # Physical bodies should be deleted outside the simulation step.
         self.physics_to_delete = []
+        self._shapes = Shapes()
 
         self.controllers = controllers
 
@@ -154,9 +157,19 @@ class World:
             e.draw(screen)
 
         self.stage.draw_foreground(screen, self.window_x, self.window_y)
+        if config.PHYSICS_DEBUG_DRAW_BODIES:
+            self._draw_physics_bodies(screen)
 
         if self.game_over_timer > 0:
             self.game_over_quad.draw(screen)
+
+    def _draw_physics_bodies(self, screen):
+        for body in self.physicsWorld.bodies:
+            for fixture in body.fixtures:
+                if isinstance(fixture.shape, b2PolygonShape):
+                    vertices = [(body.transform * v) * 10 for v in fixture.shape.vertices]
+                    vertices = [(v[0], v[1]) for v in vertices]
+                    self._shapes.draw_polygon(screen, vertices, Color(1, 0, 0, 1))
 
     def game_over(self):
         self.scene = self.SCENE_GAME_OVER
