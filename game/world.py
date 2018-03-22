@@ -1,7 +1,7 @@
 import math
 import random
 
-from Box2D import b2World, b2PolygonShape
+from Box2D import b2World, b2PolygonShape, b2CircleShape
 from mgl2d.graphics.color import Color
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shapes import Shapes
@@ -167,9 +167,15 @@ class World:
         for body in self.physicsWorld.bodies:
             for fixture in body.fixtures:
                 if isinstance(fixture.shape, b2PolygonShape):
-                    vertices = [(body.transform * v) * 10 for v in fixture.shape.vertices]
+                    vertices = [(body.transform * v) * PHYSICS_SCALE for v in fixture.shape.vertices]
                     vertices = [(v[0], v[1]) for v in vertices]
-                    self._shapes.draw_polygon(screen, vertices, Color(1, 0, 0, 1))
+                    # Add the first point again to close the polygon
+                    vertices.append(vertices[0])
+                    self._shapes.draw_polyline(screen, vertices, Color(1, 0, 0, 1))
+                elif isinstance(fixture.shape, b2CircleShape):
+                    center = (body.transform * fixture.shape.pos) * PHYSICS_SCALE
+                    radius = fixture.shape.radius * PHYSICS_SCALE
+                    self._shapes.draw_circle(screen, center.x, center.y, radius, Color(1, 0, 0, 1))
 
     def game_over(self):
         self.scene = self.SCENE_GAME_OVER
