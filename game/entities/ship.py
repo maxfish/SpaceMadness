@@ -3,7 +3,7 @@ from random import random
 
 from mgl2d.graphics.color import Color
 from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.graphics.shader import Shader
+from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.shapes import Shapes
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
@@ -64,7 +64,7 @@ class Ship(Entity):
 
         texture_file = SHIP_TEXTURES.get(color, SHIP_TEXTURES['standard'])
         self._quad.texture = Texture.load_from_file(texture_file)
-        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+        self._quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
 
         self.controllers = controllers
         self.pilotController = controllers[0] if len(controllers) else None

@@ -1,5 +1,5 @@
 from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.graphics.shader import Shader
+from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
@@ -18,7 +18,7 @@ class Trail(Entity):
         self.engine_trail.texture = Texture.load_from_file('resources/images/ship/trail.png')
         # Don't ask why 173...
         self.engine_trail.anchor = Vector2(65 * self._ship.size, 173 * self._ship.size)
-        self.engine_trail.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+        self.engine_trail.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
 
         self.update(0, 0, False)
 

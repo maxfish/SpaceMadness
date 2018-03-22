@@ -1,7 +1,7 @@
 import math
 
 from mgl2d.graphics.quad_drawable import QuadDrawable
-from mgl2d.graphics.shader import Shader
+from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
@@ -31,7 +31,7 @@ class Asteroid(Entity):
         self._quad = QuadDrawable(x, y, texture.width * scale, texture.height * scale)
         self._quad.anchor_to_center()
         self._quad.texture = texture
-        self._quad.shader = Shader.from_files('resources/shaders/base.vert', 'resources/shaders/rgba.frag')
+        self._quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
 
         self._physicAsteroid = PhysicsAsteroid(
             self,
