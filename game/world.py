@@ -175,7 +175,8 @@ class World:
                 elif isinstance(fixture.shape, b2CircleShape):
                     center = (body.transform * fixture.shape.pos) * PHYSICS_SCALE
                     radius = fixture.shape.radius * PHYSICS_SCALE
-                    self._shapes.draw_circle(screen, center.x, center.y, radius, Color(1, 0, 0, 1))
+                    self._shapes.draw_circle(screen, center.x, center.y, radius, Color(1, 0, 0, 1),
+                                             start_angle=body.angle)
 
     def game_over(self):
         self.scene = self.SCENE_GAME_OVER
