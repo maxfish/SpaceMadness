@@ -1,6 +1,6 @@
+import math
 import random
 
-import math
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.texture import Texture
@@ -13,17 +13,17 @@ class Cloud:
         start_y = random.randint(0, height)
         cloud_number = random.randint(0, len(cloud_list))
 
-        size = calculate_size(width, height)
         self.pos = Vector2(start_x, start_y)
-        self.speed_x = random.randint(-100, 100)
-        self.speed_y = random.randint(-100, 100)
+        self.speed_x = (random.random() - 0.5) / 10
+        self.speed_y = (random.random() - 0.5) / 10
 
         self.quad = None
+        size = calculate_size(width, height)
         create_cloud_quad(self, size, cloud_list, cloud_number)
 
     def update(self, screen):
-        self.pos.x += 0.002 * self.speed_x
-        self.pos.y += 0.002 * self.speed_y
+        self.pos.x += self.speed_x
+        self.pos.y += self.speed_y
         self.quad.pos = self.pos
 
     def draw(self, screen):
@@ -45,7 +45,8 @@ def calculate_size(width, height):
 
 
 def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
-    cloud.quad = QuadDrawable(cloud.pos.x, cloud.pos.y, size, size, angle=random.random()*math.pi*2)
+    cloud.quad = QuadDrawable(cloud.pos.x, cloud.pos.y, size, size, angle=random.random() * math.pi * 2)
     cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
-    cloud.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
+    cloud.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert',
+                                                 frag_file='resources/shaders/rgba.frag')
     cloud.quad.anchor_to_center()

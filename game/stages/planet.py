@@ -12,21 +12,19 @@ class Planet:
         start_x = begin_x + width / 8 + random.randint(-width / 4, width / 4)
         start_y = begin_y + height / 8 + random.randint(-height / 4, height / 4)
         planet_number = random.randint(0, len(planet_list))
-        size = calculate_size(width, height)
         self.pos = Vector2(start_x, start_y)
-        self.speed_x = random.randint(-100, 100)
-        self.speed_y = random.randint(-100, 100)
-        self.rotation_speed = random.randint(-100, 100) / 100
+        self.speed_x = (random.random() - 0.5) / 100
+        self.speed_y = (random.random() - 0.5) / 100
+        self.rotation_speed = (random.random() - 0.5) / 800
 
         self.quad = None
+        size = calculate_size(width, height)
         create_planet_quad(self, size, planet_list, planet_number)
 
-    def update(self, screen):
-        self.pos.x += 0.0001 * self.speed_x
-        self.pos.y += 0.0001 * self.speed_y
-        self.speed_x += random.randint(-20, 20)
-        self.speed_y += random.randint(-20, 20)
-        self.quad.angle += 0.01 * self.rotation_speed
+    def update(self, game_speed):
+        self.pos.x += self.speed_x
+        self.pos.y += self.speed_y
+        self.quad.angle += self.rotation_speed
         self.quad.pos = self.pos
 
     def draw(self, screen):
@@ -54,3 +52,4 @@ def create_planet_quad(planet, size, planet_list, planet_picked):
     planet.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_picked - 1])
     planet.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert',
                                                   frag_file='resources/shaders/rgba.frag')
+    planet.quad.anchor_to_center()
