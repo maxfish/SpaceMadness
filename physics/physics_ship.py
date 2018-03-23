@@ -24,7 +24,7 @@ class PhysicsShip:
 
         self.body = physicsWorld.CreateDynamicBody(
             position=(x, y),
-            angle=math.radians(angle - 180),
+            angle=angle - 180,
             shapes=self.shape,
             angularDamping=4,
             linearDamping=0.1,

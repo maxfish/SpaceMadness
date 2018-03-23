@@ -1,3 +1,4 @@
+import math
 import random
 
 from mgl2d.graphics.quad_drawable import QuadDrawable
@@ -49,6 +50,7 @@ def calculate_size(width, height):
 
 
 def create_planet_quad(planet, size, planet_list, planet_picked):
-    planet.quad = QuadDrawable(planet.pos.x, planet.pos.y, size, size, angle=random.randint(0, 360))
+    planet.quad = QuadDrawable(planet.pos.x, planet.pos.y, size, size, angle=random.random() * math.pi * 2)
     planet.quad.texture = Texture.load_from_file('resources/images/planets/' + planet_list[planet_picked - 1])
-    planet.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
+    planet.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert',
+                                                  frag_file='resources/shaders/rgba.frag')

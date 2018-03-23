@@ -52,17 +52,17 @@ class Shield(Entity):
             self._angle_speed = max(1, self._angle_speed * mag)
 
             if mag > 0.001:
-                theta = math.degrees(math.atan2(y, x))
+                theta = math.atan2(y, x)
                 self._angle_speed = min(self._angle_speed * 1.01, 6)
             else:
                 return self._angle
 
             delta = theta - self._angle
-            delta = (delta + 180) % 360 - 180
+            delta = (delta + math.pi) % (2*math.pi) - math.pi
             step = delta * self._angle_speed / 8.0
             return self._angle + step
         else:
-            return math.degrees(math.atan2(y, x))
+            return math.atan2(y, x)
 
     def update(self, game_speed, input_values):
         x, y, trigger = input_values
@@ -114,13 +114,13 @@ class Shield(Entity):
         if began:
             incoming_pos = other_body.position
             vector = incoming_pos - body.position
-            versor = b2Vec2(vector.x, vector.y)
-            versor.Normalize()
-            incoming_angle = math.degrees(math.atan2(versor.y, versor.x))
-            incoming_angle = (incoming_angle + 360) % 360
-            shield_angle = (self._angle + 360) % 360
-            shield_angle2 = (self._angle + 360) % 360 + 360
-            shield_angle3 = (self._angle + 360) % 360 - 360
+            direction = b2Vec2(vector.x, vector.y)
+            direction.Normalize()
+            incoming_angle = math.atan2(direction.y, direction.x)
+            incoming_angle = (incoming_angle + math.pi*2) % (math.pi*2)
+            shield_angle = (self._angle + math.pi*2) % (math.pi*2)
+            shield_angle2 = (self._angle + math.pi*2) % (math.pi*2) + (math.pi*2)
+            shield_angle3 = (self._angle + math.pi*2) % (math.pi*2) - (math.pi*2)
             if (shield_angle - HALF_ARC_DEGREES < incoming_angle < shield_angle + HALF_ARC_DEGREES) or \
                     (shield_angle2 - HALF_ARC_DEGREES < incoming_angle < shield_angle2 + HALF_ARC_DEGREES) or \
                     (shield_angle3 - HALF_ARC_DEGREES < incoming_angle < shield_angle3 + HALF_ARC_DEGREES):

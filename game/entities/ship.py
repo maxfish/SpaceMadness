@@ -170,7 +170,7 @@ class Ship(Entity):
             is_right_wing=True,
         )
 
-        self._angle = math.degrees(self._physicsShip.body.angle) + 180
+        self._angle = self._physicsShip.body.angle + math.pi
         pos = self._physicsShip.body.position * config.PHYSICS_SCALE
         self._position = Vector2(pos[0], pos[1])
         self._quad.pos = self._position

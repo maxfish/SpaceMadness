@@ -111,7 +111,7 @@ class DemoWorld:
     def generate_asteroid(self):
         # Picks a random movement direction
         direction = Vector2()
-        angle = random.randint(0, 359)
+        angle = random.random() * math.pi*2
         direction.x = math.cos(math.radians(angle))
         direction.y = math.sin(math.radians(angle))
 
@@ -146,7 +146,7 @@ class DemoWorld:
     def generate_derelict(self):
         # Picks a random movement direction
         direction = Vector2()
-        angle = random.randint(0, 359)
+        angle = random.random() * math.pi*2
         direction.x = math.cos(math.radians(angle))
         direction.y = math.sin(math.radians(angle))
 
@@ -171,7 +171,7 @@ class DemoWorld:
     def generate_person(self):
         # Picks a random movement direction
         direction = Vector2()
-        angle = random.randint(0, 359)
+        angle = random.random() * math.pi*2
         direction.x = math.cos(math.radians(angle))
         direction.y = math.sin(math.radians(angle))
 

@@ -29,8 +29,8 @@ class Turret(Entity):
         self.update(0, 0, 0, False, False)
 
     def convert_to_angle(self, x, y):
-        """Returns a number between 0 and 360"""
-        return self.normalize(math.degrees(math.atan2(y, x)))
+        """Returns a number between 0 and 2PI"""
+        return self.normalize(math.atan2(y, x))
 
     def fire(self):
         self.turret_state.fire()
@@ -46,7 +46,7 @@ class Turret(Entity):
         #     id(self._ship),
         # ))
 
-        angle = math.radians(self.turret_quad.angle)
+        angle = self.turret_quad.angle
         direction = Vector2(math.sin(angle), -math.cos(angle))
 
         muzzle_pos = Vector2(self.turret_quad.pos.x, self.turret_quad.pos.y) + (direction * 25)
@@ -66,7 +66,7 @@ class Turret(Entity):
         self.turret_quad.draw(screen)
 
     def normalize(self, angle):
-        return angle % 360
+        return angle % (math.pi * 2)
 
     def update(self, game_speed, x, y, fire, is_right_wing):
         """Params:
@@ -88,12 +88,12 @@ class Turret(Entity):
             self.offset_x / config.PHYSICS_SCALE, self.offset_y / config.PHYSICS_SCALE))
 
         # 90 is to account for the rotation of the resource
-        normalized_ship_angle = self.normalize(self._ship._quad.angle - 90)
+        normalized_ship_angle = self.normalize(self._ship._quad.angle - math.pi / 2)
 
         if is_right_wing:
-            angle_constraints = [-145, 20]
+            angle_constraints = [math.radians(-145), math.radians(20)]
         else:
-            angle_constraints = [-20, 145]
+            angle_constraints = [math.radians(-20), math.radians(145)]
 
         self.turret_quad.angle = self._ship._quad.angle
         if (x, y) != (0.0, 0.0):
@@ -103,24 +103,25 @@ class Turret(Entity):
             angle_difference = self.diff_angle(joystick_angle, normalized_ship_angle)
             if angle_difference < max(angle_constraints) and angle_difference > min(angle_constraints):
                 # Need to rotate 90 degrees because the resource is rotated
-                turret_angle = self.normalize(joystick_angle + 90)
+                turret_angle = self.normalize(joystick_angle + math.pi / 2)
                 self.turret_quad.angle = turret_angle
             else:
-                if abs(self.diff_angle(normalized_ship_angle + 90 + angle_constraints[0], joystick_angle)) < abs(
-                        self.diff_angle(normalized_ship_angle + 90 + angle_constraints[1], joystick_angle)):
+                if abs(self.diff_angle(normalized_ship_angle + math.pi / 2 + angle_constraints[0],
+                                       joystick_angle)) < abs(
+                        self.diff_angle(normalized_ship_angle + math.pi / 2 + angle_constraints[1], joystick_angle)):
                     bound_angle = angle_constraints[1] if is_right_wing else angle_constraints[0]
                 else:
                     bound_angle = angle_constraints[0] if is_right_wing else angle_constraints[1]
 
-                turret_angle = self.normalize(normalized_ship_angle - bound_angle + 90)
+                turret_angle = self.normalize(normalized_ship_angle - bound_angle + math.pi / 2)
                 self.turret_quad.angle = turret_angle
 
     def diff_angle(self, angle_a, angle_b):
-        """Returns the difference in degrees between 2 angles in degrees"""
+        """Returns the difference in radians between 2 angles in radians"""
         a = self.normalize(angle_a)
         b = self.normalize(angle_b)
-        diff = b - (a + 360)
-        return (diff + 180) % 360 - 180
+        diff = b - (a + math.pi * 2)
+        return (diff + math.pi) % (math.pi * 2) - math.pi
 
     def collide(self, other, **kwargs):
         pass

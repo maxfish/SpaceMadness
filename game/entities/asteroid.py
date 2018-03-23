@@ -45,7 +45,7 @@ class Asteroid(Entity):
     def update(self, game_speed):
         self._physicAsteroid.update_forces()
         self._quad.pos = self._physicAsteroid.body.position * PHYSICS_SCALE
-        self._quad.angle = math.degrees(self._physicAsteroid.body.angle)
+        self._quad.angle = self._physicAsteroid.body.angle
         pass
 
     def draw(self, screen):

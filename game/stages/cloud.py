@@ -1,5 +1,6 @@
 import random
 
+import math
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.texture import Texture
@@ -44,7 +45,7 @@ def calculate_size(width, height):
 
 
 def create_cloud_quad(cloud, size, cloud_list, cloud_picked):
-    cloud.quad = QuadDrawable(cloud.pos.x, cloud.pos.y, size, size, angle=random.randint(0, 360))
+    cloud.quad = QuadDrawable(cloud.pos.x, cloud.pos.y, size, size, angle=random.random()*math.pi*2)
     cloud.quad.texture = Texture.load_from_file('resources/images/clouds/' + cloud_list[cloud_picked - 1])
     cloud.quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
     cloud.quad.anchor_to_center()

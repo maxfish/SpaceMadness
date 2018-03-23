@@ -51,7 +51,7 @@ class Bullet(Entity):
             # Update the position of the bullet
             pos *= PHYSICS_SCALE
             self._quad.pos = Vector2(pos[0], pos[1])
-            self._quad.angle = math.degrees(self._physics.body.angle)
+            self._quad.angle = self._physics.body.angle
             pos /= PHYSICS_SCALE
 
     def collide(self, other, began=False, **kwargs):
