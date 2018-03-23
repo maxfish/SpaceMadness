@@ -14,6 +14,7 @@ class StageDemo(StageSky):
         self._logo.texture = texture
 
     def update(self, game_speed):
+        super().update(game_speed)
         self._logo.pos = Vector2(self.width / 2, self.height / 2)
 
     def draw_foreground(self, surface, window_x, window_y):

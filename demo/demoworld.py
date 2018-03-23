@@ -112,8 +112,8 @@ class DemoWorld:
         # Picks a random movement direction
         direction = Vector2()
         angle = random.random() * math.pi*2
-        direction.x = math.cos(math.radians(angle))
-        direction.y = math.sin(math.radians(angle))
+        direction.x = math.cos(angle)
+        direction.y = math.sin(angle)
 
         # Places the asteroid outside of the screen
         position = Vector2()
@@ -147,8 +147,8 @@ class DemoWorld:
         # Picks a random movement direction
         direction = Vector2()
         angle = random.random() * math.pi*2
-        direction.x = math.cos(math.radians(angle))
-        direction.y = math.sin(math.radians(angle))
+        direction.x = math.cos(angle)
+        direction.y = math.sin(angle)
 
         # Places the asteroid outside of the screen
         position = Vector2()
@@ -172,8 +172,8 @@ class DemoWorld:
         # Picks a random movement direction
         direction = Vector2()
         angle = random.random() * math.pi*2
-        direction.x = math.cos(math.radians(angle))
-        direction.y = math.sin(math.radians(angle))
+        direction.x = math.cos(angle)
+        direction.y = math.sin(angle)
 
         # Places the asteroid outside of the screen
         position = Vector2()
