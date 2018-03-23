@@ -11,6 +11,10 @@ from config import GAME_FPS, GAME_FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH, PHYSICS
 from game.stages.stage_sky import StageSky
 from game.world import World
 
+#
+# TODO: Separate physics updates from logic ones
+#
+
 logging.basicConfig(level=logging.INFO)
 
 parser = argparse.ArgumentParser()
