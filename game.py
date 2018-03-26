@@ -3,6 +3,7 @@ import argparse
 import logging
 
 from mgl2d.app import App
+from mgl2d.graphics.font import Font
 from mgl2d.graphics.screen import Screen
 from mgl2d.input.game_controller_manager import GameControllerManager
 
@@ -35,6 +36,7 @@ controllers = [
     for n in range(num_joysticks)
 ]
 
+
 screen = Screen(args.width, args.height, 'Space Madness')
 if args.fullscreen:
     screen.full_screen = True
@@ -46,9 +48,12 @@ world = World(
     stage=StageSky(screen.width, screen.height)
 )
 
+font = Font()
+font.load_bmfont_file('resources/fonts/prosto_one_16.txt')
 
 def draw_frame(screen):
     world.draw(screen)
+    font.draw_string(screen, 16, f'fps:{app.fps}', 2, 2)
 
 
 def update_frame(delta_ms):
