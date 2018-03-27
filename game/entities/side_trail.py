@@ -2,8 +2,8 @@ from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
 from game.entity import Entity
+from physic_config import PhysicConfig
 
 
 class SideTrail(Entity):
@@ -27,8 +27,9 @@ class SideTrail(Entity):
     def update(self, game_speed, axis):
         if axis > 0:
             self.side_trail.size = self.side_trail_dimensions
-            self.side_trail.pos = PHYSICS_SCALE * (
-                self._ship._physicsShip.body.transform * (self.offset_x / PHYSICS_SCALE, self.offset_y / PHYSICS_SCALE))
+            self.side_trail.pos = PhysicConfig.ptm_ratio * (
+                self._ship._physicsShip.body.transform * (
+                self.offset_x / PhysicConfig.ptm_ratio, self.offset_y / PhysicConfig.ptm_ratio))
             self.side_trail.angle = self.offset_angle + self._ship._quad.angle
         else:
             self.side_trail.size = Vector2(0, 0)

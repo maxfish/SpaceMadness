@@ -8,6 +8,7 @@ import config
 from game.entities.turret_state import TurretState
 from game.entity import Entity
 from game.stage import Stage
+from physic_config import PhysicConfig
 
 
 class Turret(Entity):
@@ -84,8 +85,8 @@ class Turret(Entity):
             time_passed_ms=(game_speed * config.GAME_FRAME_MS),
         )
 
-        self.turret_quad.pos = config.PHYSICS_SCALE * (self._ship._physicsShip.body.transform * (
-            self.offset_x / config.PHYSICS_SCALE, self.offset_y / config.PHYSICS_SCALE))
+        self.turret_quad.pos = PhysicConfig.ptm_ratio * (self._ship._physicsShip.body.transform * (
+            self.offset_x / PhysicConfig.ptm_ratio, self.offset_y / PhysicConfig.ptm_ratio))
 
         # 90 is to account for the rotation of the resource
         normalized_ship_angle = self.normalize(self._ship._quad.angle - math.pi / 2)
@@ -108,7 +109,7 @@ class Turret(Entity):
             else:
                 if abs(self.diff_angle(normalized_ship_angle + math.pi / 2 + angle_constraints[0],
                                        joystick_angle)) < abs(
-                        self.diff_angle(normalized_ship_angle + math.pi / 2 + angle_constraints[1], joystick_angle)):
+                    self.diff_angle(normalized_ship_angle + math.pi / 2 + angle_constraints[1], joystick_angle)):
                     bound_angle = angle_constraints[1] if is_right_wing else angle_constraints[0]
                 else:
                     bound_angle = angle_constraints[0] if is_right_wing else angle_constraints[1]

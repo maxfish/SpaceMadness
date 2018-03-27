@@ -7,9 +7,9 @@ from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
 import config
-from config import PHYSICS_SCALE
 from game.entities.shield_state import ShieldState
 from game.entity import Entity
+from physic_config import PhysicConfig
 from physics.physics_shield import PhysicsShield
 
 SHIP_SIZE = Vector2(109, 156)
@@ -33,7 +33,7 @@ class Shield(Entity):
             ship._physicsShip,
             world.physicsWorld,
             center=self._ship._physicsShip.body.position,
-            radius=(self._quad.size.x / PHYSICS_SCALE) * 1.1,
+            radius=(self._quad.size.x / PhysicConfig.ptm_ratio) * 1.1,
         )
         self._collision_timer = 0
 

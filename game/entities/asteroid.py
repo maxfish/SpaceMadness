@@ -5,8 +5,9 @@ from mgl2d.graphics.shader_program import ShaderProgram
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 from game.entity import Entity
+from physic_config import PhysicConfig
 from physics.physics_asteroid import PhysicsAsteroid
 
 
@@ -26,7 +27,7 @@ class Asteroid(Entity):
         texture = Texture.load_from_file(asset)
         image_size = min(texture.width, texture.height)
 
-        radius = ((image_size / PHYSICS_SCALE) / 2) * 0.8
+        radius = ((image_size / PhysicConfig.ptm_ratio) / 2) * 0.8
 
         self._quad = QuadDrawable(x, y, texture.width * scale, texture.height * scale)
         self._quad.anchor_to_center()
@@ -36,7 +37,7 @@ class Asteroid(Entity):
         self._physicAsteroid = PhysicsAsteroid(
             self,
             world.physicsWorld,
-            center=Vector2(x / PHYSICS_SCALE, y / PHYSICS_SCALE),
+            center=Vector2(x / PhysicConfig.ptm_ratio, y / PhysicConfig.ptm_ratio),
             radius=radius,
             speed=speed,
             torque=torque,
@@ -44,7 +45,7 @@ class Asteroid(Entity):
 
     def update(self, game_speed):
         self._physicAsteroid.update_forces()
-        self._quad.pos = self._physicAsteroid.body.position * PHYSICS_SCALE
+        self._quad.pos = self._physicAsteroid.body.position * PhysicConfig.ptm_ratio
         self._quad.angle = self._physicAsteroid.body.angle
         pass
 
@@ -69,11 +70,11 @@ class Asteroid(Entity):
                 self._physicAsteroid.body.position.x <
                 0 - self._physicAsteroid.shape.radius) or \
                (goes_to_right and
-                (self._physicAsteroid.body.position.x * PHYSICS_SCALE >
+                (self._physicAsteroid.body.position.x * PhysicConfig.ptm_ratio >
                  SCREEN_WIDTH + self._physicAsteroid.shape.radius)) or \
                (goes_to_top and
                 (self._physicAsteroid.body.position.y <
                  0 - self._physicAsteroid.shape.radius)) or \
                (goes_to_bottom and
-                (self._physicAsteroid.body.position.y * PHYSICS_SCALE >
+                (self._physicAsteroid.body.position.y * PhysicConfig.ptm_ratio >
                  SCREEN_HEIGHT + - self._physicAsteroid.shape.radius))

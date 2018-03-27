@@ -9,11 +9,12 @@ from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
 import config
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 from game.bullet_mgr import BulletManager
 from game.entities.asteroid import Asteroid
 from game.entities.ship import SHIP_TEXTURES
 from game.entities.ship import Ship
+from physic_config import PhysicConfig
 from physics.contact_listener import ContactListener
 
 INTRO_DEBUG = 0
@@ -105,7 +106,7 @@ class World:
                 alive += 1
 
         if alive <= 1 and self.game_over_timer <= 0:
-            self.game_over_timer = 5000
+            self.game_over_timer = 45000
 
         if self.game_over_timer > 0 and self.game_over_timer < time_delta:
             self.restart_game()
@@ -136,17 +137,16 @@ class World:
             force_dir = Vector2()
             if pos.x < 0:
                 force_dir = Vector2(1, 0)
-            elif pos.x > self.bounds.w / PHYSICS_SCALE:
+            elif pos.x > self.bounds.w / PhysicConfig.ptm_ratio:
                 force_dir = Vector2(-1, 0)
             elif pos.y < 0:
                 force_dir = Vector2(0, 1)
-            elif pos.y > self.bounds.h / PHYSICS_SCALE:
+            elif pos.y > self.bounds.h / PhysicConfig.ptm_ratio:
                 force_dir = Vector2(0, -1)
 
-            intensity = 100
-            force_dir *= intensity
+            force_dir *= config.BORDER_REPULSION_FORCE
             force_apply_pos = e._physicsShip.body.GetWorldPoint(localPoint=(0.0, 0.0))
-            e._physicsShip.body.ApplyLinearImpulse((force_dir.x, force_dir.y), force_apply_pos, True)
+            e._physicsShip.body.ApplyForce((force_dir.x, force_dir.y), force_apply_pos, True)
 
     def draw(self, screen):
         self.stage.draw_background(screen, self.window_x, self.window_y)
@@ -166,17 +166,17 @@ class World:
     def _draw_physics_bodies(self, screen):
         for body in self.physicsWorld.bodies:
             for fixture in body.fixtures:
+                color = Color(0, 1, 0, 1) if fixture.sensor else Color(1, 0, 0, 1)
                 if isinstance(fixture.shape, b2PolygonShape):
-                    vertices = [(body.transform * v) * PHYSICS_SCALE for v in fixture.shape.vertices]
+                    vertices = [(body.transform * v) * PhysicConfig.ptm_ratio for v in fixture.shape.vertices]
                     vertices = [(v[0], v[1]) for v in vertices]
                     # Add the first point again to close the polygon
                     vertices.append(vertices[0])
-                    self._shapes.draw_polyline(screen, vertices, Color(1, 0, 0, 1))
+                    self._shapes.draw_polyline(screen, vertices, color)
                 elif isinstance(fixture.shape, b2CircleShape):
-                    center = (body.transform * fixture.shape.pos) * PHYSICS_SCALE
-                    radius = fixture.shape.radius * PHYSICS_SCALE
-                    self._shapes.draw_circle(screen, center.x, center.y, radius, Color(1, 0, 0, 1),
-                                             start_angle=body.angle)
+                    center = (body.transform * fixture.shape.pos) * PhysicConfig.ptm_ratio
+                    radius = fixture.shape.radius * PhysicConfig.ptm_ratio
+                    self._shapes.draw_circle(screen, center.x, center.y, radius, color, start_angle=body.angle)
 
     def game_over(self):
         self.scene = self.SCENE_GAME_OVER
@@ -184,7 +184,7 @@ class World:
     def generate_asteroid(self):
         # Picks a random movement direction
         direction = Vector2()
-        angle = random.random()*math.pi*2
+        angle = random.random() * math.pi * 2
         direction.x = math.cos(angle)
         direction.y = math.sin(angle)
 
@@ -193,7 +193,7 @@ class World:
         position.x = SCREEN_WIDTH / 2 + direction.x * (SCREEN_WIDTH / 1.5)
         position.y = SCREEN_HEIGHT / 2 + direction.y * (SCREEN_HEIGHT / 1.5)
 
-        speed = -Vector2(direction.x, direction.y) * 1000 * random.random()
+        speed = -Vector2(direction.x, direction.y) * config.ASTEROID_VELOCITY * random.random()
         torque = 1 * random.random()
         asteroid = Asteroid(self, position.x, position.y, speed=speed, torque=torque)
         self.asteroids.append(asteroid)

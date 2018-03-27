@@ -53,7 +53,8 @@ font.load_bmfont_file('resources/fonts/prosto_one_16.txt')
 
 def draw_frame(screen):
     world.draw(screen)
-    font.draw_string(screen, 16, f'fps:{app.fps}', 2, 2)
+    font.draw_string(screen, 16, f'fps:{app._current_fps}', 2, 2)
+    font.draw_string(screen, 16, f'bodies:{world.physicsWorld.bodyCount}', 120, 2)
 
 
 def update_frame(delta_ms):

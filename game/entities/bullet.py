@@ -5,8 +5,8 @@ from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.texture import Texture
 from mgl2d.math.vector2 import Vector2
 
-from config import PHYSICS_SCALE
 from game.entity import Entity
+from physic_config import PhysicConfig
 from physics.physics_bullet import PhysicsBullet
 
 
@@ -21,13 +21,14 @@ class Bullet(Entity):
         self._quad.size = Vector2(self._quad.texture.width, self._quad.texture.height)
         self._quad.anchor_to_center()
         # Attach physics only in the initialize method
-        self.bullet_radius = min(self._quad.size.x, self._quad.size.y) / PHYSICS_SCALE / 2
+        self.bullet_radius = min(self._quad.size.x, self._quad.size.y) / PhysicConfig.ptm_ratio / 2
         self._angle = None
         self.bullet_mgr = bullet_mgr
 
     def initialize(self, x, y, direction, speed, owner):
         self.owner = owner
-        self._physics = PhysicsBullet(self, self._world.physicsWorld, x / PHYSICS_SCALE, y / PHYSICS_SCALE,
+        self._physics = PhysicsBullet(self, self._world.physicsWorld, x / PhysicConfig.ptm_ratio,
+                                      y / PhysicConfig.ptm_ratio,
                                       self.bullet_radius, owner)
 
         # Physics object corresponding to the bullet
@@ -43,16 +44,16 @@ class Bullet(Entity):
 
     def update(self, screen):
         pos = self._physics.body.position
-        if pos.x < 0 or pos.x > self._world.bounds.w / PHYSICS_SCALE or \
-                        pos.y < 0 or pos.y > self._world.bounds.h / PHYSICS_SCALE:
+        if pos.x < 0 or pos.x > self._world.bounds.w / PhysicConfig.ptm_ratio or \
+                        pos.y < 0 or pos.y > self._world.bounds.h / PhysicConfig.ptm_ratio:
             # Bullet is outside the screen
             self.remove_bullet()
         else:
             # Update the position of the bullet
-            pos *= PHYSICS_SCALE
+            pos *= PhysicConfig.ptm_ratio
             self._quad.pos = Vector2(pos[0], pos[1])
             self._quad.angle = self._physics.body.angle
-            pos /= PHYSICS_SCALE
+            pos /= PhysicConfig.ptm_ratio
 
     def collide(self, other, began=False, **kwargs):
         # Don't do anything if a bullet is hitting a bullet.

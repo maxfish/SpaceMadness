@@ -3,9 +3,11 @@ import random
 
 from Box2D import b2World
 from mgl2d.math.vector2 import Vector2
+
+from physic_config import PhysicConfig
 from physics.contact_listener import ContactListener
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PHYSICS_SCALE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 from game.entities.asteroid import Asteroid
 from game.entities.ship import Ship
 
@@ -83,11 +85,11 @@ class DemoWorld:
             force_dir = Vector2()
             if pos.x < 0:
                 force_dir = Vector2(1, 0)
-            elif pos.x > self.bounds.w / PHYSICS_SCALE:
+            elif pos.x > self.bounds.w / PhysicConfig.ptm_ratio:
                 force_dir = Vector2(-1, 0)
             elif pos.y < 0:
                 force_dir = Vector2(0, 1)
-            elif pos.y > self.bounds.h / PHYSICS_SCALE:
+            elif pos.y > self.bounds.h / PhysicConfig.ptm_ratio:
                 force_dir = Vector2(0, -1)
 
             intensity = 100

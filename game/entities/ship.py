@@ -1,23 +1,20 @@
-import math
 from random import random
 
-from mgl2d.graphics.color import Color
 from mgl2d.graphics.quad_drawable import QuadDrawable
 from mgl2d.graphics.shader_program import ShaderProgram
-from mgl2d.graphics.shapes import Shapes
 from mgl2d.graphics.texture import Texture
 from mgl2d.input.game_controller import GameController
 from mgl2d.math.vector2 import Vector2
 
 import config
 from game.entities.asteroid import Asteroid
-# from game.entities.healthbar import HealthBar
 from game.entities.shield import Shield
 from game.entities.ship_state import ShipState
 from game.entities.side_trail import SideTrail
 from game.entities.trail import Trail
 from game.entities.turret import Turret
 from game.entity import Entity
+from physic_config import PhysicConfig
 from physics.physics_ship import PhysicsShip
 
 SCALE = 0.67
@@ -50,8 +47,8 @@ class Ship(Entity):
         self._physicsShip = PhysicsShip(
             self,
             world.physicsWorld,
-            x / config.PHYSICS_SCALE,
-            y / config.PHYSICS_SCALE,
+            x / PhysicConfig.ptm_ratio,
+            y / PhysicConfig.ptm_ratio,
             angle=angle,
         )
 
@@ -64,7 +61,8 @@ class Ship(Entity):
 
         texture_file = SHIP_TEXTURES.get(color, SHIP_TEXTURES['standard'])
         self._quad.texture = Texture.load_from_file(texture_file)
-        self._quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert', frag_file='resources/shaders/rgba.frag')
+        self._quad.shader = ShaderProgram.from_files(vert_file='resources/shaders/base.vert',
+                                                     frag_file='resources/shaders/rgba.frag')
 
         self.controllers = controllers
         self.pilotController = controllers[0] if len(controllers) else None
@@ -91,24 +89,24 @@ class Ship(Entity):
         self._physicsShip.update_forces(self.pilotController)
         for c in self.controllers:
             c.update()
-            # if c.is_button_pressed(GameController.BUTTON_DIR_PAD_UP):
-            #     if self.turretController == c:
-            #         self.turretController = None
-            #     if self.shieldController == c:
-            #         self.shieldController = None
-            #     self.pilotController = c
-            # elif c.is_button_pressed(GameController.BUTTON_DIR_PAD_DOWN):
-            #     if self.pilotController == c:
-            #         self.pilotController = None
-            #     if self.shieldController == c:
-            #         self.shieldController = None
-            #     self.turretController = c
-            # elif c.is_button_pressed(GameController.BUTTON_DIR_PAD_LEFT):
-            #     if self.turretController == c:
-            #         self.turretController = None
-            #     if self.pilotController == c:
-            #         self.pilotController = None
-            #     self.shieldController = c
+            if c.is_button_pressed(GameController.BUTTON_DIR_PAD_UP):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.pilotController = c
+            elif c.is_button_pressed(GameController.BUTTON_DIR_PAD_DOWN):
+                if self.pilotController == c:
+                    self.pilotController = None
+                if self.shieldController == c:
+                    self.shieldController = None
+                self.turretController = c
+            elif c.is_button_pressed(GameController.BUTTON_DIR_PAD_LEFT):
+                if self.turretController == c:
+                    self.turretController = None
+                if self.pilotController == c:
+                    self.pilotController = None
+                self.shieldController = c
 
         if self.pilotController and self.ship_state.state == ShipState.LIVE:
             boost = self.pilotController.is_button_down(GameController.BUTTON_A)
@@ -170,8 +168,8 @@ class Ship(Entity):
             is_right_wing=True,
         )
 
-        self._angle = self._physicsShip.body.angle + math.pi
-        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
+        self._angle = self._physicsShip.body.angle
+        pos = self._physicsShip.body.position * PhysicConfig.ptm_ratio
         self._position = Vector2(pos[0], pos[1])
         self._quad.pos = self._position
         self._quad.angle = self._angle
@@ -212,7 +210,7 @@ class Ship(Entity):
             self._quad.draw(screen)
 
     def destroy_ship(self):
-        pos = self._physicsShip.body.position * config.PHYSICS_SCALE
+        pos = self._physicsShip.body.position * PhysicConfig.ptm_ratio
         x, y = pos
 
         self.world.asteroids.append(Asteroid(
